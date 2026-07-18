@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EZ Minutes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=Inter:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#ffffff;
+    --card:#f8f3e6;
+    --line:#d8cbaa;
+    --line2:#e1d5b8;
+    --ink:#241f1a;
+    --muted:#6b5f4d;
+    --faint:#a89a80;
+    --accent:#8a2e2e;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Spectral', Georgia, serif;
+  }
+  input, textarea, button{font-family:'Inter', sans-serif;}
+  input:focus, button:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  ::placeholder{color:var(--faint);}
+  .wrap{max-width:560px; margin:0 auto; padding:28px 20px 60px;}
+  .shapes{display:flex; gap:8px; margin-bottom:0;}
+  .shapes svg{display:block;}
+  .top-bar{display:flex; justify-content:space-between; align-items:baseline; gap:10px;}
+  .header-right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
+  .reset-all{font-family:'Inter',sans-serif; font-size:10.5px;}
+  .reset-all .link-btn-faint{
+    background:none; border:none; color:var(--faint); cursor:pointer;
+    font-size:10.5px; padding:0; text-decoration:underline; font-family:'Inter',sans-serif;
+  }
+  h1{font-family:'Spectral',serif; font-weight:600; font-size:26px; margin:6px 0 2px; letter-spacing:.01em;}
+  .welcome-text{font-family:'Inter',sans-serif; font-size:14px; color:var(--ink); margin:18px 0 10px; text-align:center;}
+  .welcome-actions{display:flex; gap:10px; margin-bottom:8px;}
+  .welcome-actions button{
+    flex:1; border-radius:6px; padding:13px 0; font-family:'Inter',sans-serif;
+    font-weight:700; font-size:14px; letter-spacing:.02em; cursor:pointer;
+  }
+  .btn-solid-full{background:var(--accent); color:#fff; border:1px solid var(--accent);}
+  .btn-outline-full{background:transparent; color:var(--accent); border:1px solid var(--accent);}
+  .welcome-status{font-family:'Inter',sans-serif; font-size:12px; color:var(--muted); margin-top:8px; min-height:0;}
+  .welcome-status.error{color:var(--accent); font-weight:600;}
+  #welcomeGate{margin-bottom:8px;}
+  .session-menu{
+    display:flex; flex-wrap:wrap; align-items:center; gap:6px;
+    margin:2px 0 16px; font-family:'Inter',sans-serif; font-size:11px;
+  }
+  .session-menu .session-link{
+    background:none; border:none; color:var(--faint); cursor:pointer;
+    font-size:11px; padding:0; text-decoration:underline; font-family:'Inter',sans-serif;
+  }
+  .session-menu .session-sep{color:var(--line);}
+  .sub{font-family:'Inter',sans-serif; font-size:12px; line-height:1.5; color:var(--muted); margin:0 0 12px;}
+  .setup-collapse-row{margin:4px 0 18px;}
+  .setup-collapse-row button{
+    width:100%; background:var(--accent); color:var(--card);
+    border:none; border-radius:5px; padding:11px 0;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:14px;
+    letter-spacing:.02em; cursor:pointer;
+  }
+  .setup-summary{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+    font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink);
+    padding:9px 0 14px; margin-bottom:8px; border-bottom:1px solid var(--line2);
+  }
+  .setup-summary .summary-text{flex:1; line-height:1.4;}
+  .setup-summary .summary-text .dim{color:var(--faint);}
+  .setup-summary button{
+    flex-shrink:0; background:none; border:none; color:var(--faint); cursor:pointer;
+    font-size:11px; padding:0; text-decoration:underline; font-family:'Inter',sans-serif;
+  }
+  .row{display:flex; gap:10px; margin-bottom:10px;}
+  .field{display:flex; flex-direction:column;}
+  .field label{
+    font-family:'Inter',sans-serif; font-size:10.5px; font-weight:600;
+    text-transform:uppercase; letter-spacing:.05em; color:var(--faint);
+    margin-bottom:3px;
+  }
+  .field input{
+    width:100%; padding:7px 9px; border:1px solid var(--line);
+    border-radius:4px; font-size:13.5px; background:#fff; color:var(--ink);
+  }
+  .field-label-row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:3px;}
+  .field-label-row label{margin-bottom:0;}
+  .link-btn-small{
+    background:none; border:none; color:var(--faint); cursor:pointer;
+    font-size:11px; padding:0; text-decoration:underline; font-family:'Inter',sans-serif;
+  }
+  .book-group{display:flex; flex-direction:column; gap:6px;}
+  .book-option{
+    display:flex; align-items:center; gap:9px; padding:9px 10px;
+    border:1px solid var(--line); border-radius:4px; background:#fff; cursor:pointer;
+  }
+  .book-option input{margin:0; accent-color:var(--accent); width:15px; height:15px; flex-shrink:0;}
+  .book-option.selected{border-color:var(--accent); background:#fbf3ee;}
+  .book-option .b-name{font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink); flex:1;}
+  .book-option .b-abbr{font-family:'Roboto Mono',monospace; font-size:11px; color:var(--faint);}
+  .book-check-row{display:flex; flex-wrap:wrap; gap:4px 14px;}
+  .book-check{
+    display:flex; align-items:center; gap:5px; padding:2px 0; cursor:pointer;
+  }
+  .book-check input{margin:0; accent-color:var(--accent); width:14px; height:14px; flex-shrink:0;}
+  .book-check .b-name{font-family:'Inter',sans-serif; font-size:12.5px; color:#000;}
+  .book-pill-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .book-badge{
+    display:inline-flex; align-items:center;
+    padding:5px 13px;
+    border-radius:999px;
+    font-family:'Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    line-height:1.4;
+    white-space:nowrap;
+    border:none;
+    cursor:pointer;
+    opacity:0.55;
+    transition:opacity .12s, box-shadow .12s;
+  }
+  .book-badge.selected{
+    opacity:1;
+    box-shadow:0 0 0 2px #fff, 0 0 0 4px var(--ink);
+  }
+  .book-badge.static-badge{cursor:default; opacity:1;}
+  .book-badge.shm2025{ background-color:#155D13; color:#d4af37; }
+  .book-badge.shm1991{ background-color:#800020; color:#d4af37; }
+  .book-badge.shh2012{ background-color:#d8c29d; color:#000; }
+  .book-badge.vph2024{ background-color:#b1452f; color:#000; }
+  .book-badge.shc2012{ background-color:#00008B; color:#d3d3d3; }
+  .book-badge.chm2010{ background-color:#000; color:#d4af37; }
+  .book-badge.other{ background-color:#d9d9d9; color:#000; }
+  .book-static-wrap{display:flex; align-items:center; gap:8px; font-family:'Inter',sans-serif; font-size:12px; color:var(--faint);}
+  .book-warn{font-family:'Inter',sans-serif; font-size:12px; color:var(--accent);}
+  .field.has-warn input{border-color:var(--accent); background:#fbf3ee;}
+  .page-warn{
+    font-family:'Inter',sans-serif; font-size:12px; color:var(--accent);
+    margin-top:5px; display:none; align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  .page-warn.show{display:flex;}
+  .page-warn .fix-btn{
+    border:1px solid var(--accent); background:#fff; color:var(--accent);
+    border-radius:14px; padding:3px 10px; font-size:12px; cursor:pointer; font-family:'Inter',sans-serif;
+  }
+  .unknown-confirm .fix-btn{
+    border:1px solid #8a6a2e; background:#fff; color:#8a6a2e;
+    border-radius:14px; padding:3px 10px; font-size:12px; cursor:pointer; font-family:'Inter',sans-serif;
+  }
+  .page-title-preview{
+    font-family:'Inter',sans-serif; font-size:12.5px; color:var(--accent);
+    margin-top:5px; display:none; font-style:italic;
+  }
+  .page-title-preview.show{display:block;}
+  .page-title-preview.not-found{color:var(--faint); font-style:normal;}
+  .dup-warn{
+    font-family:'Inter',sans-serif; font-size:12px; color:#8a6a2e;
+    margin-top:5px; display:none;
+  }
+  .dup-warn.show{display:block;}
+  .unknown-confirm{
+    font-family:'Inter',sans-serif; font-size:12px; color:#8a6a2e;
+    margin-top:5px; display:none; align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  .unknown-confirm.show{display:flex;}
+  .already-sung{
+    font-family:'Roboto Mono',monospace; font-size:11px; color:var(--faint);
+    line-height:1.7; margin-bottom:16px;
+  }
+  .already-sung .book-line{white-space:normal; word-break:break-word;}
+  .already-sung .code{font-weight:600; color:var(--muted);}
+  .entry .body .song{font-weight:600; color:var(--accent);}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:6px; padding:16px; margin-bottom:22px;}
+  .card .field + .field{margin-top:10px;}
+  .btn-add{
+    margin-top:14px; width:100%; background:var(--accent); color:var(--card);
+    border:none; border-radius:5px; padding:11px 0; font-weight:600; font-size:14px;
+    letter-spacing:.02em; cursor:pointer;
+  }
+  .marker-row{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+  .marker-btn{
+    flex:1 1 calc(50% - 3px); background:transparent; color:var(--muted);
+    border:1px solid var(--line); border-radius:5px; padding:7px 4px;
+    font-family:'Inter',sans-serif; font-size:11px; font-weight:600;
+    letter-spacing:.02em; text-transform:uppercase; cursor:pointer;
+  }
+  .marker-btn:hover{border-color:var(--accent); color:var(--accent);}
+  .newday-banner{
+    margin-top:12px; padding:12px 14px; background:#fbf3ee; border:1px solid var(--accent);
+    border-radius:6px;
+  }
+  .newday-banner p{
+    margin:0 0 10px; font-family:'Inter',sans-serif; font-size:12.5px; line-height:1.5; color:var(--ink);
+  }
+  .newday-banner-actions{display:flex; flex-wrap:wrap; gap:8px;}
+  .newday-banner-actions button{
+    flex:1; min-width:100px; border-radius:5px; padding:8px 0;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:12.5px; cursor:pointer;
+  }
+  #newDayCsvBtn{background:var(--accent); color:#fff; border:none;}
+  #newDayCopyBtn{background:transparent; color:var(--accent); border:1px solid var(--accent);}
+  .newday-dismiss{background:none; color:var(--faint); border:none; text-decoration:underline; flex:0 0 auto; min-width:0;}
+  .tag-row{display:flex; flex-wrap:wrap; gap:6px;}
+  .tag-chip{
+    background:#fff; color:var(--muted); border:1px solid var(--line);
+    border-radius:20px; padding:6px 13px; font-family:'Inter',sans-serif;
+    font-size:12.5px; font-weight:600; cursor:pointer;
+  }
+  .tag-chip.selected{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .tag-label{
+    display:inline-block; background:var(--accent); color:#fff; font-size:10px;
+    font-weight:700; text-transform:uppercase; letter-spacing:.04em;
+    border-radius:3px; padding:1px 6px; margin-right:6px; vertical-align:middle;
+  }
+  .entry.marker-entry{justify-content:center; background:transparent; border:none; padding:2px 0;}
+  .entry.marker-entry .marker-label{
+    flex:1; text-align:center; font-family:'Inter',sans-serif; font-size:11.5px;
+    font-weight:700; letter-spacing:.08em; color:var(--faint);
+    border-top:1px solid var(--line2); border-bottom:1px solid var(--line2);
+    padding:6px 0;
+  }
+  .log-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:8px;}
+  .log-head h2{font-family:'Spectral',serif; font-size:16px; font-weight:600; margin:0;}
+  .link-btn{background:none; border:none; color:var(--accent); cursor:pointer; font-size:12px; padding:0; text-decoration:underline; font-family:'Inter',sans-serif;}
+  .empty{font-family:'Inter',sans-serif; font-size:13px; color:var(--faint);}
+  .log{display:flex; flex-direction:column; gap:6px;}
+  .entry{display:flex; align-items:center; gap:10px; background:var(--card); border:1px solid var(--line2); border-radius:5px; padding:8px 10px;}
+  .entry .shape{flex-shrink:0;}
+  .entry .body{flex:1; font-family:'Inter',sans-serif; font-size:13px; line-height:1.4;}
+  .entry .body .title{font-weight:600;}
+  .entry .body .notes{color:var(--muted);}
+  .entry .time{font-family:'Roboto Mono',monospace; font-size:11px; color:var(--faint); white-space:nowrap;}
+  .entry .remove{background:none; border:none; cursor:pointer; color:var(--faint); padding:4px; display:flex;}
+  .entry .body{cursor:pointer;}
+  .entry.editing{cursor:default; align-items:stretch;}
+  .edit-wrap{display:flex; flex-direction:column; gap:6px; width:100%;}
+  .edit-wrap input{
+    padding:7px 9px; border:1px solid var(--line); border-radius:4px;
+    font-family:'Inter',sans-serif; font-size:13px; background:#fff; color:var(--ink);
+  }
+  .edit-btn-row{display:flex; gap:8px; margin-top:2px;}
+  .edit-save, .edit-cancel{
+    border-radius:5px; padding:6px 14px; font-family:'Inter',sans-serif; font-size:12.5px;
+    font-weight:600; cursor:pointer; border:none;
+  }
+  .edit-save{background:var(--accent); color:#fff;}
+  .edit-save.pending{background:#8a6a2e;}
+  .edit-cancel{background:transparent; color:var(--muted); border:1px solid var(--line);}
+  .edit-field-label{
+    font-family:'Inter',sans-serif; font-size:10px; font-weight:700; text-transform:uppercase;
+    letter-spacing:.05em; color:var(--faint); margin-bottom:-2px;
+  }
+  .edit-select{
+    padding:7px 9px; border:1px solid var(--line); border-radius:4px;
+    font-family:'Inter',sans-serif; font-size:13px; background:#fff; color:var(--ink);
+  }
+  .edit-page-status{font-family:'Inter',sans-serif; font-size:12px; min-height:0;}
+  .edit-page-status.warn{color:var(--accent); font-weight:600;}
+  .edit-page-status.title{color:var(--accent); font-style:italic; font-weight:600;}
+  .edit-page-status.notfound{color:var(--faint);}
+  .edit-tag-row{display:flex; flex-wrap:wrap; gap:6px;}
+  .export{display:flex; gap:10px; margin-top:22px;}
+  .tally-toggle{margin-top:18px; text-align:center;}
+  .tally-toggle button{
+    background:none; border:none; color:var(--faint); text-decoration:underline;
+    cursor:pointer; font-family:'Inter',sans-serif; font-size:12px; padding:0;
+  }
+  .tally-box{
+    margin-top:14px; padding:16px; background:var(--card); border:1px solid var(--line);
+    border-radius:6px; font-family:'Inter',sans-serif; font-size:13px;
+  }
+  .tally-box h3{font-family:'Spectral',serif; font-size:14px; font-weight:600; margin:0 0 8px; color:var(--ink);}
+  .tally-section{margin-bottom:14px;}
+  .tally-section:last-child{margin-bottom:0;}
+  .tally-row{display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid var(--line2);}
+  .tally-row:last-child{border-bottom:none;}
+  .tally-row .n{color:var(--muted); font-family:'Roboto Mono',monospace; font-size:12px;}
+  .export button{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+    border-radius:5px; padding:10px 0; font-weight:600; font-size:13px; cursor:pointer;
+  }
+  .btn-dark{background:var(--ink); color:var(--card); border:none;}
+  .btn-outline{background:transparent; color:var(--ink); border:1px solid var(--ink);}
+  .autosave-row{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px;}
+  .autosave-toggle{display:flex; align-items:center; gap:6px; font-family:'Inter',sans-serif; font-size:12px; color:var(--muted); cursor:pointer;}
+  .autosave-toggle input{margin:0; accent-color:var(--accent); width:14px; height:14px;}
+  #autosaveNowBtn{
+    background:none; border:none; color:var(--accent); cursor:pointer;
+    font-size:12px; font-weight:600; padding:0; text-decoration:underline; font-family:'Inter',sans-serif;
+  }
+  .autosave-note{
+    font-family:'Inter',sans-serif; font-size:11px; line-height:1.5; color:var(--faint); margin-top:6px;
+  }
+  .local-save-status{
+    font-family:'Inter',sans-serif; font-size:11.5px; color:var(--muted); margin:10px 0 0;
+  }
+  .local-save-status.error{color:var(--accent); font-weight:600;}
+  #toast{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+    background:var(--ink); color:var(--card); padding:8px 16px; border-radius:5px;
+    font-family:'Inter',sans-serif; font-size:13px; opacity:0; transition:opacity .2s; pointer-events:none;
+    display:flex; align-items:center; max-width:90vw;
+  }
+  #toast.show{opacity:1; pointer-events:auto;}
+  .toast-undo{
+    background:none; border:none; color:var(--card); text-decoration:underline;
+    cursor:pointer; font-weight:700; font-family:'Inter',sans-serif; font-size:13px; padding:0;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-bar">
+    <h1>EZ Minutes</h1>
+    <div class="header-right">
+      <div class="shapes" id="headerShapes"></div>
+      <span id="resetAllControls" class="reset-all"></span>
+    </div>
+  </div>
+
+  <div id="welcomeGate">
+    <p class="welcome-text">Welcome to EZ Minutes — is this a:</p>
+    <div class="welcome-actions" id="resumeRow" style="display:none">
+      <button type="button" id="resumeSessionBtn" class="btn-solid-full">Resume Current Session</button>
+    </div>
+    <div class="welcome-actions">
+      <button type="button" id="newSingingBtn" class="btn-outline-full">Start New Singing</button>
+      <button type="button" id="loadCsvBtn" class="btn-outline-full">Load CSV</button>
+    </div>
+    <div class="welcome-status" id="welcomeStatus"></div>
+    <input type="file" id="csvFileInput" accept=".csv" style="display:none">
+  </div>
+
+  <div id="mainApp" style="display:none">
+  <div class="session-menu" id="sessionMenu">
+    <button type="button" class="session-link" id="sessionStartNewBtn">Start new singing</button>
+    <span class="session-sep">·</span>
+    <button type="button" class="session-link" id="sessionLoadCsvBtn">Load CSV</button>
+    <span class="session-sep">·</span>
+    <button type="button" class="session-link" id="sessionDownloadBtn">Download CSV</button>
+    <span class="session-sep">·</span>
+    <button type="button" class="session-link" id="sessionReturnWelcomeBtn">Return to welcome</button>
+  </div>
+  <div id="setupSection">
+    <p class="sub" id="subText">Fill in Event, Date, and Location, check off today's Song Sources, then tap "Done — collapse" to tuck this away for the rest of the session. Log each song as it's called: hit Enter in Leader, Page, or Notes to submit, no button needed. Entries are timestamped automatically. Use Recess / Lunch / Announcements to mark breaks, and tag a song as Call Back, Memorial, or Special if it applies. Download or copy the minutes when you're done.</p>
+
+    <div class="row">
+      <div class="field" style="flex:2">
+        <label for="event">Event</label>
+        <input id="event" placeholder="e.g. Maryland All-Day Singing">
+      </div>
+      <div class="field" style="flex:1">
+        <label for="date">Date</label>
+        <input id="date" type="date">
+      </div>
+    </div>
+
+    <div class="field" style="margin-bottom:10px">
+      <label for="location">Location</label>
+      <input id="location" placeholder="e.g. St. David's of Roland Park, Baltimore">
+    </div>
+
+    <div class="field" style="margin-bottom:10px">
+      <label>Song Sources</label>
+      <div class="book-check-row" id="bookCheckRow"></div>
+    </div>
+
+    <div class="setup-collapse-row" id="setupCollapseRow"></div>
+  </div>
+
+  <div class="setup-summary" id="setupSummary" style="display:none"></div>
+
+  <div class="card">
+    <div class="field" id="entryBookField" style="margin-bottom:10px;"></div>
+    <div class="field">
+      <label for="caller">Leader(s)</label>
+      <input id="caller" placeholder="Who's calling this one" list="callerList" autocomplete="off">
+      <datalist id="callerList"></datalist>
+    </div>
+    <div class="field">
+      <label for="page" id="pageLabel">Page / order (e.g. 50t or 50.1)</label>
+      <input id="page" placeholder="Page called">
+      <input id="adhocTitle" placeholder="e.g. German Lesson hymn, Moravian hymn before lunch" style="display:none;">
+      <div class="page-warn" id="pageWarn">
+        <span id="pageWarnText">This page has a top and bottom — which one?</span>
+        <button type="button" class="fix-btn" id="pickTop">Top</button>
+        <button type="button" class="fix-btn" id="pickBottom">Bottom</button>
+      </div>
+      <div class="page-title-preview" id="pageTitlePreview"></div>
+      <div class="dup-warn" id="dupWarn"></div>
+      <div class="unknown-confirm" id="unknownConfirm">
+        <span>No song found at that page — add it anyway?</span>
+        <button type="button" class="fix-btn" id="confirmAddAnyway">Add anyway</button>
+        <button type="button" class="fix-btn" id="cancelAddAnyway">Cancel</button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="notes">Notes (optional)</label>
+      <input id="notes" placeholder="Something memorable...">
+    </div>
+    <div class="field">
+      <label>Tag (optional)</label>
+      <div class="tag-row" id="tagRow">
+        <button type="button" class="tag-chip" data-tag="Call Back">Call Back</button>
+        <button type="button" class="tag-chip" data-tag="Memorial">Memorial</button>
+        <button type="button" class="tag-chip" data-tag="Special">Special</button>
+      </div>
+    </div>
+    <button class="btn-add" id="addBtn">Add entry</button>
+    <div class="marker-row">
+      <button type="button" class="marker-btn" data-label="RECESS">Recess</button>
+      <button type="button" class="marker-btn" data-label="LUNCH">Lunch</button>
+      <button type="button" class="marker-btn" data-label="ANNOUNCEMENTS">Announcements</button>
+      <button type="button" class="marker-btn" data-label="NEW DAY / LOCATION">New Day</button>
+    </div>
+    <div class="newday-banner" id="newDayTransitionBanner" style="display:none">
+      <p>Update the Date and/or Location above for the new day, then confirm to continue. This won't change any songs already logged.</p>
+      <div class="newday-banner-actions">
+        <button type="button" id="newDayConfirmBtn">Confirm New Day</button>
+        <button type="button" id="newDayCancelBtn" class="newday-dismiss">Cancel</button>
+      </div>
+    </div>
+    <div class="newday-banner" id="newDayBanner" style="display:none">
+      <p>New day marked — keep logging just as you have been. But it's worth downloading or copying what's been collected so far, just in case.</p>
+      <div class="newday-banner-actions">
+        <button type="button" id="newDayCsvBtn">⬇ Download CSV</button>
+        <button type="button" id="newDayCopyBtn">Copy</button>
+        <button type="button" id="newDayDismissBtn" class="newday-dismiss">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="alreadySung" class="already-sung"></div>
+
+  <div class="log-head">
+    <h2 id="logCount">Log (0)</h2>
+    <span id="clearControls"></span>
+  </div>
+
+  <div id="logEmpty" class="empty">No entries yet — add the first song above.</div>
+  <div id="log" class="log"></div>
+
+  <div class="export" id="exportRow" style="display:none">
+    <button class="btn-dark" id="csvBtn">⬇ Download CSV</button>
+    <button class="btn-outline" id="copyBtn">Copy</button>
+  </div>
+
+  <p class="local-save-status" id="localSaveStatus" style="display:none"></p>
+
+  <div class="autosave-row" id="autosaveRow" style="display:none">
+    <label class="autosave-toggle">
+      <input type="checkbox" id="autosaveToggle">
+      Automatic download backup every 10 min
+    </label>
+    <button type="button" id="autosaveNowBtn">Download backup now</button>
+  </div>
+  <p class="autosave-note" id="autosaveNote" style="display:none">
+    Your entries are already kept safely in this browser as you go (see "Saved locally" above). This is a separate, optional extra: a real CSV file downloaded automatically every 10 minutes, in case this browser's storage is ever cleared. Browsers can block downloads that aren't triggered by a direct click, so treat this as a bonus, not your main backup — use Download CSV or Copy for that.
+  </p>
+
+  <div class="tally-toggle" id="tallyToggle" style="display:none"></div>
+  <div class="tally-box" id="tallyBox" style="display:none"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function(){
+  const STORAGE_KEY = 'singingMinutesEntries';
+  const STICKY_KEY = 'singingMinutesSticky';
+
+  const BOOKS = [
+    { abbr: 'ShH2012', name: 'The Shenandoah Harmony', short: 'Shenandoah' },
+    { abbr: 'VPH2024', name: 'The Valley Pocket Harmonist', short: 'Valley Pocket' },
+    { abbr: 'SHM2025', name: 'The Sacred Harp: 2025 Edition', short: "Sacred Harp '25" },
+    { abbr: 'SHM1991', name: 'The Sacred Harp: 1991 Edition', short: "Sacred Harp '91" },
+    { abbr: 'SHC2012', name: 'The B. F. White Sacred Harp (Cooper Book)', short: "Cooper '12" },
+    { abbr: 'CHM2010', name: 'The Christian Harmony', short: 'Christian Harmony' },
+    { abbr: 'OTHER', name: 'Other (not from a listed book)', short: 'Other' }
+  ];
+
+  // Pages known to have a distinct top ("t") and bottom ("b") song, pulled from
+  // each book's index. Typing the bare page number for one of these is ambiguous.
+  // Split-page and title data for each book, pulled from each book's own index.
+  const SPLIT_PAGES = {
+    ShH2012: [1,3,4,5,6,7,9,12,13,18,22,24,28,43,60,65,70,76,83,89,96,104,119,120,129,134,140,158,218,236,241,246,248,260,264,276,288,298,300,314,316,321,326,330,340,344,346,348,354,356,364,374,378,404,408,414,418,420,424,432,434,438,443,444,446],
+    VPH2024: [50,102,104,114,203,204,264,281,386],
+    SHM2025: [27,28,29,30,31,32,33,34,36,37,38,39,45,47,48,49,50,52,56,68,69,70,72,73,74,76,77,80,81,82,83,88,101,108,111,123,131,138,145,147,160,163,176,178,213,225,271,274,275,278,285,312,313,323,330,345,347,348,354,378,385,399,410,414,420,423,426,448,452,484,497,499,501,565,569],
+    SHM1991: [28,29,30,31,32,33,34,36,37,38,39,45,47,48,49,50,52,56,68,69,70,72,73,74,76,77,80,81,82,83,88,101,108,111,123,131,138,145,147,160,163,176,213,225,271,274,275,278,285,312,313,323,330,345,348,354,378,385,399,410,426,448,569],
+    SHC2012: [28,29,30,31,32,36,38,45,47,48,49,50,52,54,59,68,70,73,74,76,77,80,83,88,95,101,105,108,111,114,123,124,131,138,145,154,163,176,184,207,225,243,264,265,266,267,268,271,274,275,278,283,285,286,292,293,323,330,331,336,345,348,368,377,378,380,381,385,389,395,398,416,422,426,436,438,440,442,444,445,446,447,453,455,496,504,507,511,513,528,535],
+    CHM2010: [5,22,23,24,25,26,27,28,30,31,32,35,36,40,41,44,45,46,55,56,58,59,61,62,63,66,67,70,72,73,76,78,81,82,86,105,111,121,125,128,130,144,145,146,152,159,161,163,164,167,168,174,204,207,208,210,211,216,218,221,222,225,226,230,232,236,239,244,250,254,256,259,260,261,269,281,310,325,336,338,368,393,396,397,398,399,400,401,402,403,404,405,408,409,410,412,413,415,416,417,418,419,421,422,423,425,432,436,440,448,450,451,452,453,455,456,457,459,460,462,465,467,468,471,472,476,478,486,492,493,496,497,499,500,507,509,510,546,549]
+  };
+
+  const TITLES = {"ShH2012": {"viii": "When Jesus Wept", "1t": "Dublin", "1b": "Rockbridge", "2": "Rhode Island", "3t": "Walk With God", "3b": "North Carolina", "4t": "Knoxville", "4b": "Gravity", "5t": "Angel's Hymn - The lands that long in darkness lay", "5b": "Breaker", "6t": "Asbury", "6b": "Lisbon - Welcome sweet day of rest", "7t": "Supplication", "7b": "Winchester", "8": "Sweet Messenger", "9t": "Bray", "9b": "Isle of Wight", "10": "Something New", "11": "Exultation - Come away to the skies", "12t": "Liberty Hall", "12b": "Stroudwater", "13t": "Bourbon", "13b": "Bethel", "14": "Missionary's Farewell", "15": "Converse", "16": "Martial Trumpet", "17": "Lord is Great", "18t": "Canaan", "18b": "Song of Texas", "19": "Woodbury", "20": "Heavenly Union", "21": "Tender Thought", "22t": "Afflicted Man", "22b": "Psalm 30", "23": "Wesley", "24t": "Consolation - Once more, my soul, the rising day", "24b": "Happiness", "25": "Damascus", "26": "Dying Penitent", "27": "Brookfield", "28t": "Heavenly Dove", "28b": "Peaceful Shore", "29": "Hatfield", "30": "Few Happy Matches", "31": "Bruce's Address", "32": "Sutton New", "33": "Florilla", "34": "Solemn Thought", "35": "Rose Tree", "36": "Our Journey Home", "37": "Spiritual Sailor", "38": "Rome", "39": "Williamstown", "40": "Road's Town", "41": "Flower", "42": "Blooming Wilderness", "43t": "Barby", "43b": "Botetourt", "44": "Burial", "45": "Hiding Place", "46": "Conquering Soldier", "47": "Psalm 46", "48": "Captain Kidd", "49": "Marietta", "50": "Frewsburgh", "51": "Sussex", "52": "David's Victory", "53": "Lisbon - Farewell, dear brethren of the Lord", "54": "Walworth", "55": "Ball Hill", "56": "Maryville", "57": "New Orleans", "58": "Saints' Repose", "60t": "Versailles", "60b": "In Evil Long", "61": "Wabash", "62": "Rapturous Scene", "63": "Coldwater", "64": "Foster", "65t": "Salem - Break off your fears, ye saints", "65b": "I Love the Holy Son of God", "66": "Night of the Grave", "67": "Greenfield", "68": "Ward", "69": "Alstead", "70t": "Imandra", "70b": "Marcus Hook", "71": "Hickman", "72": "Salvation", "73": "Exultation - Burst, ye em’rald gates, and bring", "74": "Come On, My Fellow-Pilgrims", "75": "Farewell", "76t": "Doomsday", "76b": "Mount Watson", "77": "Collins", "78": "Stafford", "79": "Heck", "80": "Pomerania", "81": "Shepherd's Star", "82": "Indian Philosopher", "83t": "Gospel Feast", "83b": "Heavenly Spark", "84": "Lamberton", "85": "Harvest Field", "86": "Song of Moses", "87": "Babylonian Captivity", "88": "Warwick", "89t": "Stephens", "89b": "Worship", "90": "Wedlock", "91": "Redemption - Come friends and relations", "92": "Staunton", "93": "Mosley", "94": "Rickmansworth", "95": "Boundless Love", "96t": "Summer", "96b": "Leaning on Jesus' Breast", "98": "Markham", "99": "Hartford", "100": "John Adkins' Farewell", "101": "Madness", "102": "Holy City", "103": "Babe of Bethlehem", "104t": "Time is Winging Us Away", "104b": "Power", "105": "Petition", "106": "Bunker Hill - Why should vain mortals tremble", "107": "Exalted Hope", "108": "Amazing Grace", "109": "Zion's Walls", "110": "Justice", "111": "Hark, Hark", "112": "Better Days Coming", "113": "Sweet Harmony", "114": "Youthful Blessings", "115": "Complaint - Ah! whither should I go", "116": "Eden of Love", "117": "Buckfield", "118": "Lochleven", "119t": "Lamentation - Death, like an overflowing stream", "119b": "Legacy", "120t": "I Walked Abroad", "120b": "Kershaw", "121": "Hermon", "122": "Russell", "123": "Intercession", "124": "Gone to Rest", "125": "Islington", "126": "Shoreham", "127": "Pembroke", "128": "Cross For You and Me", "129t": "Hudson", "129b": "Freta", "130": "Absent Love", "131": "Zion's Call", "132": "Star in the East", "133": "Shouting Pilgrim", "134t": "Pleasant Forest", "134b": "Lamentation - When we our wearied limbs to rest", "136": "Perfect Love", "137": "To That Land", "138": "Spring", "139": "Hull", "140t": "Jehalah", "140b": "Ten Thousand Charms", "142": "Douglasville", "143": "Consolation New", "144": "Mountain", "145": "Etheridge", "146": "Samanthra", "147": "River of Jordan", "148": "Malotten", "149": "Reflection", "150": "Templeton", "151": "Thorn", "152": "Royal Proclamation", "153": "Carmel", "154": "Venus", "155": "Castine", "156": "Female Convict", "157": "Nuremburg", "158t": "Farewell Hymn", "158b": "Appletree", "160": "Admiration", "161": "Harvest Hymn", "162": "All Is Well", "163": "My Brethren All", "164": "Plainfield", "165": "Doleful Sound", "166": "Voorheesville", "167": "Bondage", "168": "New Durham", "169": "Okefenokee", "170": "Amboy", "171": "Catalina", "172": "St. James", "173": "Jacob's Well", "174": "Faithful Soldier", "175": "Changing Seasons", "176": "Worthy the Lamb", "177": "Coromandel", "178": "Effort", "179": "Separation", "180": "Glory Shone Around", "181": "Good Physician", "182": "Swain", "183": "Paris", "184": "Sinai", "186": "Worlds Beyond the Sky", "187": "Bright Season", "188": "Lewisburgh", "190": "Harewell", "191": "Richmond", "192": "Bunker Hill - We are expos’d all day to die", "193": "Solitude in the Grove", "194": "Despair - Deep in a cold, a joyless cell", "195": "Hudson Valley", "196": "Turtle Dove", "197": "Sixty-Five South", "198": "Newport", "199": "Carlisle", "200": "Attention", "201": "Diana", "202": "Morpheus", "203": "Forster", "204": "Wake Up", "205": "Marion", "206": "Experience", "207": "Friendship - When shall we meet again?", "208": "Interrogation", "209": "Consolation - Why do we mourn departing friends", "210": "Amanda", "211": "Despair - O now Amanda’s dead and gone", "212": "Augusta", "213": "Machias", "214": "Northborough", "216": "Southborough", "217": "Juniata", "218t": "Redeeming Grace", "218b": "Roslin Castle", "220": "Morning Star", "221": "Friendship - Friendship to ev’ry willing mind", "222": "Funeral Hymn", "223": "America - When God reveal’d his gracious name", "224": "Preparation", "225": "Surprise", "226": "Thorny Desert", "227": "Berne", "228": "Milinda", "229": "Beggar", "230": "Somerset", "231": "Olivet", "232": "Davisson's Retirement", "233": "Hosannah", "234": "Washington", "235": "Baltimore", "236t": "Wantage", "236b": "Maquoketa", "238": "Dover", "239": "Voice to the Shepherds", "240": "Sons of War", "241t": "Sinner, Can You Hate the Savior", "241b": "Strizak", "242": "Boulder", "243": "Balm in Gilead", "244": "Concert", "245": "Boston", "246t": "Palms of Victory", "246b": "Amelia", "247": "Crumbly", "248t": "Singing Pilgrim", "248b": "Triumph", "249": "Spring Valley", "250": "Carnsville", "251": "Jordan's Shore", "252": "New Bethlehem", "253": "My Native Land", "254": "Pennsylvania - The God of glory sends his summons", "256": "Windsor", "257": "Voice of Nature", "258": "Lamentation - Millions of years may roll away", "259": "Mecklinburg", "260t": "Conflict", "260b": "Bowen", "262": "Charlston", "263": "Sudbury", "264t": "Animation", "264b": "Millbrook", "265": "Evening Hymn", "266": "Austria", "268": "Tranquility", "269": "Broad Street Ministry", "270": "Tender-Hearted Christian", "271": "When Shall We All Meet Again", "272": "Sounding Joy", "273": "Chockset", "274": "Zion", "276t": "Salem - Weak is the effort of my heart", "276b": "Family Bible", "278": "Hauff", "279": "Miles' Lane", "280": "Psalm 89", "281": "Psalm 25", "282": "Pennsylvania - When shall thy lovely face be seen?", "284": "Bethesda Pool", "285": "Eternity", "286": "Turner", "287": "Kittery", "288t": "Savannah", "288b": "Mississippi", "290": "Harmony", "292": "Joyful Noise", "293": "Celestial Watering", "294": "Anthem from Isaiah 45:3", "296": "Unitia", "297": "Night Thought", "298t": "Little Marlborough", "298b": "Balloon", "300t": "Harmony Grove", "300b": "Livonia", "302": "Paradise - How long, dear Savior, O, how long", "303": "Cumberland - Come all ye happy race", "304": "Mortality - Stoop down my thoughts", "305": "Tho' Dark Be My Way", "306": "Buonaparte", "307": "Jolly Soldier", "308": "Pastoral Elegy", "309": "Overton", "310": "Wigan", "311": "Greenpoint", "312": "Hermit", "313": "Olive Shade", "314t": "Texas", "314b": "Transport", "316t": "Pacolet", "316b": "Fluvanna", "318": "Soldier's Return", "319": "Salutation", "320": "Wellington", "321t": "Poor Pilgrim", "321b": "Vienna", "322": "Parrish", "323": "Abingdon", "324": "Scotland", "326t": "We've No Abiding City Here", "326b": "Good Old Way", "328": "Joyful Sound", "329": "Majesty", "330t": "Day of Judgment", "330b": "Judgment", "332": "Bonnie Doon", "333": "True Happiness", "334": "Gethsemane", "335": "Rockingham", "336": "Devotion", "338": "Meek", "339": "Begone Unbelief", "340t": "Princeton", "340b": "Whitestown", "342": "Mount Olive", "344t": "Suffering Savior", "344b": "Springfield", "346t": "Warren", "346b": "Sheffield", "348t": "Sovereign Grace", "348b": "Birmingham", "350": "Gardiner", "351": "Hallowell", "352": "Cumberland - The God of glory sends his summons", "354t": "Solemnity", "354b": "Montague", "356t": "Liberty Tree", "356b": "Braintree", "358": "Dance in the Sky", "359": "Christian's Delight", "360": "Mount Calvary", "361": "Georgia - Return, O God of love, return", "362": "Westminster", "363": "Constrained by Love", "364t": "Confidence", "364b": "Stony Island", "366": "Harper's Lament (or Runie's Farewell)", "367": "Hymn of the Dunkers", "368": "Will You Go", "369": "Worthington", "370": "Cowling", "371": "Landaff", "372": "Candler Park", "373": "Weeping Mary", "374t": "Martyrs", "374b": "Epiphonema", "376": "Friendship - Thy wrath lies heavy on my soul", "377": "Glasgow", "378t": "Sweet Heaven", "378b": "Pleasant Valley", "380": "Autumn", "381": "Abenaki", "382": "Grafton", "384": "Agatite", "385": "Soda", "386": "Georgia - Hark, hark what news the angels bring", "387": "Christmas Hymn", "388": "Judea", "389": "Angel's Hymn - Hark, ye mortals, hear the trumpet", "390": "Ohio", "392": "Solitude New", "393": "He Hath Done All Things Well", "394": "Christian's Triumph", "395": "Camden", "396": "Sylvia", "397": "Namur", "398": "Election Hymn", "399": "Humble Penitent", "400": "Moreen", "401": "Hallelujah", "402": "Buzzard's Glory", "403": "Hicks' Farewell", "404t": "Paradise - I know that my Redeemer lives", "404b": "Redeeming Love", "406": "Complaint - Save us, O Lord, aloud we pray", "407": "Woburn", "408t": "Bennington", "408b": "Shepherds Arise", "410": "Trumble", "411": "Missouri", "412": "America - From all that dwell below the skies", "413": "Marcia", "414t": "Condescension", "414b": "Poole", "416": "Psalm 136", "417": "Friend", "418t": "Rochester", "418b": "Leicester", "420t": "O Turn Ye", "420b": "Bellevue", "422": "We'll Go On", "423": "Brier Island", "424t": "Musgrove", "424b": "Walpole", "426": "Sunday", "427": "Judgment", "428": "Psalm 119", "429": "Symyadda", "430": "Providence", "431": "North Providence", "432t": "New Monmouth", "432b": "Columbia", "434t": "French Broad", "434b": "Wilscot", "436": "Dominion", "437": "Exultation - When the last trumpet’s awful voice", "438t": "Lovely Vine", "438b": "Shiloh", "440": "Arinello", "441": "Beside the Gospel Pool", "442": "East Needham", "443t": "Crucifixion - Saw ye my Savior", "443b": "Dayton", "444t": "Ye Objects of Sense", "444b": "Pomfret", "446t": "Dunlap's Creek", "446b": "Song of Praise", "448": "Carol", "449": "Edenton", "450": "Lover's Lamentation", "452": "Solitude", "453": "Crucifixion - Behold, the Savior of mankind", "456": "Mortality - Our moments fly apace", "457": "Redemption - Glory to God on high"}, "VPH2024": {"1": "Agur's Wish", "2": "Sonnet", "3": "Attention", "4": "Portsmouth", "5": "General Roll Call, The", "6": "New Grace (Hallelujah)", "7": "Prodigal", "8": "Agreement (Union)", "9": "Hiding Place", "10": "Meeting of the Waters", "11": "Kentucky", "12": "Knowledge of Jesus", "13": "Wallace", "14": "Orleans", "15": "New Grafton", "16": "Teach Me the Measure", "17": "Messiah", "18": "Shelbyville", "19": "House of the Lord", "20": "Fair Margaret", "21": "Fiducia", "22": "Happy Man, The", "23": "Psalm 59", "24": "We'll March around Jerusalem", "25": "Garber", "26": "Revelee", "27": "Watts' Lyre", "28": "Quaker Courtship", "29": "Nylsvley", "30": "Oakland", "31": "Bedford", "32": "A Rest Remains", "33": "Cincinnati", "34": "Angels' Song", "35": "Manayunk", "36": "Request, The (The Infant Request)", "37": "Bath", "38": "Judgment", "39": "Conviction (Gossip)", "40": "Backslider", "41": "Oil of Grace", "42": "Invitation", "43": "Malinda", "44": "All Is Well", "45": "In Guilt's Dark Dungeon", "46": "Surp", "47": "Jackson", "48": "Hosannah", "49": "Berlin", "50t": "Farewell Vain World", "50b": "Savior, I Come", "51": "January", "52": "Hallelujah", "53": "Sabbath Morning", "54": "Mytilene (Conversion)", "55": "Vain Prosperity", "56": "Morning", "57": "Time Flies", "58": "Carkeek", "59": "Shepherd", "60": "Vain World Adieu", "61": "Earthly Home Adieu", "62": "Prodigal", "63": "Jerusalem", "64": "Hermon", "65": "No Coward Soul", "66": "Khabbaz", "67": "Jubilee (The Jubilee Trump)", "68": "Shawsville", "69": "Harpeth", "70": "Passover", "71": "Bower, The", "72": "New Orleans", "73": "Dvorah", "74": "Wise Are They", "75": "Fairview", "76": "New Salem", "77": "Cumberland", "78": "As Thy Days", "79": "God's Image", "80": "Oh, They Crucified My Savior", "81": "O, What a Band", "82": "Dukedom", "83": "Watchman", "84": "Come Ye To the Waters", "85": "Easton", "86": "On Heaven", "87": "Lebanon", "88": "Vanitas", "89": "Veneration", "90": "Homer", "91": "Evening Star", "92": "Italy", "93": "Glory, Glory", "94": "Maryland", "95": "Suffield", "96": "Regina's Song", "97": "Gardena", "98": "Yonder Bright Abode (Frog & Mouse)", "99": "Sunday School Farewell", "100": "Weevily Wheat", "101": "Paris", "102t": "Death Have You Got No Shame", "102b": "Fly Like Thee", "103": "May", "104t": "Ruth 1:16", "104b": "River, The", "106": "Foundation", "107": "Lamentation", "108": "Bealle", "109": "Morning Hymn", "110": "Another's Sorrow", "111": "Covington", "112": "Heavenly Treasure", "113": "Little Bear Creek", "114t": "Cedar Street", "114b": "Brighton", "116": "Faithful", "117": "Morning Meditation", "118": "How I Want to Go", "119": "Warning Voice", "120": "Brooklyn", "121": "Itinerant, The", "122": "Evening Meditation", "123": "New Sharon", "124": "Shining Shore", "125": "Lament (Blessed Mary)", "126": "Windows of Grace", "127": "Come to Zion", "128": "Enquirer, The", "129": "Union (Experience)", "130": "Bangor", "131": "Out in the Fields with God", "132": "Hickman", "133": "Annapolis", "134": "New Lisbon (The Betrayal)", "135": "Christ in the Garden", "136": "Praise", "137": "Cheerful", "138": "County Down", "139": "Weeping Mary", "140": "Union", "141": "Kay", "142": "Carolina", "143": "Wolf Creek", "144": "Idumea", "145": "I am bound for the Kingdom", "146": "Mount Calvary", "147": "Meeting is Over", "148": "Submission", "149": "Humiliation", "150": "Mourning Souls", "151": "Assurance", "152": "Port Royal", "153": "Lion and Unicorn", "154": "Watchman's Voice, The", "155": "Happy Land", "156": "Pretty Peggy", "157": "Want No More", "158": "Aurelius (Gospel Trumpet)", "159": "Deliverance", "160": "Pilgrim's Consolation", "161": "Shady Grove", "162": "Walsal", "163": "Children of a King", "164": "Emerald Gates", "165": "Jonesborough", "166": "Casimire", "167": "Madison Place", "168": "Advent", "169": "Harvest Home", "170": "Alphamadele", "171": "Here Is No Rest", "172": "Little Worth", "173": "Bethel Street", "174": "Conflagration", "175": "Sun-Bright Clime", "176": "Autumn Leaves", "177": "Agostine", "178": "Redemption", "179": "Harvest Ode", "180": "Pilgrim's Lot", "181": "Colchester New", "182": "Invitation", "183": "Zion's Light", "184": "Lowville", "185": "Love to Jesus", "186": "Convert's Song", "187": "Harmony", "188": "Brooklyne", "189": "Penitence", "190": "Indiana", "191": "Dundee", "192": "Gospel Banner", "193": "Monroe", "194": "Hermit", "195": "Waterford", "196": "Neumark", "197": "All Saints Old (Wareham)", "198": "Hartford", "199": "Evening Hymn", "200": "Promised Land, The", "201": "Delorese", "202": "Third Creek", "203t": "Gloom of Autumn", "203b": "West Third", "204t": "Vincennes", "204b": "Victory", "206": "Poelsweg", "207": "Zynder-Zee", "208": "Page Street", "209": "Polly Vaughn", "210": "Repose", "211": "Pilgrim's Song, The", "212": "Sutton", "213": "Come on, My Friends", "214": "Protection", "215": "Consolation", "216": "Jerusalem New", "217": "Midsummer", "218": "Blandy", "219": "Conscience", "220": "Consideration", "221": "Meditation", "222": "Farabee", "223": "Tremont Street", "224": "Nineveh", "225": "Sarabavam", "226": "Experience", "227": "Greenwood (The Unquiet Grave)", "228": "Abby", "229": "Inspiration", "230": "Rocky Nook", "231": "Decay", "232": "Truth From Above", "233": "Wheat or Tare", "234": "Garden", "235": "Prunus", "236": "Palestine", "237": "Lions' Den", "238": "Hyssop", "240": "Fidelia", "242": "Star of Columbia", "244": "Penitence", "245": "The Narrow Way", "246": "Judgment", "247": "Peter's Fire", "248": "Jane's Encouragement", "249": "Dickinson", "250": "Woolman", "251": "Long Beach", "252": "Lynn", "254": "Triumph", "255": "Sixty-Seventh Psalm", "256": "Speyside", "257": "Price", "258": "Portland", "259": "Uppsala", "260": "Salem", "262": "Sanborton", "263": "Indiana", "264t": "Christian Love", "264b": "Far from My Heart", "265": "Morning Sun", "266": "Diviner Harmony", "267": "Minnehaha", "268": "Bethlehem", "269": "Ridgeville", "270": "So Walk", "271": "Dezarn", "272": "Motherheart", "273": "Lancaster", "274": "Devizes", "275": "Communion", "276": "Bye Baby Bunting", "277": "Hans", "278": "Table Hymn", "279": "Margery Daw", "280": "Kind Thoughts (Dance Little Baby)", "281t": "All the Pretty Little Horses", "281b": "Unity", "282": "Parent's Plea, A", "283": "Communion", "284": "Briar Ridge", "285": "Crown Point", "286": "Phalia", "288": "Foolish Virgins, The", "289": "Gospel is Advancing, The", "290": "Gospel Trumpet", "293": "Bellingham", "294": "Funeral", "295": "Sunbury", "297": "Joy and Sorrow", "298": "Pilgrims' Consolation", "299": "Elevation", "300": "Farewell", "301": "Miss Hataway's Experience", "302": "Crown of Life", "303": "Desert Spring", "304": "Joyful Sound", "305": "Morning Star", "306": "Slow Traveller", "307": "Centreville", "308": "Friendship", "309": "Old Brethren", "310": "Von Guten Mächten", "311": "Glorious Crown", "312": "St. John's", "313": "Invitation", "314": "Edwin", "315": "Friendship in Absence", "316": "Satisfied", "317": "Singers' Farewell", "318": "Bluebird", "319": "Wanderer, The", "320": "Soldiers' Home", "321": "Graves County", "322": "There's a Place", "323": "McKrey", "324": "Lost Harp", "325": "Pickard's Hymn", "326": "Brownson", "327": "Invitation", "328": "Dismission", "329": "Raleigh", "330": "Edinburgh", "331": "Repose", "332": "Mouldering Vine, The", "333": "Calvary New", "334": "Calhoun", "335": "Jesus at Thy Command (Lenox)", "336": "Mount Pleasant", "337": "Illinois", "338": "\"O\" Dock (Land of Rest)", "339": "Psalm 84", "340": "Germany", "341": "Pisgah", "342": "So Did We", "343": "South Carolina", "344": "Psalm 57", "345": "Psalm 23", "346": "Rejoice in Thy Youth", "347": "Days of My Youth", "348": "Daniel", "349": "Goodell", "350": "Manatawny", "351": "Mendon", "352": "Greenwood Laddie", "353": "Love-feast (Richie's Story)", "354": "Barbara Allen", "355": "Expostulation", "356": "Shields", "357": "Shepherd's Joy", "358": "Poyner's Lamentation 2nd", "359": "Millville", "360": "Farewell", "361": "New Farewell", "362": "Broomsgrove", "363": "Cooper", "364": "Lexington", "365": "Brunswick", "366": "Dublin", "367": "Sinner and Saint", "368": "Solemn Thought", "369": "Fairton", "370": "Celestial Light", "371": "Pilgrim's Quest", "372": "Hanover", "373": "New Year", "374": "Norwich", "375": "South Second", "376": "Resolution", "377": "Bladensburg", "378": "Lavy", "379": "Conococheague", "380": "Perseverance", "381": "Bearskin", "382": "Worrall", "383": "Melody", "384": "Prospect", "385": "Pleading Savior", "386t": "Wedding Hymn", "386b": "Washington", "387": "Parting Hymn", "388": "Spring Beauty", "389": "Stone"}, "SHM2025": {"26": "Samaria", "27t": "Bethel", "27b": "Rochester", "28t": "Aylesbury", "28b": "Wells", "29t": "Fairfield", "29b": "Tribulation", "30t": "Love Divine", "30b": "Prospect", "31t": "Ninety-Third Psalm", "31b": "Webster", "32t": "Corinth", "32b": "Distress", "33t": "Weeping Savior", "33b": "Abbeville", "34t": "The Gospel Pool", "34b": "St. Thomas", "35": "Saints Bound for Heaven", "36t": "America", "36b": "Ninety-Fifth", "37t": "Ester", "37b": "Liverpool", "38t": "Winter", "38b": "Windham", "39t": "Detroit", "39b": "Sharpsburg", "40": "Lenox", "41": "Evening Hymn", "42": "Clamanda", "43": "Primrose Hill", "44": "The Converted Thief", "45t": "New Britain", "45b": "Imandra New", "46": "Let Us Sing", "47t": "Primrose", "47b": "Idumea", "48t": "Devotion", "48b": "Kedron", "49t": "Old Hundred", "49b": "Mear", "50t": "Devotion", "50b": "Canaan", "51": "Star in the East", "52t": "Albion", "52b": "Charlestown", "53": "Jerusalem", "54": "Russell", "55": "Converse", "56t": "Columbiana", "56b": "Villulia", "57": "Christian Soldier", "58": "Pisgah", "59": "Holy Manna", "60": "Day of Worship", "61": "Sweet Rivers", "62": "Parting Hand", "63": "Coronation", "64": "Nashville", "65": "Sweet Prospect", "66": "Jordan", "67": "Columbus", "68t": "Salem", "68b": "Ortonville", "69t": "Minister's Farewell", "69b": "Farewell to All", "70t": "Gainsville", "70b": "Save, Mighty Lord", "71": "Leander", "72t": "The Weary Soul", "72b": "Bellevue", "73t": "Cusseta", "73b": "Arlington", "74t": "The Enquirer", "74b": "King of Peace", "75": "I Would See Jesus", "76t": "Holiness", "76b": "Desire for Piety", "77t": "The Child of Grace", "77b": "Holcombe", "78": "Stafford", "79": "The Old Ship of Zion", "80t": "Troubles Over", "80b": "Service of the Lord", "81t": "Beach Spring", "81b": "Windlesham", "82t": "Bound for Canaan", "82b": "Edgefield", "83t": "Vale of Sorrow", "83b": "The Dying Minister", "84": "Amsterdam", "85": "The Morning Trumpet", "86": "Poland", "87": "Sweet Canaan", "88t": "Done with the World", "88b": "Mount Zion", "89": "The Church's Desolation", "90": "Look Out", "91": "Assurance", "92": "Burk", "93": "Frozen Heart", "94": "Never Part", "95": "Vernon", "96": "Few Happy Matches", "97": "We'll Soon Be There", "98": "Dull Care", "99": "Gospel Trumpet", "100": "The Bower of Prayer", "101t": "Canaan's Land", "101b": "Holy City", "102": "Fulfillment", "103": "Animation", "104": "The Lovely Story", "105": "Jewett", "106": "Ecstasy", "107": "Russia", "108t": "Weeping Sinners", "108b": "The Traveler", "109": "Carnsville", "110": "Mount Vernon", "111t": "Journey Home", "111b": "To Die No More", "112": "The Last Words of Copernicus", "113": "The Prodigal Son", "114": "Saint's Delight", "115": "Holbrook", "116": "Hooper", "117": "Babylon Is Fallen", "118": "Heavenly Meeting", "119": "Heaven's My Home", "120": "Chambers", "121": "Florence", "122": "All Is Well", "123t": "The Dying Christian", "123b": "Cross of Christ", "124": "Lover of the Lord", "125": "Expression", "126": "Babel's Streams", "127": "Green Fields", "128": "The Promised Land", "129": "Heavenly Armor", "130": "The Old Graveyard", "131t": "Messiah", "131b": "Invocation", "132": "Sinner's Friend", "133": "Hebrew Children", "134": "The Christian's Hope", "135": "Olney", "136": "Morality", "137": "Liberty", "138t": "Adoration", "138b": "Ogletree", "139": "Elysian", "140": "Moreno", "141": "Complainer", "142": "Stratfield", "143": "Pleyel's Hymn Second", "144": "Jubilee", "145t": "Warrenton", "145b": "Sweet Affliction", "146": "Hallelujah", "147t": "Boylston", "147b": "Laban", "148": "Jefferson", "149": "The Trumpet", "150": "Amity", "151": "Symphony", "152": "Shepherds Rejoice", "153": "Resurrected", "154": "Rest for the Weary", "155": "Northfield", "156": "Jesus Rose", "157": "Essay", "158": "Funeral Thought", "159": "Wondrous Love", "160t": "Prosperity", "160b": "Turn, Sinner, Turn", "161": "Southminster", "162": "Plenary", "163t": "Morning", "163b": "China", "164": "Duane Street", "165": "Family Bible", "166": "Still Better", "167": "Pray, Brethren, Pray", "168": "Cowper", "169": "God's Helping Hand", "170": "Exhilaration", "171": "Exhortation", "172": "Harmony", "173": "Phoebus", "174": "Petersburg", "175": "Highlands of Heaven", "176t": "Ragan", "176b": "Blooming Youth", "177": "The Christian's Flight", "178t": "Africa", "178b": "Gaines", "179": "The Christian Warfare", "180": "Vermont", "181": "Exit", "182": "Newburgh", "183": "Greenwich", "184": "And Jesus Crucified", "185": "Pilgrim's Farewell", "186": "Sherburne", "187": "Protection", "188": "Ephesus", "189": "Montgomery", "191": "Virginia", "192": "Schenectady", "193": "Huntington", "195": "Worcester", "196": "Alabama", "197": "Georgia", "198": "Green Street", "200": "Edom", "201": "Pilgrim", "202": "New Lebanon", "203": "Florida", "204": "Mission", "205": "Pleasant Hill", "206": "Christian's Hope", "207": "Louisiana", "208": "Traveling On", "209": "Evening Shade", "210": "Lena", "211": "Whitestown", "212": "Sharon", "213t": "The Good Old Way", "213b": "Trembling Spirit", "214": "Repentance", "215": "New Topia", "216": "Delight", "217": "Ballstown", "218": "Mount Pleasant", "219": "He Hath Saved Us", "220": "Mount Zion", "222": "Ocean", "223": "Balm in Gilead", "224": "Save, Lord, or We Perish", "225t": "Reynolds", "225b": "Christmas Anthem", "227": "Ode of Life's Journey", "228": "Marlborough", "229": "Irwinton", "230": "Converting Grace", "231": "Seiler", "232": "Baptismal Anthem", "234": "Reverential Anthem", "235": "Long Sought Home", "236": "Easter Anthem", "240": "Christian Song", "242": "Revere", "243": "Stanton", "244": "Plevna", "245": "Claremont", "250": "Heavenly Vision", "254": "Warsaw", "255": "Mechanicville", "256": "Northampton", "257": "Manatawny", "258": "Inspiration", "259": "Easton", "260": "Farewell Anthem", "263": "Every Grace", "264": "Night Song", "265": "Gwehelog", "266": "Chambersburg", "267": "Parting Friends", "268": "David's Lamentation", "269": "Bear Creek", "270": "Confidence", "271t": "Arkansas", "271b": "Restoration", "272": "Exhortation", "273": "Milford", "274t": "The Golden Harp", "274b": "Roll Jordan", "275t": "Loving-Kindness", "275b": "Roll On", "276": "Bridgewater", "277": "Antioch", "278t": "Love Shall Never Die", "278b": "Traveling Pilgrim", "279": "Mink Hollow", "280": "Westford", "282": "I'm Going Home", "283": "Sabbath Morning", "284": "Garden Hymn", "285t": "Arnold", "285b": "Land of Rest", "286": "Heavenly Home", "287": "Cambridge", "288": "White", "289": "Greensborough", "290": "Victoria", "291": "Majesty", "292": "Behold the Savior", "293": "Midnight Hour", "294": "Rocky Road", "295": "Iowa", "296": "Sardinia", "297": "Conversion", "298": "Providence", "299": "New Jerusalem", "300": "Calvary", "301": "Greenland", "302": "Logan", "303": "Heavenly Land", "304": "Morgan", "306": "Oxford", "308": "The Lost City", "309": "Living Lamb", "310": "Weeping Savior", "311": "Silver Street", "312t": "Sing to Me of Heaven", "312b": "Restoration", "313t": "Concord", "313b": "Cobb", "314": "Cleburne", "315": "Immensity", "316": "New Hope", "317": "Jackson", "318": "Present Joys", "319": "Religion Is a Fortune", "320": "Funeral Anthem", "321": "Newnan", "322": "Man's Redemption", "323t": "Mullins", "323b": "Kingswood", "324": "North Port", "325": "Soldier of the Cross", "326": "Weary Pilgrim", "327": "Invitation", "328": "Praise God", "329": "Vain World Adieu", "330t": "Fellowship", "330b": "Chandesse", "332": "Sons of Sorrow", "333": "Family Circle", "334": "Bainbridge Island", "335": "Return Again", "336": "Eternal Home", "337": "Mercy's Free", "338": "Sawyer's Exit", "339": "When I Am Gone", "340": "Odem", "341": "The Lone Pilgrim", "342": "The Old-Fashioned Bible", "343": "Happy Home", "344": "Rainbow", "345t": "Jesus Is My Friend", "345b": "I'm on My Journey Home", "346": "The American Star", "347t": "Christian's Farewell", "347b": "Humility", "348t": "Ainslie", "348b": "Fleeting Days", "349": "A Cross for Me", "350": "Nativity", "351": "Pittsford", "352": "Swanton", "353": "McGraw", "354t": "Lebanon", "354b": "Happy Land", "355": "Torrington", "356": "Boundless Grace", "357": "Kedar", "358": "Murillo's Lesson", "359": "The Bride's Farewell", "360": "The Royal Band", "361": "Loving Jesus", "362": "Norwich", "364": "Southwell", "366": "Bremen", "367": "Nassau", "368": "Stony Point", "369": "Send a Blessing", "370": "Monroe", "371": "Heavenly Dove", "372": "Rockport", "373": "Homeward Bound", "374": "Oh, Sing with Me!", "375": "Love the Lord", "376": "Help Me to Sing", "377": "Eternal Praise", "378t": "Heavenly Port", "378b": "Never Turn Back", "379": "Span of Life", "380": "Lawrenceburg", "381": "Wells Second", "382": "Coston", "383": "Eternal Day", "384": "Panting for Heaven", "385t": "Fight On", "385b": "Can I Leave You?", "386": "Christ Our Song", "387": "Penick", "388": "The Happy Sailor", "389": "Fredericksburg", "390": "New Prospect", "391": "Sounding Joy", "392": "Manchester", "393": "Rebekah", "394": "The Messiah's Praise", "395": "Unrath", "396": "Notes Almost Divine", "397": "The Fountain", "398": "The Dying Boy", "399t": "The Dying Friend", "399b": "Happy Christian", "400": "Struggle On", "401": "Cuba", "402": "Protection", "403": "Heavenly Rest", "404": "Youth Will Soon Be Gone", "405": "The Marcellas", "406": "New Harmony", "407": "Charlton", "408": "Weeping Mary", "409": "Exeter", "410t": "The Dying Californian", "410b": "Mutual Love", "411": "Morning Prayer", "412": "New Hosanna", "413": "Buffam Falls", "414t": "Farewell Brethren", "414b": "Parting Friend", "415": "Endless Praise", "416": "The Christian's Nightly Song", "417": "Weeping Pilgrim", "418": "Rees", "419": "Melancholy Day", "420t": "Tides of Love", "420b": "Bishop", "421": "Sweet Morning", "422": "Burdette", "423t": "Grantville", "423b": "Hall", "424": "Sweet Union", "425": "Golden Streets", "426t": "Kelley", "426b": "Jasper", "428": "World Unknown", "429": "Red Sands", "430": "Arbacoochee", "431": "New Bethany", "432": "Cheves", "433": "Springdale", "434": "Fillmore", "435": "Sacred Rest", "436": "Morning Sun", "437": "Enoch", "438": "The Blind Girl", "439": "Jordan", "440": "North Salem", "441": "Raymond", "442": "New Jordan", "444": "All Saints New", "445": "Passing Away", "446": "Infinite Day", "447": "Wondrous Cross", "448t": "Consecration", "448b": "The Grieved Soul", "449": "Lovely Social Band", "450": "Elder", "451": "Milton", "452t": "Peterborough", "452b": "Martin", "453": "Newbury", "454": "The Better Land", "455": "Soar Away", "456": "Sacred Mount", "457": "Wayfaring Stranger", "458": "Friendship", "459": "Hurricane Creek", "460": "Sardis", "461": "John 3:37", "462": "Faith and Hope", "463": "Morel", "464": "Sheppard", "465": "Where There's No Trouble and Sorrow", "466": "Haynes Creek", "467": "Lisbon", "468": "Soul's Delight", "469": "Thy Strength", "470": "The Mercy Seat", "471": "Becket", "472": "Akin", "473": "Carmarthen", "474": "Mount Desert", "475": "A Thankful Heart", "476": "Eternal Ages", "477": "Lord, We Adore Thee", "478": "Helen Hills Hills", "479": "Chester", "480": "Redemption", "481": "Novakoski", "482": "Mulberry Grove", "483": "Golden Gardens", "484t": "Millbrook", "484b": "Parwich", "485": "New Agatite", "486": "Beneficence", "487": "Lowndes", "488": "Radiance", "489": "The Savior's Call", "490": "My Shepherd Guides", "491": "Eagles' Wings", "492": "Invocation", "493": "Blessed Road", "494": "Harrison", "495": "The Midnight Cry", "496": "The Rock That Is Higher than I", "497t": "Natick", "497b": "Supplication", "498": "The Resurrection Day", "499t": "Pastures Green", "499b": "At Rest", "500": "Living Hope", "501t": "Penn", "501b": "O'Leary", "502": "New York", "503": "Lloyd", "504": "Wood Street", "505": "Where Ceaseless Ages Roll", "506": "The Ark", "507": "Woodlands", "508": "Sermon on the Mount", "510": "Corley", "511": "The Great Redeemer", "512": "The Spirit Shall Return", "513": "Oakland", "514": "Choctawhatchee", "515": "Rockbridge", "516": "Granada", "517": "Mars Hill", "518": "Heavenly Anthem", "520": "Ata", "521": "Parting Friends", "522": "Ye Heedless Ones", "523": "Just for a Day", "524": "Moonlight", "525": "Imandra", "526": "Schwab", "527": "My Life and Breath", "528": "Showers of Blessings", "530": "A Glad New Song", "531": "Clayton", "532": "Peace and Joy", "534": "New Georgia", "535": "Shawmut", "536": "Sweet Majesty", "537": "Portsmouth", "538": "Hampton", "539": "Simena", "540": "Nidrah", "541": "Willkie", "542": "I'll Seek His Blessings", "543": "Thou Art God", "544": "Youthful Blessings", "545": "Somers", "546": "My Brightest Days", "547": "Granville", "548": "Wootten", "549": "Phillips' Farewell", "550": "Blissful Dawning", "551": "Jacob's Vision", "553": "Anthem on the Beginning", "556": "Portland", "557": "New Farewell", "558": "Living Streams", "560": "My Home", "561": "Cunningham", "562": "Mournful Joy", "563": "Suffield", "564": "Zion", "565t": "Hebron", "565b": "The Hill of Zion", "566": "Gum Pond", "567": "The Great Day", "568": "I Want to Go to Heaven", "569t": "Emmaus", "569b": "Sacred Throne", "570": "Sleepers Awake!", "571": "Hamrick", "572": "The Lamb of God", "573": "Harpeth Valley", "574": "Thomaston", "575": "Lisbon"}, "SHM1991": {"26": "Samaria", "27": "Bethel", "28t": "Aylesbury", "28b": "Wells", "29t": "Fairfield", "29b": "Tribulation", "30t": "Love Divine", "30b": "Prospect", "31t": "Ninety-Third Psalm", "31b": "Webster", "32t": "Corinth", "32b": "Distress", "33t": "Weeping Savior (First)", "33b": "Abbeville", "34t": "The Gospel Pool", "34b": "St. Thomas", "35": "Saints Bound For Heaven", "36t": "America", "36b": "Ninety-Fifth", "37t": "Ester", "37b": "Liverpool", "38t": "Winter", "38b": "Windham", "39t": "Detroit", "39b": "Sharpsburg", "40": "Lenox", "41": "Home in Heaven", "42": "Clamanda", "43": "Primrose Hill", "44": "The Converted Thief", "45t": "New Britain", "45b": "Imandra", "46": "Let Us Sing", "47t": "Primrose", "47b": "Idumea", "48t": "Devotion", "48b": "Kedron", "49t": "Old Hundred", "49b": "Mear", "50t": "Mortality", "50b": "Humility", "51": "My Home (First)", "52t": "Albion", "52b": "Charlestown", "53": "Jerusalem", "54": "The Blessed Lamb", "55": "Sister's Farewell", "56t": "Columbiana", "56b": "Villulia", "57": "Christian Soldier", "58": "Pisgah", "59": "Holy Manna", "60": "Day of Worship", "61": "Sweet Rivers", "62": "Parting Hand", "63": "Coronation", "64": "Nashville", "65": "Sweet Prospect", "66": "Jordan (First)", "67": "Columbus", "68t": "Salem", "68b": "Ortonville", "69t": "Minister's Farewell", "69b": "Farewell to All (First)", "70t": "Gainsville", "70b": "Save, Mighty Lord", "71": "Leander", "72t": "The Weary Soul", "72b": "Bellevue", "73t": "Cusseta", "73b": "Arlington", "74t": "The Enquirer", "74b": "King of Peace", "75": "I Would See Jesus", "76t": "Holiness", "76b": "Desire For Piety", "77t": "The Child of Grace", "77b": "Holcombe", "78": "Stafford", "79": "The Old Ship of Zion", "80t": "Shouting Song", "80b": "Service of the Lord", "81t": "Beach Spring", "81b": "Cookham", "82t": "Bound For Canaan", "82b": "Edgefield", "83t": "Vale of Sorrow", "83b": "The Dying Minister", "84": "Amsterdam", "85": "The Morning Trumpet", "86": "Poland", "87": "Sweet Canaan", "88t": "Done With the World", "88b": "Mount Zion (First)", "89": "The Church's Desolation", "90": "Look Out", "91": "Assurance", "92": "Burk", "93": "Frozen Heart", "94": "Never Part", "95": "Vernon", "96": "Few Happy Matches", "97": "We'll Soon Be There", "98": "Dull Care", "99": "Gospel Trumpet", "100": "The Bower of Prayer", "101t": "Canaan's Land", "101b": "Holy City", "102": "Fulfillment", "103": "Animation", "104": "The Lovely Story", "105": "Jewett", "106": "Ecstasy", "107": "Russia", "108t": "Weeping Sinners", "108b": "The Traveler", "109": "Carnsville", "110": "Mount Vernon", "111t": "Journey Home", "111b": "To Die No More", "112": "The Last Words of Copernicus", "113": "The Prodigal Son", "114": "Saint's Delight", "115": "Edmonds", "116": "Union", "117": "Babylon Is Fallen", "118": "Stockwood", "119": "Heaven's My Home", "120": "Chambers", "121": "Florence", "122": "All Is Well", "123t": "The Dying Christian", "123b": "Cross of Christ", "124": "Lover of the Lord", "125": "Expression", "126": "Babel's Streams", "127": "Green Fields", "128": "The Promised Land", "129": "Heavenly Armor", "130": "Millennium", "131t": "Messiah", "131b": "Invocation (First)", "132": "Sinner's Friend", "133": "Hebrew Children", "134": "The Christian's Hope", "135": "Olney", "136": "Morality", "137": "Liberty", "138t": "Adoration", "138b": "Ogletree", "139": "Elysian", "140": "Sweet Solitude", "141": "Complainer", "142": "Stratfield", "143": "Pleyel's Hymn (First)", "144": "Jubilee", "145t": "Warrenton", "145b": "Sweet Affliction", "146": "Hallelujah", "147t": "Boylston", "147b": "Laban", "148": "Jefferson", "149": "The Trumpet", "150": "Amity", "151": "Symphony", "152": "Shepherds Rejoice", "153": "Resurrected", "154": "Rest For the Weary", "155": "Northfield", "156": "Jesus Rose", "157": "Essay", "158": "Funeral Thought", "159": "Wondrous Love", "160t": "War Department", "160b": "Turn, Sinner, Turn", "161": "Sweet Home", "162": "Plenary", "163t": "Morning", "163b": "China", "164": "Duane Street", "165": "Family Bible", "166": "Still Better", "167": "Pray, Brethren, Pray", "168": "Cowper", "169": "Dartmouth", "170": "Exhilaration", "171": "Exhortation (First)", "172": "Harmony", "173": "Phoebus", "174": "Petersburg", "175": "Highlands of Heaven", "176t": "Ragan", "176b": "Blooming Youth", "177": "The Christian's Flight", "178": "Africa", "179": "The Christian Warfare", "180": "Vermont", "181": "Exit", "182": "Newburgh", "183": "Greenwich", "184": "Enfield", "185": "Pilgrim's Farewell", "186": "Sherburne", "187": "Protection (First)", "188": "Spring", "189": "Montgomery", "191": "Virginia", "192": "Schenectady", "193": "Huntington", "195": "Worcester", "196": "Alabama", "197": "Georgia", "198": "Green Street", "200": "Edom", "201": "Pilgrim", "202": "New Lebanon", "203": "Florida", "204": "Mission", "205": "Pleasant Hill", "206": "Christian's Hope", "207": "Louisiana", "208": "Traveling On", "209": "Evening Shade", "210": "Lena", "211": "Whitestown", "212": "Sharon", "213t": "The Good Old Way", "213b": "Warning", "214": "Repentance", "215": "New Topia", "216": "Delight", "217": "Ballstown", "218": "Mount Pleasant", "220": "Mount Zion (Second)", "222": "Ocean", "223": "Portuguese Hymn", "224": "Save, Lord, or We Perish", "225t": "Reynolds", "225b": "Christmas Anthem", "227": "Ode on Life's Journey", "228": "Marlborough", "229": "Irwinton", "230": "Converting Grace", "231": "Thou Art Passing Away", "232": "Baptismal Anthem", "234": "Reverential Anthem", "235": "Long Sought Home", "236": "Easter Anthem", "240": "Christian Song", "242": "Ode on Science", "245": "Claremont", "250": "Heavenly Vision", "254": "Rose of Sharon", "260": "Farewell Anthem", "263": "Doddridge", "266": "Kingwood", "267": "Parting Friends (First)", "268": "David's Lamentation", "269": "Bear Creek", "270": "Confidence", "271t": "Arkansas", "271b": "Restoration (First)", "272": "Exhortation (Second)", "273": "Milford", "274t": "The Golden Harp", "274b": "Roll Jordan", "275t": "Loving Kindness", "275b": "Roll On", "276": "Bridgewater", "277": "Antioch", "278t": "Love Shall Never Die", "278b": "Traveling Pilgrim", "279": "The Shepherd's Flock", "280": "Westford", "282": "I'm Going Home", "283": "Sabbath Morning", "284": "Garden Hymn", "285t": "Arnold", "285b": "Land of Rest", "286": "Heavenly Home", "287": "Cambridge", "288": "White", "289": "Greensborough", "290": "Victoria", "291": "Majesty", "292": "Behold the Savior", "293": "Akers", "294": "Rocky Road", "295": "Odem (First)", "296": "Sardinia", "297": "Conversion", "298": "Providence", "299": "New Jerusalem", "300": "Calvary", "301": "Greenland", "302": "Logan", "303": "Heavenly Land", "304": "Morgan", "306": "Oxford", "308": "Parting Friends (Second)", "309": "Living Lamb", "310": "Weeping Savior (Second)", "311": "Silver Street", "312t": "Sing to Me of Heaven", "312b": "Restoration (Second)", "313t": "Concord", "313b": "Cobb", "314": "Cleburne", "315": "Immensity", "316": "New Hope", "317": "Jackson", "318": "Present Joys", "319": "Religion Is a Fortune", "320": "Funeral Anthem", "321": "Newnan", "322": "Man's Redemption", "323t": "Mullins", "323b": "Soft Music", "324": "North Port", "325": "Soldier of the Cross", "326": "Weary Pilgrim", "327": "Invitation", "328": "Praise God", "329": "Vain World Adieu", "330t": "Horton", "330b": "Fellowship", "331": "Jester", "332": "Sons of Sorrow", "333": "Family Circle", "334": "O Come Away", "335": "Return Again", "336": "Eternal Home", "337": "Mercy's Free", "338": "Sawyer's Exit", "339": "When I Am Gone", "340": "Odem (Second)", "341": "The Lone Pilgrim", "342": "The Old-Fashioned Bible", "343": "Happy Home", "344": "Rainbow", "345t": "Jesus Is My Friend", "345b": "I'm On My Journey Home", "346": "The American Star", "347": "Christian's Farewell", "348t": "Ainslie", "348b": "Fleeting Days", "349": "A Cross for Me", "350": "Nativity", "351": "Pittsford", "352": "Swanton", "353": "McGraw", "354t": "Lebanon", "354b": "Happy Land", "355": "Anthem on the Savior", "358": "Murillo's Lesson", "359": "The Bride's Farewell", "360": "The Royal Band", "361": "Loving Jesus", "362": "Norwich", "365": "Southwell", "367": "Consolation", "368": "Stony Point", "369": "Send A Blessing", "370": "Monroe", "371": "Heavenly Dove", "372": "Rockport", "373": "Homeward Bound", "374": "Oh, Sing With Me!", "375": "Love the Lord", "376": "Help Me to Sing", "377": "Eternal Praise", "378t": "Heavenly Port", "378b": "Never Turn Back", "379": "Span of Life", "380": "Lawrenceburg", "381": "Sing On", "382": "Coston", "383": "Eternal Day", "384": "Panting For Heaven", "385t": "Fight On", "385b": "Can I Leave You?", "386": "Christ Our Song", "387": "Penick", "388": "The Happy Sailor", "389": "Fredericksburg", "390": "New Prospect", "391": "Sounding Joy", "392": "Manchester", "393": "Alexander", "394": "The Messiah's Praise", "395": "New Bethel", "396": "Notes Almost Divine", "397": "The Fountain", "398": "The Dying Boy", "399t": "The Dying Friend", "399b": "Happy Christian", "400": "Struggle On", "401": "Cuba", "402": "Protection (Second)", "403": "Heavenly Rest", "404": "Youth Will Soon Be Gone", "405": "The Marcellas", "406": "New Harmony", "407": "Charlton", "408": "Weeping Mary", "409": "Promised Day", "410t": "The Dying Californian", "410b": "Mutual Love", "411": "Morning Prayer", "412": "New Hosanna", "413": "The Loved Ones", "414": "Parting Friend", "415": "Easter Morn", "416": "The Christian's Nightly Song", "417": "Weeping Pilgrim", "418": "Reese", "419": "Melancholy Day", "420": "Bishop", "421": "Sweet Morning", "422": "Burdette", "423": "Grantville", "424": "Sweet Union", "425": "Golden Streets", "426t": "Kelley", "426b": "Jasper", "428": "World Unknown", "429": "Christian's Delight", "430": "Arbacoochee", "431": "New Bethany", "432": "Cheves", "433": "McKay", "434": "Fillmore", "435": "Sacred Rest", "436": "Morning Sun", "437": "Sidney", "438": "The Marriage in the Skies", "439": "Jordan (Second)", "440": "North Salem", "441": "Raymond", "442": "New Jordan", "444": "All Saints New", "445": "Passing Away", "446": "Infinite Day", "447": "Wondrous Cross", "448t": "Consecration", "448b": "The Grieved Soul", "449": "Fatherland", "450": "Elder", "451": "Mary's Grief and Joy", "452": "Martin", "453": "Holly Springs", "454": "The Better Land", "455": "Soar Away", "456": "Sacred Mount", "457": "Wayfaring Stranger", "458": "Friendship", "459": "Tolling Bell", "460": "Sardis", "461": "Shining Star", "462": "Faith and Hope", "463": "Our Humble Faith", "464": "Sheppard", "465": "Where There's No Trouble and Sorrow", "466": "Haynes Creek", "467": "Lisbon", "468": "Bristol", "470": "The Mercy Seat", "471": "The Savior's Name", "472": "Akin", "473": "Carmarthen", "474": "Mount Desert", "475": "A Thankful Heart", "476": "The Throne of Grace", "477": "Lord, We Adore Thee", "478": "My Rising Sun", "479": "Chester", "480": "Redemption", "481": "Novakoski", "482": "Mulberry Grove", "483": "Eternal Light", "484": "Heavenly Union", "485": "New Agatite", "486": "Beneficence", "487": "Soldier's Delight", "488": "As We Go On", "489": "The Savior's Call", "490": "My Shepherd Guides", "491": "Oh, What Love", "492": "Invocation (Second)", "493": "Amanda Ray", "494": "Big Creek", "495": "The Midnight Cry", "496": "The Rock That is Higher Than I", "497": "Natick", "498": "The Resurrection Day", "499": "At Rest", "500": "Living Hope", "501": "O'Leary", "502": "A Charge to Keep", "503": "Lloyd", "504": "Wood Street", "505": "Where Ceaseless Ages Roll", "506": "The Ark", "507": "Sermon on the Mount", "510": "Corley", "511": "The Great Redeemer", "512": "The Spirit Shall Return", "513": "Joyful", "515": "Federal Street", "516": "DeLong", "517": "Mars Hill", "518": "Heavenly Anthem", "521": "Parting Friends (Third)", "522": "Ye Heedless Ones", "523": "Pleyel's Hymn (Second)", "524": "The Twenty-Third Psalm", "527": "My Life and Breath", "528": "Showers of Blessings", "530": "A Glad New Song", "531": "Dura", "532": "Peace and Joy", "534": "New Georgia", "535": "Shawmut", "536": "Sweet Majesty", "538": "Hampton", "539": "Supplication", "540": "Nidrah", "541": "Home of the Blest", "542": "I'll Seek His Blessings", "543": "Thou Art God", "544": "Praise Him", "545": "The Pilgrim's Way", "546": "My Brightest Days", "547": "Granville", "548": "Wootten", "549": "Phillips Farewell", "550": "Blissful Dawning", "551": "Jacob's Vision", "553": "Anthem on the Beginning", "556": "Portland", "558": "Living Streams", "560": "My Home (Second)", "562": "Infinite Delight", "564": "Zion", "565": "The Hill of Zion", "566": "Hebron", "567": "The Great Day", "568": "I Want to Go to Heaven", "569t": "Emmaus", "569b": "Sacred Throne", "570": "Farewell to All (Second)", "571": "Penitence", "572": "The Lamb of God", "573": "Harpeth Valley"}, "SHC2012": {"27": "Bethel", "28t": "Will Guide Us Till We Die (Aylesbury)", "28b": "Life Is the Time to Serve the Lord (Wells)", "29t": "Come, Humble Sinner (Fairfield)", "29b": "Entreaty (Liverpool)", "30t": "Rochester", "30b": "Prospect", "31t": "Ninety-Third Psalm", "31b": "Come, We That Love the Lord (Webster)", "32t": "I'm Not Ashamed of Jesus (Corinth)", "32b": "Weeping Saviour", "33": "Gathering Home", "34": "Gone to a Better World", "35": "Augusta", "36t": "America", "36b": "Ninety-Fifth Psalm", "37": "The Christian's Home", "38t": "Sessions", "38b": "The Road to Life and Death (Windham)", "39": "Eden of Love", "40": "Blow Ye the Trumpet (Lenox)", "41": "Poyner", "42": "Social Band (Clamanda)", "43": "The Hope of Heaven (Primrose Hill)", "44": "The Converted Thief", "45t": "Amazing Grace (New Britain)", "45b": "Supplication", "46": "The Fountain of Life", "47t": "Salvation, O the Joyful Sound (Primrose)", "47b": "Idumea", "48t": "Devotion", "48b": "Thou Man of Grief (Kedron)", "49t": "Old Hundred", "49b": "Will God Forever Cast Us Off? (Mear)", "50t": "Consolation", "50b": "Distress", "51": "My Home (Lisbon)", "52t": "Albion", "52b": "Prayer of Bartimeus (Charlestown)", "53": "Jerusalem", "54t": "Palmetto", "54b": "Farewell, My Brethren (Imandra New)", "55": "Shall We Know Each Other There?", "56": "Salem", "57": "Am I a Soldier of the Cross? (Christian Soldier)", "58": "Pisgah", "59t": "Lord Revive Us (Holy Manna)", "59b": "Holy Manna", "60": "Saints Bound for Heaven", "61": "Sweet Rivers", "62": "Parting Hand", "63": "Coronation", "64": "Refreshing Showers (Nashville)", "65": "Sweet Prospect", "66": "Security", "67": "Columbus", "68t": "Do Not I Love Thee (Detroit)", "68b": "Come Holy Spirit (Abbeville)", "69": "Minister's Farewell", "70t": "Gainsville", "70b": "Evening", "71": "My Soul Forsakes Her Vain Delight (Leander)", "72": "Firm Foundation (Bellevue)", "73t": "Show Pity, Lord (Cusseta)", "73b": "Soldiers of Christ (Arlington)", "74t": "The Inquirer", "74b": "Solid Comfort (King of Peace)", "75": "I Would See Jesus", "76t": "Holiness", "76b": "Desire for Piety", "77t": "The Child of Grace", "77b": "The Saviour's Word (Talbotton)", "78": "Calvary", "79": "The Old Ship of Zion", "80t": "Shouting Song", "80b": "Service of the Lord", "81": "Jesus Is Willing (Beach Spring)", "82": "Bound for Canaan", "83t": "Vale of Sorrow", "83b": "The Weary Souls", "84": "The Crucified Saviour", "85": "The Morning Trumpet", "86": "Guiding Spirit", "87": "Sweet Canaan", "88t": "Done With the World", "88b": "Mount Zion", "89": "The Church's Desolation", "90": "Arise and Pray (Look Out)", "91": "Assurance", "92": "The Glorious Light of Zion (Burk)", "93": "Frozen Heart", "94": "My Sands of Life (Mulberry Grove)", "95t": "Farewell, Vain World", "95b": "The Christian's Love", "96": "Mercy Seat", "97": "Gone to Heaven", "98": "Glory Shone Around", "99": "Gospel Trumpet", "100": "The Bower of Prayer", "101t": "Canaan's Land", "101b": "Holy City", "102": "Fulfillment", "103": "Animation", "104": "The Lovely Story", "105t": "Saint Paul", "105b": "Turn, Sinner, Turn", "106": "Ecstacy", "107": "Martin", "108t": "Weeping Sinners", "108b": "The Traveler", "109": "Carnsville", "110": "Mount Vernon", "111t": "Journey Home", "111b": "To Die No More", "112": "The Last Words of Copernicus", "113": "The Prodigal Son", "114t": "Edmonds", "114b": "Fallen by the Way", "115": "The Midnight Cry", "116": "I Will Shout and Sing in Glory", "117": "Timmons", "118": "Sounding Joy", "119": "Heaven's My Home", "120": "The Lord Jehovah Reigns (Chambers)", "121": "Florence", "122": "All Is Well", "123t": "The Dying Christian", "123b": "Cross of Christ", "124t": "Heavenly Land", "124b": "The Dying Minister", "125": "Expression", "126": "Babel's Streams", "127": "Green Fields", "128": "The Promised Land", "129": "Heavenly Armor", "130": "Millennium", "131t": "Messiah", "131b": "Invocation", "132": "Evening Shade", "133": "John 4:14", "134": "The Christian's Hope", "135": "Olney", "136": "Morality", "137": "Liberty", "138t": "Song to the Lamb", "138b": "Ogletree", "139": "Elysian", "140": "Chicago", "141": "Complainer", "142": "Stratfield", "143": "Playel's Hymn Second", "144": "Jubilee", "145t": "Streams of Mercy (Warrenton)", "145b": "The Child's Prayer (Sweet Affliction)", "146": "Hallelujah", "147": "Washington", "148": "Jefferson", "149": "The Trumpet", "150": "The Spiritual Sailor", "151": "Symphony", "152": "Bruce's Address", "153": "Come and Go with Me to Heaven", "154t": "Holy Land", "154b": "Eden", "155": "How Long, Dear Saviour (Northfield)", "156": "San Diego", "157": "How We Grovel Here Below (Zynder-Zee)", "158": "Funeral Thought", "159": "Wondrous Love", "160": "A Crown of Life for Me", "161": "Sweet Home", "162": "Hark! from the Tomb (Plenary)", "163t": "Morning", "163b": "Marysville", "164": "Duane Street", "165": "Family Bible", "166": "Joyful", "168": "Cowper", "169": "Dartmouth", "170": "Exhilaration", "171": "Exhortation", "172": "Harmony", "173": "To Thee Will I Direct My Prayer (Phoebus)", "174": "Gospel Message", "175": "Star in the East", "176t": "Ragan", "176b": "The Good Physician", "177": "Jesus Loves to Answer Prayer", "178": "Hosanna", "179": "The Christian Warfare", "180": "A Place for Children", "181": "The Gospel Invitation", "182": "Newburgh", "183": "Arbacoochee", "184t": "Will You Come?", "184b": "Tribulation", "185": "Pilgrim's Farewell", "186": "Sherburne", "187": "The Christian's Race", "188": "Spring", "189": "Montgomery", "191": "Jesus Is Winning Souls (Essay)", "192": "Schenectady", "193": "Huntington", "195": "Mars Hill Morning", "196": "Alabama", "197": "Edwards", "198": "Jesus Saves (Raymond)", "199": "City of Light", "200": "With Songs and Honors (Edom)", "201": "Pilgrim", "202": "New Lebanon", "203": "Florida", "204": "Mission", "205": "Pleasant Hill", "206": "Come, Friends, Go With Me", "207t": "I'm On My Journey Home", "207b": "Passing Away", "208": "Little Songs and Little Ways (Louisiana)", "209": "Sing His Praise", "210": "Minnesota", "211": "Whitestown", "212": "Sharon", "213": "The Good Old Way", "214": "Repentance", "215": "New Topia", "216": "Delight", "217": "Great God, Attend (Ballstown)", "218": "Mount Pleasant", "220": "Mount Zion", "222": "Ocean", "223": "Portuguese Hymn", "224": "Save, Lord, or We Perish", "225t": "Newry", "225b": "Christmas Anthem", "227": "Baptismal Anthem", "229": "The Great Roll Call", "230": "Reverential Anthem", "232": "The Crucifixion", "235": "The Resurrection (Easter Anthem)", "239": "David's Lamentation", "240": "The Christian's Song", "242": "Newton", "243t": "Yarbrough", "243b": "To Thee I Call (Hingham)", "244": "Joyful News (Resignation)", "245": "Vital Spark (Claremont)", "250": "Heavenly Vision", "254": "Rose of Sharon", "260": "Farewell Anthem", "263": "Beautiful Home", "264t": "Great God, Attend (Duke Street)", "264b": "Hebron", "265t": "Restoration New", "265b": "Eternal Spirit (Uxbridge)", "266t": "O Happy Day (Rockingham)", "266b": "Lebanon New", "267t": "Sacred Stream", "267b": "Hedgeburg", "268t": "Restoration", "268b": "Texas", "269": "Nightfall", "270": "Confidence", "271t": "Safety", "271b": "Come On, My Friends", "272": "Exhortation", "273": "Marthasville", "274t": "The Golden Harp", "274b": "Baldwin", "275t": "Loving-Kindness", "275b": "Roll On", "276": "Bridgewater", "277": "Antioch", "278t": "Sweet Heaven", "278b": "Traveling Pilgrim", "279": "Cross for You and Me", "280": "Vain World, Be Gone (Westford)", "282": "I'm Going Home", "283t": "How Sweet the Name (Ortonville)", "283b": "Am I a Soldier? (Ortonville)", "284": "The Christian's Rest", "285t": "Arnold", "285b": "Land of Rest", "286t": "Saint's Request", "286b": "Melody", "287": "Cambridge", "288": "White", "289": "Greensborough", "290": "Alas! And Did My Saviour Bleed (Victoria)", "291": "Shepherds, Rejoice", "292t": "Happy Day", "292b": "The Wonder", "293t": "Ballerma", "293b": "Saint Thomas", "294": "Never Part", "295": "The Sinner Must Be Born Again (Ganges)", "296": "Sardinia", "297": "Conversion", "298": "Providence", "299": "New Jerusalem", "300": "Calvary", "301": "God's Promise", "302": "Greenland", "303": "The Fountain (Sincerity)", "304": "Morgan", "306": "News From the Regions of the Skies (Oxford)", "308": "Parting Friends", "309": "Living Lamb", "310": "The Weeping Saviour", "311": "Silver Street", "312": "Sing to Me of Heaven", "313": "Concord", "314": "Amherst", "315": "Worlds Above", "316": "Blessed Thought", "318": "Morning Meditation", "319": "Religion Is a Fortune", "320": "The Lost City", "321": "Man's Redemption", "322": "Soon We Shall Land on Canaan's Shore (Autauga)", "323t": "Mullins", "323b": "Soft Music", "324": "Northport", "325": "The Cause of Christ", "326": "Weary Pilgrim", "327": "Hatfield", "328": "There's a Great Day Coming", "329": "Vain World, Adieu!", "330t": "Love Divine", "330b": "Sacred Music", "331t": "The Father's Boundless Love (Columbiana)", "331b": "Mercy, O Thou Son of David (Villulia)", "332": "Sons of Sorrow", "333": "Family Circle", "334": "O Come Away!", "335": "Return Again", "336t": "Hester", "336b": "Haw Ridge", "337": "Mercy's Free", "338": "Rise to the Mansions of Glory", "339": "When I Am Gone", "340": "The Rock That Is Higher Than I", "341": "The Lone Pilgrim (The White Pilgrim)", "342": "Fountain of Life", "343": "Long Sought Home", "344": "We'll Meet Beyond the Grave", "345t": "Jesus Is My Friend", "345b": "We'll Meet Over There (Golden Streets)", "346": "My Happy Home", "347": "It Is a Wonder If I Am Saved ('Tis Wonder)", "348t": "Happy Land", "348b": "Blessed Forever", "350": "The Red Sea Anthem", "355": "Hinder Me Not", "356": "Cheves", "357": "God's Eternal (Complaint)", "358": "Murillo's Lesson", "359": "Prosperity", "360": "The Royal Band", "361": "Loving Jesus", "362": "The Lord's Promise", "363": "I Have No Mother Now", "364": "Greenland", "365": "Southwell", "367": "Dear Name! The Rock on Which I Stand", "368t": "Remember Me", "368b": "Newman", "369": "Send a Blessing", "370": "Monroe", "371": "Heavenly Dove (Turner)", "372": "Mount Pleasant", "373": "Weeping Peter", "374": "O Sing With Me!", "375": "Love the Lord", "376": "Help Me to Sing", "377t": "Happy Home", "377b": "Parting Friends", "378t": "The Heavenly Port", "378b": "Eureka", "379": "Span of Life", "380t": "Nettie", "380b": "Humble Pleadings", "381t": "Never Turn Back", "381b": "The Surrender", "382": "The Cleansing Fountain", "383": "Eternal Day", "384": "Longing for Heaven (Panting for Heaven)", "385t": "Fight On", "385b": "Asleep in Jesus", "386": "Carry Me Home", "387": "Penick", "388": "The Happy Sailor", "389t": "Saint Peters", "389b": "The Sky", "390": "New Prospect", "391": "The Royal Invitation", "392": "Little Pilgrim", "393": "I'm Wandering To and Fro", "394": "Messiah's Praise", "395t": "Can I Leave You?", "395b": "Fleeting Days", "396": "Look to Jesus, Weary One", "397": "We'll Soon Be There", "398t": "Farewell to All", "398b": "The Dying Californian", "399": "The Dying Boy", "400": "Struggle On", "401": "Cuba", "402": "Protection", "403": "Heavenly Rest", "404": "He Died on the Cross", "405": "Children of the Heavenly King (The Marcellas)", "406": "New Harmony", "407": "Charlton", "408": "Weeping Mary", "409": "Promised Day", "410": "Willie", "411": "The Finest Flower", "412": "New Hosanna", "413": "The Loved Ones", "414": "Morning Sun", "416t": "My Native Land", "416b": "Vernon", "417": "Weeping Pilgrim", "418": "Rees", "419": "Melancholy Day", "420": "Religion Is Sweet", "421": "Sweet Morning", "422t": "A Song of Texas", "422b": "The Grieved Soul", "423": "Grantville", "424": "Sweet Union", "425": "Golden Streets", "426t": "Dumas", "426b": "The Time is Rolling On (Shiloah)", "427": "Babylon is Fallen", "428": "World Unknown", "429": "Christian's Delight", "430": "Land of Rest", "431": "New Bethany", "432": "The Heavenly Mansion", "433": "Rejoice", "434": "Thus Will I Sing (Fillmore)", "435": "Sacred Rest", "436t": "Humble Penitent", "436b": "The Infant Request", "437": "Ester", "438t": "Missouri", "438b": "Jewett", "439": "Adoration", "440t": "Shady Grove", "440b": "Sharpsburg", "441": "The Saint's Delight", "442t": "Blooming Youth", "442b": "Pickard's Hymn", "443": "Beatrice", "444t": "The Gospel Pool", "444b": "The Teacher's Farewell", "445t": "Hill of Zion", "445b": "My Last Moments", "446t": "Sharon's Lovely Rose", "446b": "Charming Sound", "447t": "Boylston", "447b": "Laban", "448": "I Love Thy Kingdon", "449": "Beautiful River", "450": "Leaning on Jesus' Breast", "451": "Rock of Ages (Toplady)", "452": "Elder", "453t": "Clark", "453b": "Highlands of Heaven", "454": "The Blessed Lamb", "455t": "Vesper", "455b": "Still Better", "456": "Almighty Father", "457": "Zion's Ship", "458": "Friendship", "459": "Tolling Bell", "460": "My Soul Abounds with Joy", "461": "Let Us Sing", "462": "Fatherland", "463": "Angel Band (Land of Beulah)", "464": "Hocutt", "465": "Trusting", "466": "The Christian's Flight", "467": "Pray, Brethren, Pray", "468": "Sweet Thought", "469": "Winning Souls", "470": "There We Our Jesus Shall Adore (Sardis)", "471": "Come On, My Fellow Pilgrims", "472": "The Sinner's Friend", "473": "Jesus Rose", "474": "Rest for the Weary", "475": "Lover of the Lord", "476": "At the Golden Gates", "477": "Let the Saints Appear", "478": "March On", "479": "Behold A Sinner", "480": "Leaning on Jesus' Breast No. 2", "482": "Amazing Love", "483": "Where the Saints Are Passing Over", "484": "My Country 'Tis of Thee (America)", "485": "Christ Jesus Died for Sinners", "486": "No Night on That Golden Shore", "488": "Unity", "489": "Cooper (Jordan)", "490": "Canaan's Peaceful Shore", "491": "Closer Walk With God", "492": "The Poor, Wayfaring Stranger (Wayfaring Stranger)", "493": "Where Heavenly Joy Imparts", "494": "If Christ Be in My Arms (Grafton)", "495": "A Nearness to God (Eliza)", "496t": "We Shall Meet Again", "496b": "The Master's Call", "497": "The Bitter Cup", "498": "The Living Stone", "499": "Where Love In Glory Shines", "500": "Sweet By and By", "501": "That Beautiful Land", "502": "Wilson", "503": "That Beautiful Land On High", "504t": "Peterborough", "504b": "North Jersey", "505": "Cleansing Fountain", "506": "The Orphan Girl", "507t": "Jackson", "507b": "The Glory of the Cross", "508": "Amsterdam", "509": "We Are Going Home", "510": "Miller", "511t": "Brown", "511b": "Jesus Died for Me", "512": "Oh, How Wonderful!", "513t": "The Christian's Desire (Avon)", "513b": "Whosoever Will", "514": "Wiley", "515": "When the Lord Shall Come for Me", "516": "Tallahassee", "517": "We'll Wear a Crown", "518": "Love At Home", "519": "My Mother's Gone", "520": "Rest for the Soul", "521": "A Golden Crown to Wear", "522": "Shades of Night", "524": "My Home Above", "526": "Heavenly Joy", "527": "Heavenly Grace", "528t": "The Gospel Sound", "528b": "Peaceful Shore", "529": "When Jesus Calls", "530": "God's Unchanging Hand", "532": "O Jesus, Ever with Us Stay", "533": "Thy Love Proclaim", "534": "The Saints Will Be Gathered There", "535t": "Kelley", "535b": "Take Me Home", "536": "Thy Love (North Salem)", "537": "Praise the Lord", "538": "Praising Jesus", "539": "Bidding Farewell to Loved Ones", "540": "She Is Sleeping", "541": "I'm Going Home to Die No More", "542": "The Judgment Day", "543": "Consecration", "544": "My Eternal Home (Home)", "545": "I Have a Precious Friend", "546": "Farther On", "547": "All Is Peace and Love", "548": "The God of Love", "549": "That Sweet Home", "550": "Gone Home", "551": "World Above", "552": "And Live Through Endless Day", "553": "The Hill of Zion", "554": "Where the Soul Shall Never Die", "555": "Praise the Redeemer (New Hope)", "556": "A Prayerful Heart", "557": "Jordan's Banks", "558": "I'll Praise My Master", "559": "Will You Meet Me?", "560": "Singing As I Go", "561": "Calling Me", "562": "On To Calvary", "563": "Jesus Is Mine", "564": "Sweet Home", "565": "Marching to That Home", "566": "O Blessed Day", "567": "Child of Thine", "568": "Gone to Rest", "569": "He Leads Me All the Way", "570": "Our King Above the Sky", "571": "Not Made With Hands", "572": "We Will Sing with Angels There", "573": "Trusting Jesus", "574": "Sweet Peace", "575": "Davis (Lonsdale)", "576": "Allen", "577": "Forever Blest", "578": "God's Wondrous Love", "580": "The Gates of Paradise", "581": "Wells Second", "582": "Long Ago, Comrades", "583": "Savannah", "584": "I Love to Sing of Jesus", "585": "The Gospel Feast", "586": "Traveler's Rest—Samson", "587": "Nearer, My God, To Thee (Bethany)", "588": "Worchester", "589": "Gosia", "590": "Every Grace", "591": "Sweet Reunion", "592": "The Judgment", "594": "National Blessings (Glimpse of Thee, A)"}, "CHM2010": {"1": "Weary Rest", "2": "O Wondrous Love", "3": "Christmas Morning", "4": "Copeland", "5t": "Dear Friends, Farewell", "5b": "Always Something New", "6": "Babel's Streams", "7": "Jehovah is My God", "8": "Creation (First)", "9": "Cords of Love", "10": "Zion's Dove", "11": "Minister's Farewell", "12": "Gate of Home", "13": "Traveler's Hope", "14": "I'll Serve My Lord", "15": "My Consolation", "16": "The Finest Flower", "17": "Call to Arms", "18": "Praise Our Redeemer", "19": "The Day of Days", "20": "Prison Chains", "21": "Webster", "22t": "Laban", "22b": "Sinner Come", "23t": "Phillippi", "23b": "Evening Hymn", "24t": "Volusia", "24b": "Fredrica", "25t": "Santee", "25b": "Brimmer", "26t": "Golden Hill", "26b": "Ninety-Third", "27t": "Morning Worship", "27b": "Missionary Herald", "28t": "Mocksville", "28b": "Watchman (First)", "29": "The Midnight Cry", "30t": "Zion's Joy", "30b": "Dennis", "31t": "Home", "31b": "Time", "32t": "Rayfield", "32b": "Zellville", "33": "Angel Choir", "34": "Going Home", "35t": "Lisbon", "35b": "Boylston", "36t": "Lovely Vine", "36b": "Albion", "37": "Heaven's My Home", "38": "God Is Our Refuge", "39": "A Precious Stone", "40t": "Mamie", "40b": "Weeping Sinners", "41t": "Mediation", "41b": "Ardor", "42": "Joy Bells", "43": "The Heavenly Throng", "44t": "Morning Sun", "44b": "Dunlap's Creek", "45t": "Ila", "45b": "Lofty Sky", "46t": "The Hill of Zion", "46b": "Waiting Church", "47": "Panting for Heaven", "48": "Mount Helicon", "49": "Forever with the Lord", "50": "Cranbrook", "51": "Lonsdale", "52": "Newburg", "53": "No Parting There", "54": "My Trust", "55t": "Carolina", "55b": "Idumea", "56t": "America", "56b": "Sing to Me of Heaven", "57": "Salvation's Rock", "58t": "Liverpool", "58b": "Primrose", "59t": "Mear", "59b": "Dove of Peace", "60": "What Did He Do?", "61t": "North Carolina", "61b": "Gaines", "62t": "Sweet Hope (First)", "62b": "Joy to the World", "63t": "Condescension", "63b": "Pardoning Love", "64": "Youthful Blessings", "65": "The Golden Hill", "66t": "Balerma", "66b": "The Penitent's Prayer", "67t": "Peterboro", "67b": "Dundee", "68": "Bright Mansions", "69": "Rocky Mount", "70t": "Arlington", "70b": "Brown", "71": "The Peaceful Shore", "72t": "Jordan", "72b": "Joyful News", "73t": "Ella's Song", "73b": "Downs", "74": "God's Helping Hand", "75": "Sprague", "76t": "Brainerd", "76b": "Night", "77": "How Beautiful Heaven Must Be", "78t": "Repent", "78b": "New Britain", "79": "Kingwood", "80": "The Blind Girl", "81t": "Maitland", "81b": "Eternal Joys", "82t": "Lady Touch Thy Harp Again", "82b": "Gospel Waves", "84": "Homeland", "85": "Mercy Seat", "86t": "Ortonville", "86b": "Hicks' Farewell", "87": "The Promised Land", "88": "Pisgah", "89": "Northfield", "90": "Brightest Days", "91": "There is a Fountain", "92": "Promised Day", "93": "Something New", "94": "Plenary", "95": "Canaan's Land", "96": "Mighty Love", "97": "The Guiding Star", "98": "Christian Soldier", "99": "Pleasant Hill", "100": "Tennessee", "101": "An Address for All", "102": "Missionary's Adieu", "103": "Derrick", "104": "Everlasting Song", "105t": "Tender Care", "105b": "Hamburg", "106": "Sweet Rivers", "107": "Resignation (First)", "108": "Redeeming Love", "109": "Not Made with Hands", "110": "Volunteers", "111t": "Fleeting Days", "111b": "Judkins", "112": "Bush Hills", "113": "The Converted Thief", "114": "That Glorious Day", "115": "The Millennium", "116": "Floyd", "117": "Angel Band", "118": "Campbell", "119": "Weary Souls", "120": "Home in the Sky", "121t": "Prosperity", "121b": "Greensboro", "122": "The Dying Boy", "123": "Rapturous Scene", "124": "Pilgrim's Triumph", "125t": "Endless Joy", "125b": "Day Dawn", "126": "Ocean", "127": "Herald", "128t": "Hester", "128b": "Ninety-Fifth", "129": "Coronation", "130t": "Sacred Love", "130b": "Passing Away", "131": "Will You Meet Me?", "132": "Musical Society", "133": "Juniata", "134": "Liberty", "135": "Raymond", "136": "Sherburne", "137": "Antioch", "138": "Rest in the Kingdom", "139": "The Wanderer's Grave", "140": "Edom", "142": "The Solid Rock", "143": "Farther Along", "144t": "Tribulation", "144b": "Walk with God", "145t": "Milledgeville", "145b": "Fiducia", "146t": "Solemn Warning", "146b": "Bangor", "147": "Fairfield", "148": "Leander", "149": "A Good Time Coming", "150": "Salvation", "151": "Sweet Prospect", "152t": "Cross of Christ", "152b": "Messiah", "153": "Columbus", "154": "Happy Time", "155": "Solemn Call", "156": "Repentance", "157": "Hallelujah", "158": "The Land of Rest", "159t": "Devotion (First)", "159b": "Long Sought Home", "160": "The Saint's Delight", "161t": "Wells", "161b": "Awake, Jerusalem", "162": "Redeemed Singers", "163t": "Hollis", "163b": "Burroughs", "164t": "Convict", "164b": "The Pilgrim's Song", "165": "Babylon is Fallen", "166": "What Can I Do?", "167t": "Detroit", "167b": "Come Along", "168t": "Rest", "168b": "Sunrise", "170": "On My Way", "171": "Sessions", "172": "The Grand Highway", "174t": "Prospect", "174b": "Burning Lamp", "175": "O How I Love Jesus", "176": "Heavenly Treasures", "178": "That Beautiful Land", "179": "Traveling On", "180": "The Sinless Summerland", "182": "A Happy Meeting", "184": "Where We'll Never Grow Old", "185": "Corinth", "186": "Lord Remember Me", "187": "The Gospel Pool", "188": "He Loves Me", "189": "One by One", "190": "Salutation", "191": "Oh! Turn, Sinner", "192": "The Penitent", "193": "Kay", "194": "O Happy Day", "195": "Garden", "196": "Loving Kindness", "197": "The Living Vine", "198": "News From The Skies", "199": "Vernon", "200": "Parting Hand", "201": "Mission", "202": "Immensity", "203": "Cumberland", "204t": "What a Day", "204b": "Evening Bells", "205": "The Watchman's Call", "206": "Prayer Meeting", "207t": "Windham", "207b": "Meditation", "208t": "He Lives", "208b": "French Broad", "209": "The Lord's Supper", "210t": "Old Hundred", "210b": "Contented Soldier", "211t": "Hopewell", "211b": "Humble Penitent", "212": "Christian Prospect", "213": "Be Committed", "214": "Hosanna", "215": "In That Morning", "216t": "O, Save", "216b": "Social Band", "217": "Jerusalem", "218t": "Cookham", "218b": "Harmony", "219": "Rapture (First)", "220": "Over the Sea", "221t": "Pleyel's Hymn", "221b": "Poor, Weak, and Worthless", "222t": "Praise", "222b": "St. Louis", "223": "Hallelujah! Praise The Lord", "224": "Hark My Soul", "225t": "Kenan", "225b": "Martin", "226t": "Rock of Ages", "226b": "Haws", "227": "Majestic Rays", "228": "Pass Me Not", "229": "Tranquility", "230t": "Eltham", "230b": "Amboy", "231": "Indian's Farewell", "232t": "Heavenly Armor", "232b": "Olean", "233": "Believer and His Soul", "234": "The Singing Christian", "235": "Faithful Soldier", "236t": "Pacolet", "236b": "Complainer", "237": "Remember Thy Creator", "238": "Child's Wish", "239t": "Soft Music", "239b": "I Want to Be an Angel", "240": "Morning Light", "241": "Closer Walk with God", "242": "Come, Ye Disconsolate", "243": "Zion's Light", "244t": "Mutual Love", "244b": "The Christian's Conflicts", "245": "Bozrah", "246": "The Good Physician", "247": "Oh! How Charming", "248": "Twilight is Falling", "249": "Green Fields", "250t": "Realms of the Blest", "250b": "Disciple", "252": "The Sufferings of Christ", "253": "Is It Far?", "254t": "Bartimeus", "254b": "Talmar", "255": "Watchman (Second)", "256t": "Pleading Savior", "256b": "Sacred Rest", "257": "Jubilee", "258": "Thorny Desert", "259t": "Crumly", "259b": "Olney", "260t": "Bavaria", "260b": "Shields", "261t": "Come Thou Fount", "261b": "Alone", "262": "Collins", "263": "Autumn", "264": "Harwell", "265": "Mourner's Lamentation", "266": "Chrystler's Field", "267": "Louisiana", "268": "Come Ye to the Waters", "269t": "Restoration", "269b": "Invocation", "270": "Lena", "271": "The Mouldering Vine (First)", "272": "Felicity", "273": "Sing His Praise", "274": "Mother Tell Me of the Angels", "275": "Missionary's Farewell", "276": "Worlds Beyond the Sky", "277": "Sweet Affliction", "278": "God Holds the Future", "279": "Lecil", "280": "Zion", "281t": "Am I Born to Die?", "281b": "Palmetto", "282": "Friendship", "283": "Willowby", "284": "Don't Grieve Your Mother", "285": "Farewell Brother", "286": "Ganges", "287": "Indian Convert", "288": "Morris", "289": "Happy Land", "290": "Amity", "291": "Warrenton", "292": "Grief of Love", "293": "Lenox", "294": "Carmarthen", "295": "Redeemer's Praise", "296": "He's Holding My Hand", "297": "Lucas", "298": "My Shepherd Guides", "299": "Green Meadows", "300": "Desire", "301": "John Street", "302": "Olivers", "303": "The Unclouded Day", "304": "Blue Vale of Naucoochee", "305": "The Weary Soldier", "306": "Middlebury", "307": "True Happiness", "308": "The Happy Time", "309": "Singing School", "310t": "Our Journey Home", "310b": "Weary Sinner", "311": "Elysian", "312": "Penitence", "313": "Bruce's Address", "314": "The Christian", "315": "David's Victory", "316": "This Heavy Load", "317": "The Christian Soldier", "318": "The Martial Trumpet", "319": "Weary Pilgrim", "320": "Longing for the Day", "321": "Hear and Save", "322": "Among that Band", "323": "Holy Manna", "324": "Fair Fields of Eden", "325t": "Will You Go?", "325b": "Jesus Died For Me", "326": "Royal Proclamation", "327": "The Christian's Hope", "328": "Mercy's Free", "329": "Redeeming Grace", "330": "Fulfillment", "331": "A Home in Heaven", "332": "Babylonian Captivity", "333": "Night is Coming", "334": "Jordan's Stormy Wave", "335": "When I am Gone", "336t": "Sweet Harmony", "336b": "Probation", "337": "To Die No More", "338t": "How Firm a Foundation", "338b": "Davis", "339": "Samanthra", "340": "Concord", "341": "The Lone Pilgrim", "342": "Blest Morn", "343": "Tell the Story", "344": "Morality", "345": "The Shepherd's Star", "346": "Star in the East", "347": "Portuguese Hymn", "348": "We've a Mansion in Heaven", "349": "Redemption (First)", "350": "The Rock", "351": "Sweet Home", "352": "My Home on High", "353": "Bower of Prayer", "354": "Summer", "355": "Homeward Bound", "356": "Morning Song", "357": "The Trumpet", "358": "O Come, Come Away", "359": "Wondrous Love", "360": "The Saints Bound for Heaven", "361": "Solemn Thought", "362": "Shining Light", "363": "The Christian Warfare", "364": "Redemption (Second)", "365": "The Indian's Petition", "366": "Millennium (First)", "367": "David's Lamentation", "368t": "Brush Creek", "368b": "Sweetest Pleasure", "369": "Easter Anthem", "372": "I Won't Turn Back", "374": "Heavenly Vision", "378": "Mount Hope", "380": "Christian Song", "382": "How Sweet the Sound", "383": "Azmon", "384": "Lord I'm Depending on You", "385": "Sweet Heaven", "386": "Spartanburg", "387": "Stay, Sinner", "388": "Anchor", "389": "Crown of Victory", "390": "Crown of Light", "391": "Glad Tidings", "392": "Imandra", "393t": "West Point", "393b": "China", "394": "Stubborn Heart", "395": "King of Peace", "396t": "Adams", "396b": "Waynsville", "397t": "Hants", "397b": "Bedan", "398t": "St. Thomas", "398b": "Gerar", "399t": "Lockport", "399b": "Thatcher", "400t": "Christian Love", "400b": "Hall", "401t": "Tillotson", "401b": "Euphrates", "402t": "Olive Leaf", "402b": "Kelso", "403t": "New Year", "403b": "Silver Street", "404t": "Rosalie", "404b": "Arion", "405t": "Honeywel", "405b": "Caution", "406": "Luther", "407": "Sweet Hope (Second)", "408t": "Shirland", "408b": "Dartmouth", "409t": "Little Marlborough", "409b": "Newingham", "410t": "Weeping Saviour", "410b": "Kambia", "411": "The Trumpeters", "412t": "Howard", "412b": "Colchester", "413t": "Warwick", "413b": "Barby", "414": "Friend", "415t": "Nazareth", "415b": "Henry", "416t": "Fragrance", "416b": "Edwards", "417t": "Heber", "417b": "Zanesville", "418t": "Chimes", "418b": "Union Vale", "419t": "Rockingham (First)", "419b": "Fountain", "420": "Cambridge", "421t": "Seymour", "421b": "Caddo", "422t": "Boswell", "422b": "Whitney", "423t": "Coventry", "423b": "Benediction", "424": "Nightingale", "425t": "Exchange", "425b": "Ryland", "426": "Tappan", "427": "Naomi", "428": "Zerah", "429": "Charming Name", "430": "Let Me Rise", "431": "Dungeness", "432t": "Loftin", "432b": "Fish Pond", "433": "New Haven", "434": "Nobler Choice", "435": "Shenley", "436t": "Turner", "436b": "It Is I", "437": "The Dying Penitent", "438": "The Mouldering Vine (Second)", "439": "Lydia", "440t": "Beulah", "440b": "Robinson", "441": "The Lonesome Dove", "442": "Lanesboro", "443": "Christmas", "444": "Broomsgrove", "445": "Revelation", "446": "Damascus", "447": "Mount Pisgah", "448t": "Suffield", "448b": "Coleshill", "449": "Cosmer", "450t": "Burford", "450b": "Consolation", "451t": "Shepherd (First)", "451b": "Devotion (Second)", "452t": "Head", "452b": "Hebron", "453t": "De Beza", "453b": "Wakefield", "454": "Heavenly Light (or Eden)", "455t": "New Lebanon", "455b": "Rockbridge", "456t": "Blenden", "456b": "Endor", "457t": "Ware", "457b": "Evening Chant", "458": "Rolland", "459t": "All-Saints", "459b": "Refuge", "460t": "Bohemia", "460b": "Gratitude", "461": "Lynn", "462t": "Lotha", "462b": "Upton", "463": "Anvern", "464": "Reformation", "465t": "Breaker", "465b": "Welton", "466": "The Mercy-Seat", "467t": "Elparan", "467b": "Uxbridge", "468t": "Mendon", "468b": "Laurell", "469": "Pilesgrove", "470": "Duke Street", "471t": "Rockingham (Second)", "471b": "Hesperia", "472t": "Sunset", "472b": "Cleaveland", "473": "Bartholday", "474": "Rothwell", "475": "Portugal", "476t": "Effingham", "476b": "Shepherd (Second)", "477": "Park Street", "478t": "Brentford", "478b": "Sylvan Stream", "479": "Triumph", "480": "Salineville", "481": "Holden", "482": "Gray", "483": "Burroughs (New)", "484": "Olivet", "485": "Quito", "486t": "Retreat", "486b": "Lisle", "487": "Chester", "488": "Dell of the Woods", "489": "Ridge", "490": "Creation (Second)", "491": "Nashville", "492t": "Ramesis", "492b": "Supplication", "493t": "Kedron", "493b": "Day-Star", "494": "Hingham", "495": "The Sailor's Home", "496t": "Wilmot", "496b": "Resurrection", "497t": "Acton", "497b": "Horton", "498": "Hendon", "499t": "Hasten Sinner", "499b": "Rosefield", "500t": "Harts", "500b": "Inley", "501": "Owen", "502": "Eton", "503": "Invocation (New)", "504": "Missionary Hymn", "505": "Waterford", "506": "Dying Love", "507t": "Union", "507b": "Sicily", "508": "Heavenly Rest", "509t": "Break of Day", "509b": "The Good Shepherd", "510t": "Aberdeen", "510b": "Invitation", "511": "Farewell", "512": "Missionary Song", "513": "Lakeland", "514": "Crown", "515": "Olive Shade", "516": "Oliphant", "517": "Rapture (Second)", "518": "Ariel", "519": "Dalston", "520": "Harwich", "521": "Darwell", "522": "Newbury", "523": "Conquest", "524": "When Shall We Meet Again?", "525": "Goodly Land", "526": "Zion's Glory", "527": "Prince of Light", "528": "Throne of Glory", "529": "Worship", "530": "Urmund", "531": "Little Worth", "532": "Boerne", "533": "Prospect of Heaven", "534": "Angels Singing", "535": "Trial's Hour", "536": "Symphony", "537": "Crucifixion", "538": "Isles of the South", "539": "Rest for the Weary", "540": "Funeral Anthem", "541": "Resignation (Second)", "542": "The Heavenly Home", "543": "Chase High Road", "544": "Life's Troubles", "545": "Mount Vernon", "546t": "The Holy Spirit", "546b": "Oak Grove", "547": "Higher Ground", "548": "Macedonia", "549t": "The Christian's Farewell", "549b": "The Drone"}};
+
+  const shapeSVGs = [
+    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8a2e2e" stroke-width="2"><polygon points="12,3 21,20 3,20"/></svg>', // triangle - fa
+    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8a2e2e" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>', // circle - sol
+    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8a2e2e" stroke-width="2"><rect x="4" y="4" width="16" height="16"/></svg>', // square - la
+    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8a2e2e" stroke-width="2"><polygon points="12,2 22,12 12,22 2,12"/></svg>' // diamond - mi
+  ];
+
+  document.getElementById('headerShapes').innerHTML = shapeSVGs.join('');
+
+  const resetAllControlsEl = document.getElementById('resetAllControls');
+  function resetEntryForm(){
+    editingId = null;
+    callerEl.value = '';
+    pageEl.value = '';
+    notesEl.value = '';
+    adhocTitleEl.value = '';
+    pageIsAmbiguous = false;
+    pageWarnEl.classList.remove('show');
+    pageTitlePreviewEl.classList.remove('show');
+    dupWarnEl.classList.remove('show');
+    pendingUnknownConfirm = false;
+    unknownConfirmEl.classList.remove('show');
+    selectedTag = null;
+    tagChips.forEach(function(c){ c.classList.remove('selected'); });
+    tallyVisible = false;
+    setAdHocMode(false);
+    newDayBannerEl.style.display = 'none';
+    newDayTransitionBannerEl.style.display = 'none';
+  }
+
+  function performFullReset(){
+    entries = [];
+    eventEl.value = '';
+    dateEl.value = todayLocalISO();
+    locationEl.value = '';
+    activeBooks = [BOOKS[0].abbr];
+    resetEntryForm();
+    lastAutosaveSnapshot = JSON.stringify(entries);
+    dirtySinceExport = false;
+    try { localStorage.setItem(SETUP_COLLAPSE_KEY, '0'); } catch(e){}
+    saveEntries();
+    saveSticky();
+    renderBookChecklist();
+    renderEntryBookField();
+    renderSetupCollapse();
+    render();
+  }
+
+  function renderResetAll(){
+    resetAllControlsEl.innerHTML = '';
+    const link = document.createElement('button');
+    link.className = 'link-btn-faint';
+    link.textContent = 'Reset all';
+    link.onclick = function(){
+      resetAllControlsEl.innerHTML = '';
+      const span = document.createElement('span');
+      if (entries.length > 0){
+        span.textContent = 'This clears ' + entries.length + ' logged ' + (entries.length === 1 ? 'entry' : 'entries') + ' — have you downloaded or copied the minutes? ';
+      } else {
+        span.textContent = 'Clear the session and start over? ';
+      }
+      const yes = document.createElement('button');
+      yes.className = 'link-btn-faint'; yes.textContent = entries.length > 0 ? 'Yes, clear it' : 'Yes';
+      yes.onclick = function(){
+        performFullReset();
+        renderResetAll();
+        showToast('Reset');
+      };
+      const no = document.createElement('button');
+      no.className = 'link-btn-faint'; no.textContent = 'No'; no.style.marginLeft = '6px';
+      no.onclick = renderResetAll;
+      span.appendChild(yes);
+      span.appendChild(document.createTextNode(' / '));
+      span.appendChild(no);
+      resetAllControlsEl.appendChild(span);
+    };
+    resetAllControlsEl.appendChild(link);
+  }
+  renderResetAll();
+
+  const eventEl = document.getElementById('event');
+  const dateEl = document.getElementById('date');
+  const locationEl = document.getElementById('location');
+  const bookCheckRowEl = document.getElementById('bookCheckRow');
+  const entryBookFieldEl = document.getElementById('entryBookField');
+  const setupSectionEl = document.getElementById('setupSection');
+  const setupSummaryEl = document.getElementById('setupSummary');
+  const setupCollapseRowEl = document.getElementById('setupCollapseRow');
+  const SETUP_COLLAPSE_KEY = 'singingMinutesSetupCollapsed';
+
+  function formatDateNice(iso){
+    if (!iso) return '';
+    const parts = iso.split('-');
+    if (parts.length !== 3) return iso;
+    const d = new Date(parseInt(parts[0],10), parseInt(parts[1],10) - 1, parseInt(parts[2],10));
+    return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+
+  function renderSetupCollapse(){
+    let collapsed = false;
+    try { collapsed = localStorage.getItem(SETUP_COLLAPSE_KEY) === '1'; } catch(e){}
+
+    setupSectionEl.style.display = collapsed ? 'none' : 'block';
+    setupSummaryEl.style.display = collapsed ? 'flex' : 'none';
+    setupCollapseRowEl.style.display = collapsed ? 'none' : 'block';
+
+    if (collapsed){
+      const line1 = [];
+      const eventVal = eventEl.value.trim();
+      line1.push(eventVal ? escapeHtml(eventVal) : '<span class="dim">(no event name)</span>');
+      const dateNice = formatDateNice(dateEl.value);
+      if (dateNice) line1.push(dateNice);
+      const locationVal = locationEl.value.trim();
+      let html = line1.join(' &nbsp;\u00b7&nbsp; ');
+      if (locationVal) html += '<br>' + escapeHtml(locationVal);
+      const textEl = document.createElement('span');
+      textEl.className = 'summary-text';
+      textEl.innerHTML = html;
+      setupSummaryEl.innerHTML = '';
+      setupSummaryEl.appendChild(textEl);
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Edit';
+      editBtn.onclick = function(){
+        try { localStorage.setItem(SETUP_COLLAPSE_KEY, '0'); } catch(e){}
+        renderSetupCollapse();
+      };
+      setupSummaryEl.appendChild(editBtn);
+    } else {
+      setupCollapseRowEl.innerHTML = '';
+      const collapseBtn = document.createElement('button');
+      collapseBtn.textContent = 'Done — collapse';
+      collapseBtn.onclick = function(){
+        try { localStorage.setItem(SETUP_COLLAPSE_KEY, '1'); } catch(e){}
+        renderSetupCollapse();
+      };
+      setupCollapseRowEl.appendChild(collapseBtn);
+    }
+  }
+
+  let activeBooks = [BOOKS[0].abbr];
+  let selectedBook = BOOKS[0].abbr;
+
+  function bookByAbbr(abbr){
+    return BOOKS.find(function(b){ return b.abbr === abbr; });
+  }
+
+  function renderBookChecklist(){
+    bookCheckRowEl.innerHTML = '';
+    BOOKS.forEach(function(b){
+      const checked = activeBooks.indexOf(b.abbr) !== -1;
+      const label = document.createElement('label');
+      label.className = 'book-check' + (checked ? ' checked' : '');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = checked;
+      cb.addEventListener('change', function(){
+        if (cb.checked){
+          if (activeBooks.indexOf(b.abbr) === -1) activeBooks.push(b.abbr);
+        } else {
+          activeBooks = activeBooks.filter(function(a){ return a !== b.abbr; });
+        }
+        saveSticky();
+        renderBookChecklist();
+        renderEntryBookField();
+        checkPageAmbiguity();
+      });
+      const name = document.createElement('span');
+      name.className = 'b-name';
+      name.textContent = b.short || b.abbr;
+      label.appendChild(cb);
+      label.appendChild(name);
+      bookCheckRowEl.appendChild(label);
+    });
+  }
+
+  function renderEntryBookField(){
+    entryBookFieldEl.innerHTML = '';
+    if (activeBooks.length === 0){
+      setAdHocMode(false);
+      const warn = document.createElement('div');
+      warn.className = 'book-warn';
+      warn.textContent = 'Select at least one songbook above';
+      entryBookFieldEl.appendChild(warn);
+      return;
+    }
+    if (activeBooks.length === 1){
+      selectedBook = activeBooks[0];
+      setAdHocMode(selectedBook === 'OTHER');
+      const b = bookByAbbr(selectedBook);
+      const wrap = document.createElement('div');
+      wrap.className = 'book-static-wrap';
+      const badge = document.createElement('span');
+      badge.className = 'book-badge static-badge ' + selectedBook.toLowerCase();
+      badge.textContent = selectedBook;
+      const name = document.createElement('span');
+      name.textContent = b ? b.name : '';
+      wrap.appendChild(badge);
+      wrap.appendChild(name);
+      entryBookFieldEl.appendChild(wrap);
+      return;
+    }
+    if (activeBooks.indexOf(selectedBook) === -1) selectedBook = activeBooks[0];
+    setAdHocMode(selectedBook === 'OTHER');
+    const label = document.createElement('label');
+    label.style.display = 'block';
+    label.style.fontFamily = "'Inter',sans-serif";
+    label.style.fontSize = '11px';
+    label.style.fontWeight = '600';
+    label.style.textTransform = 'uppercase';
+    label.style.letterSpacing = '.06em';
+    label.style.color = 'var(--faint)';
+    label.style.marginBottom = '4px';
+    label.textContent = 'Book';
+    entryBookFieldEl.appendChild(label);
+    const row = document.createElement('div');
+    row.className = 'book-pill-row';
+    activeBooks.forEach(function(abbr){
+      const pill = document.createElement('button');
+      pill.type = 'button';
+      pill.className = 'book-badge ' + abbr.toLowerCase() + (selectedBook === abbr ? ' selected' : '');
+      pill.textContent = abbr;
+      pill.addEventListener('click', function(){
+        selectedBook = abbr;
+        renderEntryBookField();
+        checkPageAmbiguity();
+      });
+      row.appendChild(pill);
+    });
+    entryBookFieldEl.appendChild(row);
+  }
+  const callerEl = document.getElementById('caller');
+  const callerListEl = document.getElementById('callerList');
+  const pageEl = document.getElementById('page');
+  const pageLabelEl = document.getElementById('pageLabel');
+  const adhocTitleEl = document.getElementById('adhocTitle');
+  const pageWarnEl = document.getElementById('pageWarn');
+  const pageWarnTextEl = document.getElementById('pageWarnText');
+  const pickTopBtn = document.getElementById('pickTop');
+  const pickBottomBtn = document.getElementById('pickBottom');
+  const pageTitlePreviewEl = document.getElementById('pageTitlePreview');
+  const dupWarnEl = document.getElementById('dupWarn');
+  const unknownConfirmEl = document.getElementById('unknownConfirm');
+  let pendingUnknownConfirm = false;
+  let adHocMode = false;
+
+  function setAdHocMode(on){
+    if (adHocMode === on) return;
+    adHocMode = on;
+    if (on){
+      pageEl.style.display = 'none';
+      pageEl.value = '';
+      pageWarnEl.classList.remove('show');
+      pageTitlePreviewEl.classList.remove('show');
+      dupWarnEl.classList.remove('show');
+      unknownConfirmEl.classList.remove('show');
+      pendingUnknownConfirm = false;
+      adhocTitleEl.style.display = 'block';
+      pageLabelEl.textContent = 'Song title';
+    } else {
+      pageEl.style.display = 'block';
+      adhocTitleEl.style.display = 'none';
+      adhocTitleEl.value = '';
+      pageLabelEl.textContent = 'Page / order (e.g. 50t or 50.1)';
+    }
+  }
+  const alreadySungEl = document.getElementById('alreadySung');
+  let pageIsAmbiguous = false;
+
+  function canonPage(raw){
+    const s = String(raw).trim().toLowerCase();
+    let m = /^(\d+)\.(1|2)$/.exec(s);
+    if (m) return m[1] + (m[2] === '1' ? 't' : 'b');
+    m = /^(\d+)([tb])$/.exec(s);
+    if (m) return m[1] + m[2];
+    m = /^(\d+)$/.exec(s);
+    if (m) return m[1];
+    return s;
+  }
+
+  function lookupTitle(book, raw){
+    const map = TITLES[book];
+    if (!map) return null;
+    return map[canonPage(raw)] || null;
+  }
+
+  function isSplitBare(book, raw){
+    const m = /^(\d+)$/.exec(String(raw).trim());
+    if (!m) return false;
+    const splits = SPLIT_PAGES[book] || [];
+    return splits.indexOf(parseInt(m[1], 10)) !== -1;
+  }
+
+  function isRealBookEntry(e){
+    return !!e.book && e.book !== 'OTHER';
+  }
+
+  function updatePageTitlePreview(){
+    const raw = pageEl.value.trim();
+    const title = lookupTitle(selectedBook, raw);
+    const map = TITLES[selectedBook];
+    const hasData = map && Object.keys(map).length > 0;
+    if (title){
+      pageTitlePreviewEl.textContent = '♪ ' + title;
+      pageTitlePreviewEl.classList.remove('not-found');
+      pageTitlePreviewEl.classList.add('show');
+    } else if (raw && hasData && !pageIsAmbiguous){
+      pageTitlePreviewEl.textContent = 'No song found at that page in this book';
+      pageTitlePreviewEl.classList.add('not-found');
+      pageTitlePreviewEl.classList.add('show');
+    } else {
+      pageTitlePreviewEl.classList.remove('show');
+      pageTitlePreviewEl.classList.remove('not-found');
+    }
+  }
+
+  function checkDuplicate(){
+    const raw = pageEl.value.trim();
+    if (!raw){
+      dupWarnEl.classList.remove('show');
+      return;
+    }
+    const key = canonPage(raw);
+    const already = entries.some(function(e){ return e.book === selectedBook && canonPage(e.page) === key; });
+    if (already){
+      dupWarnEl.textContent = 'Already logged this singing — fine if that\u2019s intentional.';
+      dupWarnEl.classList.add('show');
+    } else {
+      dupWarnEl.classList.remove('show');
+    }
+  }
+
+  function isUnknownPage(){
+    const raw = pageEl.value.trim();
+    if (!raw || pageIsAmbiguous) return false;
+    const map = TITLES[selectedBook];
+    const hasData = map && Object.keys(map).length > 0;
+    return hasData && !lookupTitle(selectedBook, raw);
+  }
+
+  function hideUnknownConfirm(){
+    pendingUnknownConfirm = false;
+    unknownConfirmEl.classList.remove('show');
+  }
+
+  function checkPageAmbiguity(){
+    hideUnknownConfirm();
+    const raw = pageEl.value.trim();
+    const m = /^(\d+)$/.exec(raw);
+    const splits = SPLIT_PAGES[selectedBook] || [];
+    if (m && splits.indexOf(parseInt(m[1], 10)) !== -1){
+      pageIsAmbiguous = true;
+      const num = m[1];
+      const titleT = lookupTitle(selectedBook, num + 't');
+      const titleB = lookupTitle(selectedBook, num + 'b');
+      if (titleT && titleB){
+        pageWarnTextEl.textContent = num + 't — ' + titleT + '  /  ' + num + 'b — ' + titleB;
+      } else {
+        pageWarnTextEl.textContent = 'This page has a top and bottom — which one?';
+      }
+      pageWarnEl.classList.add('show');
+    } else {
+      pageIsAmbiguous = false;
+      pageWarnEl.classList.remove('show');
+    }
+    updatePageTitlePreview();
+    checkDuplicate();
+  }
+
+  pageEl.addEventListener('input', checkPageAmbiguity);
+  pickTopBtn.addEventListener('click', function(){
+    const m = /^(\d+)$/.exec(pageEl.value.trim());
+    if (m) pageEl.value = m[1] + 't';
+    pageIsAmbiguous = false;
+    pageWarnEl.classList.remove('show');
+    updatePageTitlePreview();
+    checkDuplicate();
+    pageEl.focus();
+  });
+  pickBottomBtn.addEventListener('click', function(){
+    const m = /^(\d+)$/.exec(pageEl.value.trim());
+    if (m) pageEl.value = m[1] + 'b';
+    pageIsAmbiguous = false;
+    pageWarnEl.classList.remove('show');
+    updatePageTitlePreview();
+    checkDuplicate();
+    pageEl.focus();
+  });
+  const notesEl = document.getElementById('notes');
+  let selectedTag = null;
+  const tagChips = document.querySelectorAll('.tag-chip');
+  tagChips.forEach(function(chip){
+    chip.addEventListener('click', function(){
+      const tag = chip.getAttribute('data-tag');
+      selectedTag = (selectedTag === tag) ? null : tag;
+      tagChips.forEach(function(c){
+        c.classList.toggle('selected', c.getAttribute('data-tag') === selectedTag);
+      });
+    });
+  });
+  const addBtn = document.getElementById('addBtn');
+  const logEl = document.getElementById('log');
+  const logEmptyEl = document.getElementById('logEmpty');
+  const logCountEl = document.getElementById('logCount');
+  const clearControls = document.getElementById('clearControls');
+  const exportRow = document.getElementById('exportRow');
+  const tallyToggleEl = document.getElementById('tallyToggle');
+  const tallyBoxEl = document.getElementById('tallyBox');
+  let tallyVisible = false;
+  const toastEl = document.getElementById('toast');
+
+  let entries = [];
+  let editingId = null;
+  let toastTimeout = null;
+  let dirtySinceExport = false;
+
+  // --- persistence (this page's own browser storage — works once hosted, not in this preview sandbox) ---
+  function isValidStoredEntry(x){
+    if (!x || typeof x !== 'object') return false;
+    if (x.type === 'marker') return typeof x.label === 'string' && x.label.length > 0;
+    return typeof x.book === 'string' || x.book === undefined;
+  }
+
+  function load(){
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw){
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.every(isValidStoredEntry)){
+          entries = parsed;
+        } else if (raw){
+          entries = [];
+          showToast("Saved session looked corrupted, so it wasn't restored");
+        }
+      }
+    } catch(e){ entries = []; }
+    try {
+      const stickyRaw = localStorage.getItem(STICKY_KEY);
+      if (stickyRaw) {
+        const sticky = JSON.parse(stickyRaw);
+        if (sticky.event) eventEl.value = sticky.event;
+        if (sticky.date) dateEl.value = sticky.date;
+        if (sticky.location) locationEl.value = sticky.location;
+        if (Array.isArray(sticky.activeBooks)){
+          const valid = sticky.activeBooks.filter(function(a){ return BOOKS.some(function(b){ return b.abbr === a; }); });
+          if (valid.length) activeBooks = valid;
+        }
+      }
+    } catch(e){}
+    if (!dateEl.value) dateEl.value = todayLocalISO();
+  }
+  function saveEntries(){
+    dirtySinceExport = entries.length > 0;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+      if (entries.length){
+        localSaveStatusEl.style.display = 'block';
+        localSaveStatusEl.textContent = 'Saved locally at ' + new Date().toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
+        localSaveStatusEl.classList.remove('error');
+      }
+    } catch(e){
+      localSaveStatusEl.style.display = 'block';
+      localSaveStatusEl.textContent = "Couldn't save to this browser — download or copy your minutes now to be safe.";
+      localSaveStatusEl.classList.add('error');
+    }
+  }
+  function saveSticky(){
+    try { localStorage.setItem(STICKY_KEY, JSON.stringify({event: eventEl.value, date: dateEl.value, location: locationEl.value, activeBooks: activeBooks})); } catch(e){}
+  }
+
+  function showToast(msg){
+    clearTimeout(toastTimeout);
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    toastTimeout = setTimeout(()=> toastEl.classList.remove('show'), 1400);
+  }
+
+  function showUndoToast(msg, onUndo){
+    clearTimeout(toastTimeout);
+    toastEl.innerHTML = '';
+    toastEl.appendChild(document.createTextNode(msg + ' '));
+    const undoBtn = document.createElement('button');
+    undoBtn.className = 'toast-undo';
+    undoBtn.textContent = 'Undo';
+    undoBtn.onclick = function(){
+      clearTimeout(toastTimeout);
+      toastEl.classList.remove('show');
+      onUndo();
+    };
+    toastEl.appendChild(undoBtn);
+    toastEl.classList.add('show');
+    toastTimeout = setTimeout(()=> toastEl.classList.remove('show'), 5000);
+  }
+
+  function formatClock(iso){
+    const d = new Date(iso);
+    return d.toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
+  }
+
+  function todayLocalISO(){
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+
+  function sortPageKeys(keys){
+    return keys.slice().sort(function(a, b){
+      const ma = /^(\d+)([tb]?)$/.exec(a);
+      const mb = /^(\d+)([tb]?)$/.exec(b);
+      if (!ma || !mb) return a.localeCompare(b);
+      const na = parseInt(ma[1], 10), nb = parseInt(mb[1], 10);
+      if (na !== nb) return na - nb;
+      return (ma[2] || '').localeCompare(mb[2] || '');
+    });
+  }
+
+  function renderTallyToggle(){
+    const songCount = entries.filter(function(e){ return e.type !== 'marker'; }).length;
+    tallyToggleEl.style.display = songCount ? 'block' : 'none';
+    tallyToggleEl.innerHTML = '';
+    const btn = document.createElement('button');
+    btn.textContent = tallyVisible ? 'Hide tally' : 'Show tally';
+    btn.onclick = function(){
+      tallyVisible = !tallyVisible;
+      renderTallyToggle();
+      renderTallyBox();
+    };
+    tallyToggleEl.appendChild(btn);
+  }
+
+  function renderTallyBox(){
+    const songEntries = entries.filter(function(e){ return e.type !== 'marker'; });
+    if (!tallyVisible || !songEntries.length){
+      tallyBoxEl.style.display = 'none';
+      tallyBoxEl.innerHTML = '';
+      return;
+    }
+    const byLeader = {};
+    const byBook = {};
+    songEntries.forEach(function(e){
+      const leader = e.caller || '(no leader listed)';
+      byLeader[leader] = (byLeader[leader] || 0) + 1;
+      const book = e.book || '(no book)';
+      byBook[book] = (byBook[book] || 0) + 1;
+    });
+    const leaderRows = Object.keys(byLeader)
+      .sort(function(a, b){ return byLeader[b] - byLeader[a] || a.localeCompare(b); })
+      .map(function(name){
+        return '<div class="tally-row"><span>' + escapeHtml(name) + '</span><span class="n">' + byLeader[name] + '</span></div>';
+      }).join('');
+    const bookRows = Object.keys(byBook)
+      .sort(function(a, b){ return byBook[b] - byBook[a] || a.localeCompare(b); })
+      .map(function(abbr){
+        return '<div class="tally-row"><span>' + escapeHtml(abbr) + '</span><span class="n">' + byBook[abbr] + '</span></div>';
+      }).join('');
+    tallyBoxEl.innerHTML =
+      '<div class="tally-section"><h3>Songs total</h3><div class="tally-row"><span>All entries</span><span class="n">' + songEntries.length + '</span></div></div>' +
+      '<div class="tally-section"><h3>By leader</h3>' + leaderRows + '</div>' +
+      '<div class="tally-section"><h3>By songbook</h3>' + bookRows + '</div>';
+    tallyBoxEl.style.display = 'block';
+  }
+
+  function renderAlreadySung(){
+    const byBook = {};
+    entries.forEach(function(e){
+      if (!e.book || !e.page) return;
+      const key = canonPage(e.page);
+      byBook[e.book] = byBook[e.book] || new Set();
+      byBook[e.book].add(key);
+    });
+    const lines = BOOKS
+      .filter(function(b){ return byBook[b.abbr] && byBook[b.abbr].size; })
+      .map(function(b){
+        const keys = sortPageKeys(Array.from(byBook[b.abbr]));
+        return '<div class="book-line"><span class="code">' + escapeHtml(b.abbr) + '</span> ' + keys.map(escapeHtml).join(' ') + '</div>';
+      });
+    alreadySungEl.innerHTML = lines.join('');
+  }
+
+  function updateCallerList(){
+    const names = Array.from(new Set(entries.map(function(e){ return e.caller; }).filter(Boolean))).sort();
+    callerListEl.innerHTML = names.map(function(n){ return '<option value="' + n.replace(/"/g,'&quot;') + '">'; }).join('');
+  }
+
+  function render(){
+    logCountEl.textContent = 'Log (' + entries.length + ')';
+    logEmptyEl.style.display = entries.length ? 'none' : 'block';
+    exportRow.style.display = entries.length ? 'flex' : 'none';
+    updateCallerList();
+    renderAlreadySung();
+    renderTallyToggle();
+    renderTallyBox();
+    renderAutosaveControls();
+
+    clearControls.innerHTML = '';
+    if (entries.length){
+      const clearBtn = document.createElement('button');
+      clearBtn.className = 'link-btn';
+      clearBtn.textContent = 'Clear log';
+      clearBtn.onclick = function(){
+        clearControls.innerHTML = '';
+        const span = document.createElement('span');
+        span.style.fontFamily = "'Inter',sans-serif";
+        span.style.fontSize = '12px';
+        span.innerHTML = 'Clear the log? Event, Date, Location, and Song Sources stay as they are. ';
+        const yes = document.createElement('button');
+        yes.className = 'link-btn'; yes.textContent = 'Yes';
+        yes.onclick = function(){
+          entries = [];
+          lastAutosaveSnapshot = JSON.stringify(entries);
+          resetEntryForm();
+          saveEntries();
+          render();
+          showToast('Cleared');
+        };
+        const no = document.createElement('button');
+        no.className = 'link-btn'; no.textContent = 'No'; no.style.marginLeft = '6px';
+        no.onclick = render;
+        span.appendChild(yes); span.appendChild(document.createTextNode(' / ')); span.appendChild(no);
+        clearControls.appendChild(span);
+      };
+      clearControls.appendChild(clearBtn);
+    }
+
+    logEl.innerHTML = '';
+    [...entries].reverse().forEach(function(e){
+      const row = document.createElement('div');
+      row.className = 'entry';
+
+      if (e.type === 'marker'){
+        row.classList.add('marker-entry');
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'marker-label';
+        labelDiv.textContent = e.label;
+        row.appendChild(labelDiv);
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'time';
+        timeDiv.textContent = e.displayTime || formatClock(e.timestamp);
+        row.appendChild(timeDiv);
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove';
+        removeBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+        removeBtn.onclick = function(){
+          const idx = entries.findIndex(function(x){ return x.id === e.id; });
+          if (idx === -1) return;
+          const removed = entries[idx];
+          entries.splice(idx, 1);
+          entries.forEach(function(x, i){ x.order = i + 1; });
+          saveEntries(); render();
+          showUndoToast('Removed', function(){
+            entries.splice(idx, 0, removed);
+            entries.forEach(function(x, i){ x.order = i + 1; });
+            saveEntries(); render();
+          });
+        };
+        row.appendChild(removeBtn);
+        logEl.appendChild(row);
+        return;
+      }
+
+      if (editingId === e.id){
+        row.classList.add('editing');
+        const editWrap = document.createElement('div');
+        editWrap.className = 'edit-wrap';
+
+        // Book selector
+        const editBookLabel = document.createElement('label');
+        editBookLabel.className = 'edit-field-label';
+        editBookLabel.textContent = 'Book';
+        const editBookSelect = document.createElement('select');
+        editBookSelect.className = 'edit-select';
+        BOOKS.forEach(function(b){
+          const opt = document.createElement('option');
+          opt.value = b.abbr;
+          opt.textContent = b.abbr + ' — ' + b.name;
+          if (b.abbr === e.book) opt.selected = true;
+          editBookSelect.appendChild(opt);
+        });
+
+        const editCaller = document.createElement('input');
+        editCaller.value = e.caller || '';
+        editCaller.placeholder = "Who's calling this one";
+
+        const editPage = document.createElement('input');
+        const editPageStatus = document.createElement('div');
+        editPageStatus.className = 'edit-page-status';
+
+        function editIsRealBook(){ return editBookSelect.value !== 'OTHER'; }
+
+        function refreshEditPageField(clearValue){
+          if (editIsRealBook()){
+            editPage.placeholder = 'Page called';
+            if (clearValue) editPage.value = '';
+          } else {
+            editPage.placeholder = 'Song title';
+            if (clearValue) editPage.value = e.song || '';
+          }
+        }
+        if (editIsRealBook()){
+          editPage.value = e.page || '';
+          editPage.placeholder = 'Page called';
+        } else {
+          editPage.value = e.song || '';
+          editPage.placeholder = 'Song title';
+        }
+
+        let editPendingUnknownConfirm = false;
+
+        function checkDuplicateForEdit(book, rawValue){
+          const key = canonPage(rawValue);
+          return entries.some(function(x){
+            return x.id !== e.id && x.type !== 'marker' && x.book === book && canonPage(x.page) === key;
+          });
+        }
+
+        function renderEditPageStatus(){
+          editPendingUnknownConfirm = false;
+          editPageStatus.className = 'edit-page-status';
+          editPageStatus.textContent = '';
+          saveBtn.textContent = 'Save';
+          saveBtn.classList.remove('pending');
+          if (!editIsRealBook()) return;
+          const book = editBookSelect.value;
+          const raw = editPage.value.trim();
+          if (!raw) return;
+          if (isSplitBare(book, raw)){
+            editPageStatus.classList.add('warn');
+            editPageStatus.textContent = 'This page has a top and bottom — add t or b';
+            return;
+          }
+          const title = lookupTitle(book, raw);
+          const map = TITLES[book];
+          const hasData = map && Object.keys(map).length > 0;
+          if (title){
+            const isDup = checkDuplicateForEdit(book, raw);
+            editPageStatus.classList.add('title');
+            editPageStatus.textContent = '♪ ' + title + (isDup ? '  ·  already logged' : '');
+          } else if (hasData){
+            editPageStatus.classList.add('notfound');
+            editPageStatus.textContent = 'No song found at that page';
+          }
+        }
+
+        editBookSelect.addEventListener('change', function(){
+          refreshEditPageField(true);
+          renderEditPageStatus();
+        });
+        editPage.addEventListener('input', renderEditPageStatus);
+
+        const editNotes = document.createElement('input');
+        editNotes.value = e.notes || '';
+        editNotes.placeholder = 'Notes';
+
+        // Tag chips
+        const editTagRow = document.createElement('div');
+        editTagRow.className = 'edit-tag-row';
+        let editSelectedTag = e.tag || null;
+        const editTagLabels = ['Call Back', 'Memorial', 'Special'];
+        const editTagBtns = editTagLabels.map(function(label){
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'tag-chip' + (editSelectedTag === label ? ' selected' : '');
+          btn.textContent = label;
+          btn.addEventListener('click', function(){
+            editSelectedTag = (editSelectedTag === label) ? null : label;
+            editTagBtns.forEach(function(b2){ b2.classList.toggle('selected', b2.textContent === editSelectedTag); });
+          });
+          editTagRow.appendChild(btn);
+          return btn;
+        });
+
+        editWrap.appendChild(editBookLabel);
+        editWrap.appendChild(editBookSelect);
+        editWrap.appendChild(editCaller);
+        editWrap.appendChild(editPage);
+        editWrap.appendChild(editPageStatus);
+        editWrap.appendChild(editTagRow);
+        editWrap.appendChild(editNotes);
+
+        const btnRow = document.createElement('div');
+        btnRow.className = 'edit-btn-row';
+        const saveBtn = document.createElement('button');
+        saveBtn.className = 'edit-save'; saveBtn.textContent = 'Save';
+        saveBtn.onclick = function(){
+          const book = editBookSelect.value;
+          const isReal = book !== 'OTHER';
+          const raw = editPage.value.trim();
+
+          if (isReal){
+            if (!raw){
+              showToast('Enter a page first');
+              return;
+            }
+            if (isSplitBare(book, raw)){
+              showToast('Specify top or bottom for this page');
+              return;
+            }
+            const title = lookupTitle(book, raw);
+            const map = TITLES[book];
+            const hasData = map && Object.keys(map).length > 0;
+            if (!title && hasData && !editPendingUnknownConfirm){
+              editPendingUnknownConfirm = true;
+              editPageStatus.className = 'edit-page-status notfound';
+              editPageStatus.textContent = 'No song found — tap Save again to keep it anyway';
+              saveBtn.textContent = 'Save anyway';
+              saveBtn.classList.add('pending');
+              return;
+            }
+          } else {
+            if (!raw){
+              showToast('Enter a song title first');
+              return;
+            }
+          }
+
+          e.book = book;
+          e.caller = editCaller.value.trim();
+          e.notes = editNotes.value.trim();
+          e.tag = editSelectedTag;
+          if (isReal){
+            e.page = raw;
+            e.song = lookupTitle(book, raw);
+          } else {
+            e.page = '';
+            e.song = raw;
+          }
+          editingId = null;
+          saveEntries(); render();
+        };
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'edit-cancel'; cancelBtn.textContent = 'Cancel';
+        cancelBtn.onclick = function(){ editingId = null; render(); };
+        btnRow.appendChild(saveBtn);
+        btnRow.appendChild(cancelBtn);
+        editWrap.appendChild(btnRow);
+        row.appendChild(editWrap);
+        logEl.appendChild(row);
+        renderEditPageStatus();
+        return;
+      }
+
+      const metaParts = [String(e.order), e.caller || '—'];
+      if (e.page) metaParts.push(e.page);
+      if (e.book) metaParts.push(e.book);
+      row.innerHTML =
+        '<span class="shape">' + shapeSVGs[(e.order - 1) % 4] + '</span>' +
+        '<div class="body">' +
+          '<div class="title">' + metaParts.map(escapeHtml).join(' - ') + '</div>' +
+          (e.song ? '<div class="song">' + (e.tag ? '<span class="tag-label">' + escapeHtml(e.tag) + '</span>' : '') + escapeHtml(e.song) + '</div>' : '') +
+          (e.notes ? '<div class="notes">' + escapeHtml(e.notes) + '</div>' : '') +
+        '</div>' +
+        '<div class="time">' + (e.displayTime || formatClock(e.timestamp)) + '</div>';
+      row.querySelector('.body').addEventListener('click', function(){
+        editingId = e.id;
+        render();
+      });
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove';
+      removeBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+      removeBtn.onclick = function(){
+        const idx = entries.findIndex(function(x){ return x.id === e.id; });
+        if (idx === -1) return;
+        const removed = entries[idx];
+        entries.splice(idx, 1);
+        entries.forEach(function(x, i){ x.order = i + 1; });
+        saveEntries(); render();
+        showUndoToast('Removed', function(){
+          entries.splice(idx, 0, removed);
+          entries.forEach(function(x, i){ x.order = i + 1; });
+          saveEntries(); render();
+        });
+      };
+      row.appendChild(removeBtn);
+      logEl.appendChild(row);
+    });
+  }
+
+  function escapeHtml(s){
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function addMarker(label){
+    const now = new Date().toISOString();
+    entries.push({
+      id: now + Math.random().toString(36).slice(2,7),
+      order: entries.length + 1,
+      type: 'marker',
+      label: label,
+      event: eventEl.value.trim(),
+      date: dateEl.value,
+      location: locationEl.value.trim(),
+      timestamp: now,
+      displayTime: formatClock(now)
+    });
+    saveEntries();
+    render();
+    showToast('Marked: ' + label);
+  }
+
+  function addEntry(){
+    if (activeBooks.length === 0){
+      showToast('Select a songbook first');
+      return;
+    }
+
+    if (adHocMode){
+      const title = adhocTitleEl.value.trim();
+      if (!title){
+        showToast('Enter a song title first');
+        adhocTitleEl.focus();
+        return;
+      }
+      const now = new Date().toISOString();
+      entries.push({
+        id: now + Math.random().toString(36).slice(2,7),
+        order: entries.length + 1,
+        event: eventEl.value.trim(),
+        date: dateEl.value,
+        location: locationEl.value.trim(),
+        book: selectedBook,
+        caller: callerEl.value.trim(),
+        page: '',
+        song: title,
+        tag: selectedTag,
+        notes: notesEl.value.trim(),
+        timestamp: now,
+        displayTime: formatClock(now)
+      });
+      callerEl.value = '';
+      adhocTitleEl.value = '';
+      notesEl.value = '';
+      selectedTag = null;
+      tagChips.forEach(function(c){ c.classList.remove('selected'); });
+      saveEntries();
+      render();
+      showToast('Added');
+      callerEl.focus();
+      return;
+    }
+
+    if (!pageEl.value.trim()){
+      showToast('Enter a page or order first');
+      pageEl.focus();
+      return;
+    }
+    if (pageIsAmbiguous){
+      showToast('Specify top or bottom for this page');
+      pageEl.focus();
+      return;
+    }
+    if (isUnknownPage() && !pendingUnknownConfirm){
+      pendingUnknownConfirm = true;
+      unknownConfirmEl.classList.add('show');
+      return;
+    }
+    hideUnknownConfirm();
+    const now = new Date().toISOString();
+    entries.push({
+      id: now + Math.random().toString(36).slice(2,7),
+      order: entries.length + 1,
+      event: eventEl.value.trim(),
+      date: dateEl.value,
+      location: locationEl.value.trim(),
+      book: selectedBook,
+      caller: callerEl.value.trim(),
+      page: pageEl.value.trim(),
+      song: lookupTitle(selectedBook, pageEl.value),
+      tag: selectedTag,
+      notes: notesEl.value.trim(),
+      timestamp: now,
+      displayTime: formatClock(now)
+    });
+    callerEl.value = '';
+    pageEl.value = '';
+    notesEl.value = '';
+    selectedTag = null;
+    tagChips.forEach(function(c){ c.classList.remove('selected'); });
+    pageIsAmbiguous = false;
+    pageWarnEl.classList.remove('show');
+    pageTitlePreviewEl.classList.remove('show');
+    dupWarnEl.classList.remove('show');
+    saveEntries();
+    render();
+    showToast('Added');
+    callerEl.focus();
+  }
+
+  addBtn.addEventListener('click', addEntry);
+  const newDayBannerEl = document.getElementById('newDayBanner');
+  const newDayTransitionBannerEl = document.getElementById('newDayTransitionBanner');
+  document.querySelectorAll('.marker-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const label = btn.getAttribute('data-label');
+      if (label === 'NEW DAY / LOCATION'){
+        try { localStorage.setItem(SETUP_COLLAPSE_KEY, '0'); } catch(e){}
+        renderSetupCollapse();
+        newDayTransitionBannerEl.style.display = 'block';
+        newDayBannerEl.style.display = 'none';
+        setupSectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        dateEl.focus();
+        return;
+      }
+      addMarker(label);
+    });
+  });
+  document.getElementById('newDayConfirmBtn').addEventListener('click', function(){
+    newDayTransitionBannerEl.style.display = 'none';
+    addMarker('NEW DAY / LOCATION');
+    try { localStorage.setItem(SETUP_COLLAPSE_KEY, '1'); } catch(e){}
+    renderSetupCollapse();
+    newDayBannerEl.style.display = 'block';
+  });
+  document.getElementById('newDayCancelBtn').addEventListener('click', function(){
+    newDayTransitionBannerEl.style.display = 'none';
+  });
+  document.getElementById('newDayCsvBtn').addEventListener('click', downloadCSV);
+  document.getElementById('newDayCopyBtn').addEventListener('click', copyToClipboard);
+  document.getElementById('newDayDismissBtn').addEventListener('click', function(){
+    newDayBannerEl.style.display = 'none';
+  });
+  document.getElementById('confirmAddAnyway').addEventListener('click', addEntry);
+  document.getElementById('cancelAddAnyway').addEventListener('click', function(){
+    hideUnknownConfirm();
+    pageEl.focus();
+  });
+  [callerEl, pageEl, notesEl, adhocTitleEl].forEach(function(el){
+    el.addEventListener('keydown', function(ev){
+      if (ev.key === 'Enter'){ ev.preventDefault(); addEntry(); }
+    });
+  });
+  eventEl.addEventListener('input', saveSticky);
+  dateEl.addEventListener('input', saveSticky);
+  locationEl.addEventListener('input', saveSticky);
+
+  const EXPORT_HEADER = ['Order of entry','Record Type','Event','Date','Location','Book','Leader(s)','Page','Song','Tag','Notes','Marker','Timestamp ISO','Time entered'];
+  function buildExportRows(){
+    return entries.map(function(e){
+      if (e.type === 'marker'){
+        return [e.order, 'marker', e.event, e.date, e.location || '', '', '', '', '', '', '', e.label, e.timestamp, e.displayTime || formatClock(e.timestamp)];
+      }
+      return [e.order, 'song', e.event, e.date, e.location || '', e.book, e.caller, e.page, e.song || '', e.tag || '', e.notes, '', e.timestamp, e.displayTime || formatClock(e.timestamp)];
+    });
+  }
+
+  function csvContent(){
+    function cell(v){
+      let s = String(v == null ? '' : v);
+      if (/^[=+\-@]/.test(s)) s = "'" + s;
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+    }
+    const lines = [EXPORT_HEADER.join(',')];
+    buildExportRows().forEach(function(row){
+      lines.push(row.map(cell).join(','));
+    });
+    return lines.join('\n');
+  }
+
+  function eventSlug(){
+    const v = eventEl.value.trim();
+    return v ? v.replace(/[^a-z0-9]+/gi, '-').toLowerCase().replace(/^-+|-+$/g, '') : 'minutes';
+  }
+
+  function downloadCSVFile(filename){
+    const csv = '\uFEFF' + csvContent().replace(/\n/g, '\r\n');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function downloadCSV(){
+    downloadCSVFile('minutes-' + dateEl.value + '.csv');
+    dirtySinceExport = false;
+  }
+
+  function copyToClipboard(){
+    function tcell(v){
+      let s = String(v == null ? '' : v).replace(/\t/g, ' ').replace(/\n/g, ' ');
+      if (/^[=+\-@]/.test(s)) s = "'" + s;
+      return s;
+    }
+    const lines = [EXPORT_HEADER.join('\t')];
+    buildExportRows().forEach(function(row){
+      lines.push(row.map(tcell).join('\t'));
+    });
+    const text = lines.join('\n');
+    function fallbackCopy(){
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch(e){ ok = false; }
+      document.body.removeChild(ta);
+      return ok;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){
+        dirtySinceExport = false;
+        showToast('Copied — paste into your spreadsheet');
+      }).catch(function(){
+        if (fallbackCopy()){
+          dirtySinceExport = false;
+          showToast('Copied — paste into your spreadsheet');
+        } else {
+          showToast("Couldn't copy — try Download CSV instead");
+        }
+      });
+    } else {
+      if (fallbackCopy()){
+        dirtySinceExport = false;
+        showToast('Copied — paste into your spreadsheet');
+      } else {
+        showToast("Couldn't copy — try Download CSV instead");
+      }
+    }
+  }
+
+  document.getElementById('csvBtn').addEventListener('click', downloadCSV);
+  document.getElementById('copyBtn').addEventListener('click', copyToClipboard);
+
+  // ---------- Autosave ----------
+  const AUTOSAVE_KEY = 'singingMinutesAutosaveEnabled';
+  const AUTOSAVE_INTERVAL_MS = 10 * 60 * 1000;
+  let lastAutosaveSnapshot = null;
+
+  function autosaveTimestamp(){
+    const d = new Date();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    return hh + mm;
+  }
+
+  function performAutosave(manual){
+    if (!entries.length) return;
+    downloadCSVFile(eventSlug() + '-' + dateEl.value + '-autosave-' + autosaveTimestamp() + '.csv');
+    lastAutosaveSnapshot = JSON.stringify(entries);
+    // Only a direct, manual click counts as "saved" for the unsaved-changes warning —
+    // a timer-triggered download may be silently blocked by the browser, so we can't
+    // be sure it actually happened.
+    if (manual) dirtySinceExport = false;
+  }
+
+  function isAutosaveEnabled(){
+    try { return localStorage.getItem(AUTOSAVE_KEY) === '1'; } catch(e){ return false; }
+  }
+
+  const autosaveRowEl = document.getElementById('autosaveRow');
+  const autosaveNoteEl = document.getElementById('autosaveNote');
+  const autosaveToggleEl = document.getElementById('autosaveToggle');
+  const autosaveNowBtn = document.getElementById('autosaveNowBtn');
+  const localSaveStatusEl = document.getElementById('localSaveStatus');
+
+  function renderAutosaveControls(){
+    autosaveRowEl.style.display = entries.length ? 'flex' : 'none';
+    autosaveNoteEl.style.display = entries.length ? 'block' : 'none';
+    autosaveToggleEl.checked = isAutosaveEnabled();
+  }
+
+  autosaveToggleEl.addEventListener('change', function(){
+    try { localStorage.setItem(AUTOSAVE_KEY, autosaveToggleEl.checked ? '1' : '0'); } catch(e){}
+    showToast(autosaveToggleEl.checked ? 'Automatic download backup on' : 'Automatic download backup off');
+  });
+
+  autosaveNowBtn.addEventListener('click', function(){
+    if (!entries.length){
+      showToast('Nothing to save yet');
+      return;
+    }
+    performAutosave(true);
+    showToast('Backup downloaded');
+  });
+
+  setInterval(function(){
+    if (!isAutosaveEnabled()) return;
+    if (!entries.length) return;
+    const snapshot = JSON.stringify(entries);
+    if (snapshot !== lastAutosaveSnapshot){
+      performAutosave(false);
+    }
+  }, AUTOSAVE_INTERVAL_MS);
+
+  window.addEventListener('beforeunload', function(evt){
+    if (entries.length > 0 && dirtySinceExport){
+      evt.preventDefault();
+      evt.returnValue = '';
+    }
+  });
+
+  // ---------- Welcome gate / Load CSV ----------
+  const welcomeGateEl = document.getElementById('welcomeGate');
+  const mainAppEl = document.getElementById('mainApp');
+  const welcomeStatusEl = document.getElementById('welcomeStatus');
+  const resumeRowEl = document.getElementById('resumeRow');
+  const resumeSessionBtn = document.getElementById('resumeSessionBtn');
+  const newSingingBtn = document.getElementById('newSingingBtn');
+  const loadCsvBtn = document.getElementById('loadCsvBtn');
+  const csvFileInputEl = document.getElementById('csvFileInput');
+  const sessionMenuEl = document.getElementById('sessionMenu');
+  const sessionStartNewBtn = document.getElementById('sessionStartNewBtn');
+  const sessionLoadCsvBtn = document.getElementById('sessionLoadCsvBtn');
+  const sessionDownloadBtn = document.getElementById('sessionDownloadBtn');
+  const sessionReturnWelcomeBtn = document.getElementById('sessionReturnWelcomeBtn');
+
+  function showMainApp(){
+    welcomeGateEl.style.display = 'none';
+    mainAppEl.style.display = 'block';
+  }
+
+  function showWelcomeGate(){
+    mainAppEl.style.display = 'none';
+    welcomeGateEl.style.display = 'block';
+    renderWelcomeGate();
+  }
+
+  function renderWelcomeGate(){
+    const hasSession = entries.length > 0;
+    resumeRowEl.style.display = hasSession ? 'flex' : 'none';
+    newSingingBtn.className = hasSession ? 'btn-outline-full' : 'btn-solid-full';
+    welcomeStatusEl.textContent = '';
+    welcomeStatusEl.classList.remove('error');
+  }
+
+  function startNewSinging(){
+    if (entries.length > 0){
+      const proceed = window.confirm(
+        'Starting a new singing will clear the ' + entries.length + ' ' +
+        (entries.length === 1 ? 'entry' : 'entries') + ' currently logged. Continue?'
+      );
+      if (!proceed) return;
+    }
+    performFullReset();
+    showMainApp();
+    eventEl.focus();
+  }
+
+  resumeSessionBtn.addEventListener('click', showMainApp);
+  newSingingBtn.addEventListener('click', startNewSinging);
+  loadCsvBtn.addEventListener('click', function(){ csvFileInputEl.click(); });
+
+  sessionStartNewBtn.addEventListener('click', startNewSinging);
+  sessionLoadCsvBtn.addEventListener('click', function(){ csvFileInputEl.click(); });
+  sessionDownloadBtn.addEventListener('click', downloadCSV);
+  sessionReturnWelcomeBtn.addEventListener('click', showWelcomeGate);
+
+  function parseCSV(text){
+    if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+    const rows = [];
+    let row = [];
+    let field = '';
+    let inQuotes = false;
+    for (let i = 0; i < text.length; i++){
+      const c = text[i];
+      if (inQuotes){
+        if (c === '"'){
+          if (text[i+1] === '"'){ field += '"'; i++; }
+          else { inQuotes = false; }
+        } else {
+          field += c;
+        }
+      } else {
+        if (c === '"'){ inQuotes = true; }
+        else if (c === ','){ row.push(field); field = ''; }
+        else if (c === '\r'){ /* skip; \n below ends the row */ }
+        else if (c === '\n'){ row.push(field); rows.push(row); row = []; field = ''; }
+        else { field += c; }
+      }
+    }
+    if (field.length > 0 || row.length > 0){ row.push(field); rows.push(row); }
+    return rows.filter(function(r){ return !(r.length === 1 && r[0] === ''); });
+  }
+
+  function unescapeFormulaGuard(s){
+    if (typeof s === 'string' && s.length >= 2 && s[0] === "'" && '=+-@'.indexOf(s[1]) !== -1){
+      return s.slice(1);
+    }
+    return s;
+  }
+
+  function parseTimeToISO(dateStr, timeStr){
+    const m = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec(String(timeStr || '').trim());
+    let h = 12, mm = 0;
+    if (m){
+      h = parseInt(m[1], 10) % 12;
+      mm = parseInt(m[2], 10);
+      if (/pm/i.test(m[3])) h += 12;
+    }
+    const parts = String(dateStr || '').split('-').map(Number);
+    const d = new Date(parts[0] || 2000, (parts[1] || 1) - 1, parts[2] || 1, h, mm, 0);
+    return d.toISOString();
+  }
+
+  const VALID_TAGS = ['Call Back', 'Memorial', 'Special'];
+
+  function buildEntriesFromCSVRows(rows){
+    const header = rows[0];
+    const headerMatches = header.length === EXPORT_HEADER.length &&
+      header.every(function(h, i){ return h.trim() === EXPORT_HEADER[i]; });
+    if (!headerMatches){
+      return { error: "This doesn't look like an EZ Minutes CSV — the column headers don't match." };
+    }
+    const idx = {};
+    EXPORT_HEADER.forEach(function(h, i){ idx[h] = i; });
+    const dataRows = rows.slice(1);
+    const parsed = [];
+    const booksSeen = {};
+    let lastEvent = '', lastDate = '', lastLocation = '';
+    let orderProblem = false;
+    const seenOrders = {};
+    const rowErrors = [];
+    const rowWarnings = [];
+    const validBookAbbrs = BOOKS.map(function(b){ return b.abbr; });
+
+    dataRows.forEach(function(r, i){
+      const rowNum = i + 2; // +1 for header, +1 for 1-indexing
+      // Every field can carry the formula-injection guard on export — undo it uniformly on the way back in.
+      const get = function(col){ return unescapeFormulaGuard(r[idx[col]] !== undefined ? r[idx[col]] : ''); };
+      const orderRaw = get('Order of entry');
+      const recordTypeRaw = get('Record Type').trim().toLowerCase();
+      const eventVal = get('Event');
+      const dateVal = get('Date');
+      const locationVal = get('Location');
+      const bookVal = get('Book');
+      const nameVal = get('Leader(s)');
+      const pageVal = get('Page');
+      const songVal = get('Song');
+      const tagVal = get('Tag');
+      const notesVal = get('Notes');
+      const markerVal = get('Marker');
+      const isoVal = r[idx['Timestamp ISO']] !== undefined ? r[idx['Timestamp ISO']] : '';
+      const timeVal = get('Time entered');
+
+      if (recordTypeRaw && recordTypeRaw !== 'song' && recordTypeRaw !== 'marker'){
+        rowErrors.push('Row ' + rowNum + ': unrecognized Record Type "' + recordTypeRaw + '"');
+        return;
+      }
+      if (dateVal && !/^\d{4}-\d{2}-\d{2}$/.test(dateVal)){
+        rowWarnings.push('Row ' + rowNum + ': date "' + dateVal + '" looks invalid');
+      }
+
+      if (eventVal) lastEvent = eventVal;
+      if (dateVal) lastDate = dateVal;
+      if (locationVal) lastLocation = locationVal;
+      if (bookVal) booksSeen[bookVal] = true;
+
+      const isoDate = new Date(isoVal);
+      const timestamp = (isoVal && !isNaN(isoDate.getTime())) ? isoDate.toISOString() : parseTimeToISO(dateVal, timeVal);
+
+      const orderNum = parseInt(orderRaw, 10);
+      const orderValid = /^\d+$/.test(String(orderRaw).trim()) && orderNum > 0;
+      if (!orderValid || seenOrders[orderNum]) orderProblem = true;
+      if (orderValid) seenOrders[orderNum] = true;
+
+      // Fall back to the blank-fields heuristic only if Record Type is missing (older/hand-edited files).
+      const isMarker = recordTypeRaw ? recordTypeRaw === 'marker' :
+        (!bookVal && !nameVal && !pageVal && !songVal && !tagVal);
+
+      const label = markerVal || notesVal;
+      if (isMarker){
+        if (!label){
+          rowErrors.push('Row ' + rowNum + ': marker row has no label');
+          return;
+        }
+        if (bookVal || nameVal || pageVal || songVal || tagVal){
+          rowWarnings.push('Row ' + rowNum + ': marker row has extra data outside Marker/Notes');
+        }
+      } else {
+        if (bookVal && validBookAbbrs.indexOf(bookVal) === -1){
+          rowErrors.push('Row ' + rowNum + ': unrecognized Book "' + bookVal + '"');
+          return;
+        }
+        if (bookVal && bookVal !== 'OTHER' && !pageVal){
+          rowErrors.push('Row ' + rowNum + ': ' + bookVal + ' entry is missing a Page');
+          return;
+        }
+        if (bookVal === 'OTHER' && !songVal){
+          rowErrors.push('Row ' + rowNum + ': Other entry is missing a Song title');
+          return;
+        }
+        if (tagVal && VALID_TAGS.indexOf(tagVal) === -1){
+          rowWarnings.push('Row ' + rowNum + ': unrecognized Tag "' + tagVal + '"');
+        }
+      }
+
+      const base = {
+        id: timestamp + '-' + i + Math.random().toString(36).slice(2,5),
+        fileOrder: i,
+        parsedOrder: orderValid ? orderNum : null,
+        event: eventVal,
+        date: dateVal,
+        location: locationVal,
+        timestamp: timestamp,
+        displayTime: timeVal || null
+      };
+      if (isMarker){
+        base.type = 'marker';
+        base.label = label;
+      } else {
+        base.book = bookVal;
+        base.caller = nameVal;
+        base.page = pageVal;
+        base.song = songVal || null;
+        base.tag = tagVal || null;
+        base.notes = notesVal;
+      }
+      parsed.push(base);
+    });
+
+    if (rowErrors.length){
+      const shown = rowErrors.slice(0, 3).join('; ');
+      const more = rowErrors.length > 3 ? ' (+' + (rowErrors.length - 3) + ' more)' : '';
+      return { error: rowErrors.length + ' row(s) failed validation — ' + shown + more };
+    }
+
+    // Use the file's own Order of entry to sequence records when every value is valid and unique;
+    // otherwise fall back to on-disk row order and say so, rather than trusting a column that may
+    // have been reshuffled by sorting the CSV in a spreadsheet.
+    if (!orderProblem){
+      parsed.sort(function(a, b){ return a.parsedOrder - b.parsedOrder; });
+    } else {
+      parsed.sort(function(a, b){ return a.fileOrder - b.fileOrder; });
+    }
+
+    const newEntries = parsed.map(function(e, i){
+      const clean = Object.assign({}, e, { order: i + 1 });
+      delete clean.fileOrder;
+      delete clean.parsedOrder;
+      return clean;
+    });
+
+    const validBooks = BOOKS.map(function(b){ return b.abbr; })
+      .filter(function(abbr){ return booksSeen[abbr]; });
+
+    return {
+      event: lastEvent,
+      date: lastDate,
+      location: lastLocation,
+      activeBooks: validBooks.length ? validBooks : [BOOKS[0].abbr],
+      entries: newEntries,
+      orderProblem: orderProblem,
+      rowWarnings: rowWarnings
+    };
+  }
+
+  function reportImportError(msg){
+    showToast(msg);
+    if (welcomeGateEl.style.display !== 'none'){
+      welcomeStatusEl.textContent = msg;
+      welcomeStatusEl.classList.add('error');
+    }
+  }
+
+  csvFileInputEl.addEventListener('change', function(){
+    const file = csvFileInputEl.files && csvFileInputEl.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(){
+      let result;
+      try {
+        const rows = parseCSV(String(reader.result));
+        if (!rows.length){
+          reportImportError('That file appears to be empty.');
+          csvFileInputEl.value = '';
+          return;
+        }
+        result = buildEntriesFromCSVRows(rows);
+      } catch (err){
+        result = { error: 'Could not read that file as a CSV.' };
+      }
+      if (result.error){
+        reportImportError(result.error);
+        csvFileInputEl.value = '';
+        return;
+      }
+      if (entries.length > 0){
+        const proceed = window.confirm(
+          'Loading this file will replace the ' + entries.length + ' ' +
+          (entries.length === 1 ? 'entry' : 'entries') + ' currently in the application. Continue?'
+        );
+        if (!proceed){
+          csvFileInputEl.value = '';
+          return;
+        }
+      }
+      entries = result.entries;
+      activeBooks = result.activeBooks;
+      eventEl.value = result.event;
+      dateEl.value = result.date || todayLocalISO();
+      locationEl.value = result.location;
+      resetEntryForm();
+      saveEntries();
+      saveSticky();
+      dirtySinceExport = false;
+      lastAutosaveSnapshot = JSON.stringify(entries);
+      try { localStorage.setItem(SETUP_COLLAPSE_KEY, entries.length ? '1' : '0'); } catch(e){}
+      renderBookChecklist();
+      renderEntryBookField();
+      renderSetupCollapse();
+      render();
+      showMainApp();
+      const warnCount = (result.rowWarnings || []).length;
+      if (result.orderProblem){
+        showToast('Loaded ' + entries.length + ' — order numbers were missing or duplicated, so file order was used instead');
+      } else if (warnCount){
+        showToast('Loaded ' + entries.length + ' — ' + warnCount + ' minor ' + (warnCount === 1 ? 'issue' : 'issues') + ' noted (see console)');
+        console.warn('EZ Minutes import warnings:', result.rowWarnings);
+      } else {
+        showToast('Loaded ' + entries.length + ' ' + (entries.length === 1 ? 'entry' : 'entries'));
+      }
+      csvFileInputEl.value = '';
+    };
+    reader.onerror = function(){
+      reportImportError('Could not read that file.');
+    };
+    reader.readAsText(file);
+  });
+
+  load();
+  lastAutosaveSnapshot = JSON.stringify(entries);
+  renderBookChecklist();
+  renderEntryBookField();
+  checkPageAmbiguity();
+  renderSetupCollapse();
+  render();
+  renderWelcomeGate();
+})();
+</script>
+</body>
+</html>
