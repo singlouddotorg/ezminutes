@@ -4,6 +4,9 @@ A single-file, no-install web app for logging songs during a shape-note singing 
 
 Built for the Sacred Harp / shape-note singing community, but usable for any event where you need to log a running order of items, leaders, and page/tune references.
 
+Here is a walkthrough:
+https://www.youtube.com/watch?v=ydjWNx06eCk
+
 ## What it does
 
 - **Fast entry, built for the table.** Type a leader's name and a page number, hit Enter — no button required. The song title looks itself up from the book's index as you type.
