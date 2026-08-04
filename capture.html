@@ -386,8 +386,11 @@
     <nav class="suite-nav" aria-label="Suite navigation">
       <a href="index.html">Home</a>
       <a href="instructions.html">Instructions</a>
+      <span aria-hidden="true" style="opacity:.4;padding:0 2px;">|</span>
       <a href="capture.html" aria-current="page">Capture</a>
       <a href="compile.html">Compile</a>
+      <span aria-hidden="true" style="opacity:.4;padding:0 2px;">|</span>
+      <a href="tunebook-editor.html">Tunebooks</a>
     </nav>
   </header>
 </div>
@@ -1087,6 +1090,7 @@
   }
 
   function load(){
+    var migrationInsertedSessionBoundary = false;
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw){
@@ -1106,6 +1110,7 @@
           entries.sort(function(a,b){ return (a.order||0) - (b.order||0); });
           if (entries.some(function(e){ return e.type !== 'metadata' && !e.sessionId; })){
             let migrationSessionId = newSessionId();
+            var hadExplicitSessionBoundary = entries.some(function(e){ return e.type === 'session'; });
             entries.forEach(function(e){
               if (e.type === 'session'){
                 if (!e.sessionId) e.sessionId = newSessionId();
@@ -1114,6 +1119,29 @@
                 if (!e.sessionId) e.sessionId = migrationSessionId;
               }
             });
+            // A pre-Schema-4 project can have real songs/markers but no session boundary
+            // record at all - the block above gives them a real Session ID, but nothing
+            // that ID actually belongs to. ensureFirstSessionExists() can't help here since
+            // it only fires on a genuinely empty project. Without inserting a boundary now,
+            // the next Schema 4 export would carry songs referencing a session that was
+            // never written - exactly what Compile's own Schema 4 validation now correctly
+            // rejects as a structural defect, silently turning a migrated legacy project
+            // into one that can no longer be re-imported anywhere.
+            if (!hadExplicitSessionBoundary){
+              var migrationTimestamp = new Date().toISOString();
+              entries.unshift({
+                id: migrationTimestamp + Math.random().toString(36).slice(2,7),
+                order: 0,
+                type: 'session',
+                sessionId: migrationSessionId,
+                sessionLabel: '',
+                event: '', date: '', location: '',
+                timestamp: migrationTimestamp,
+                displayTime: formatClock(migrationTimestamp)
+              });
+              entries.forEach(function(e, i){ e.order = i + 1; });
+              migrationInsertedSessionBoundary = true;
+            }
           }
           for (let i = entries.length - 1; i >= 0; i--){
             if (entries[i].type !== 'metadata' && entries[i].sessionId){
@@ -1128,9 +1156,11 @@
         }
       }
     } catch(e){ entries = []; }
+    var hadPriorSticky = false;
     try {
       const stickyRaw = localStorage.getItem(STICKY_KEY);
       if (stickyRaw) {
+        hadPriorSticky = true;
         const sticky = JSON.parse(stickyRaw);
         if (sticky.event) eventEl.value = sticky.event;
         if (sticky.date) dateEl.value = sticky.date;
@@ -1148,7 +1178,14 @@
         }
       }
     } catch(e){}
-    if (!dateEl.value) dateEl.value = todayLocalISO();
+    // Only a genuinely fresh browser (no prior save of any kind) defaults to today - a
+    // resumed session whose date was deliberately left blank must stay blank, not have
+    // today's date silently invented for it on every reload.
+    if (!hadPriorSticky && !dateEl.value) dateEl.value = todayLocalISO();
+    if (migrationInsertedSessionBoundary){
+      saveEntries();
+      showToast('This project was saved before session tracking existed — a session record was added automatically so it exports correctly. Worth checking the Event Details for this first session.');
+    }
   }
   function saveEntries(){
     dirtySinceExport = entries.length > 0;
@@ -1202,7 +1239,9 @@
   }
 
   function formatClock(iso){
+    if (!iso) return '';
     const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
     return d.toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
   }
 
@@ -1238,7 +1277,7 @@
   }
 
   function renderTallyToggle(){
-    const songCount = entries.filter(function(e){ return e.type !== 'marker' && e.type !== 'session' && e.type !== 'metadata'; }).length;
+    const songCount = entries.filter(function(e){ return e.type === 'song'; }).length;
     tallyToggleEl.style.display = songCount ? 'block' : 'none';
     tallyToggleEl.innerHTML = '';
     const btn = document.createElement('button');
@@ -1252,7 +1291,7 @@
   }
 
   function renderTallyBox(){
-    const songEntries = entries.filter(function(e){ return e.type !== 'marker' && e.type !== 'session' && e.type !== 'metadata'; });
+    const songEntries = entries.filter(function(e){ return e.type === 'song'; });
     if (!tallyVisible || !songEntries.length){
       tallyBoxEl.style.display = 'none';
       tallyBoxEl.innerHTML = '';
@@ -2032,8 +2071,8 @@
   });
 
   const SCHEMA_VERSION = '4';
-  const EZ_MINUTES_SUITE_VERSION = '1.0.0-beta.26';
-  const EXPORT_HEADER = ['Schema Version','Order of entry','Record Type','Session Label','Session ID','Metadata Field','Metadata Value','Event','Date','Location','Chair','Vice-Chair','Secretary','Treasurer','Arranger(s)','Chaplain','Memorial Lesson Leader','Book','SingLoud Code','Leader(s)','Canonical Leader(s)','Page','Song','Tag','Notes','Marker','Timestamp ISO','Time entered'];
+  const EZ_MINUTES_SUITE_VERSION = '1.0.0-beta.56'; // Suite-wide version bump: appendix-style page keys (e.g. "a11", "a104") now sort numerically instead of as plain text in compile.html and Tunebook Editor - capture.html itself unchanged this release
+  const EXPORT_HEADER = ['Schema Version','Order of entry','Record Type','Session Label','Session ID','Metadata Field','Metadata Value','Event','Date','Location','Chair','Vice-Chair','Secretary','Treasurer','Arranger(s)','Chaplain','Memorial Lesson Leader','Book','Edition Code','Leader(s)','Canonical Leader(s)','Page','Song','Tag','Notes','Marker','Timestamp ISO','Time entered'];
   function buildExportRows(){
     return entries.map(function(e){
       if (e.__unknownType){
@@ -2061,10 +2100,10 @@
       if (e.type === 'marker'){
         return [SCHEMA_VERSION, e.order, 'marker', '', e.sessionId || '', '', '', e.event, e.date, e.location || ''].concat(roleCols, ['', '', e.caller || '', '', '', e.prose || '', e.tag || '', e.notes || '', e.label, e.timestamp, e.displayTime || formatClock(e.timestamp)]);
       }
-      // Song rows carry SingLoud Code and Canonical Leader(s) as pass-through fields —
+      // Song rows carry Edition Code and Canonical Leader(s) as pass-through fields —
       // Capture doesn't assign these itself, but must preserve them if they were already
       // set by Compile on a previously-enriched file being reopened here.
-      return [SCHEMA_VERSION, e.order, 'song', '', e.sessionId || '', '', '', e.event, e.date, e.location || ''].concat(roleCols, [e.book, e.singLoudCode || '', e.caller, e.canonicalLeader || '', e.page, e.song || '', e.tag || '', e.notes, '', e.timestamp, e.displayTime || formatClock(e.timestamp)]);
+      return [SCHEMA_VERSION, e.order, 'song', '', e.sessionId || '', '', '', e.event, e.date, e.location || ''].concat(roleCols, [e.book, e.editionCode || '', e.caller, e.canonicalLeader || '', e.page, e.song || '', e.tag || '', e.notes, '', e.timestamp, e.displayTime || formatClock(e.timestamp)]);
     });
   }
 
@@ -2465,7 +2504,7 @@
       const chaplainVal = get('Chaplain');
       const memorialLessonVal = get('Memorial Lesson Leader');
       const bookVal = get('Book');
-      const singLoudCodeVal = get('SingLoud Code');
+      const editionCodeVal = get('Edition Code') || get('SingLoud Code');
       const nameVal = get('Leader(s)');
       const canonicalLeaderVal = get('Canonical Leader(s)');
       const pageVal = get('Page');
@@ -2547,6 +2586,9 @@
       // build doesn't own and shouldn't touch. The raw column value goes straight through
       // unchanged; only a genuinely blank value stays blank rather than getting invented.
       const isoValid = isoVal && !isNaN(isoDate.getTime());
+      if(isoVal && !isoValid && recordTypeRaw !== 'metadata'){
+        rowWarnings.push('Row ' + rowNum + ': Timestamp ISO "' + isoVal + '" doesn\u2019t look like a valid date/time and could not be preserved — it was left blank instead');
+      }
       const recordTimestamp = (recordKind === 'metadata') ? (isoVal || '') : (isoValid ? isoVal : '');
       const recordDisplayTime = (recordKind === 'metadata') ? (timeVal || '') : (timeVal || null);
 
@@ -2656,7 +2698,7 @@
           base.sessionId = currentImportSessionId;
         }
         base.book = bookVal;
-        base.singLoudCode = singLoudCodeVal;
+        base.editionCode = editionCodeVal;
         base.caller = nameVal;
         base.canonicalLeader = canonicalLeaderVal;
         base.page = pageVal;
@@ -2703,7 +2745,7 @@
       arranger: lastArranger,
       chaplain: lastChaplain,
       memorialLesson: lastMemorialLesson,
-      activeBooks: validBooks.length ? validBooks : [BOOKS[0].abbr],
+      activeBooks: validBooks.length ? validBooks : ["OTHER"],
       entries: newEntries,
       orderProblem: orderProblem,
       rowWarnings: rowWarnings,
@@ -2765,7 +2807,7 @@
       if (!currentSessionId) currentSessionId = newSessionId();
       activeBooks = result.activeBooks;
       eventEl.value = result.event;
-      dateEl.value = result.date || todayLocalISO();
+      dateEl.value = result.date || '';
       locationEl.value = result.location;
       roleChairEl.value = result.chair || '';
       roleViceChairEl.value = result.viceChair || '';

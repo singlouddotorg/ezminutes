@@ -9,6 +9,7 @@ Each entry notes its status:
 - **Partially built** — something related exists, but not the full idea as originally discussed.
 - **Known limitation** — not a planned feature exactly, more an honest gap in something already built, worth fixing properly rather than living with indefinitely.
 - **Planned, deferred** — not a maybe. Confirmed to happen; only the timing is deferred.
+- **Resolved — built** — was an open question at some point in this project's history; now actually decided and built. Noted here briefly for context, since the file's own history discussed it as unresolved.
 
 ---
 
@@ -29,6 +30,20 @@ No server, no build pipeline — GitHub Pages just serves whatever's currently p
 `instructions.html` originally carried a placeholder for this ("A complete EZ Minutes walkthrough will appear here") — removed for the pre-release version rather than left as a visible placeholder, since a permanent-looking "coming soon" box reads worse than no box at all once real people are actually testing the app. The plan is confirmed, not abandoned: a produced video covering the same ground as the written Quick Start and workflow sections, to be added back in once it exists. Worth revisiting once field-test feedback has settled the workflow enough that a video wouldn't need re-recording after early corrections.
 
 ---
+
+## Testing & Quality
+
+**Automated regression test suite — Resolved — built**
+
+Raised repeatedly across several release reviews as an open question: every fix across this whole project had been verified by a hand-written, disposable jsdom script, thrown away once the fix was confirmed. This worked, but explains why a few specific bugs (Schema 4 Session ID validation among them) got confirmed as real in one review, never actually fixed, and then had to be confirmed as real *again* in a later review before finally being corrected — a persistent suite exists specifically to catch that kind of recurrence the second time, not the third.
+
+Built as a separate, dev-only `tests/` folder (Node's built-in test runner plus `jsdom` and `papaparse`, both dev dependencies only) sitting alongside the actual suite files, with a matching GitHub Actions workflow so it runs on every push once it's in the repo. This has no effect on the distributed app whatsoever — Capture, Compile, and Tunebook Editor remain exactly what they've always been: static files, no build step, no dependencies of their own. Covers the highest-value, most-repeated manual checks from this project's history: the four-sample Capture/Compile round-trip, Schema 4 Session ID validation, Compile's transactional import safety, canonical leader conflict preservation, Tunebook Editor's rename identity tracking and page-key canonicalization, and edition-index structural validation (including both real bundled `ShH2012.json`/`VPH2024.json` files, not just synthetic test data).
+
+Deliberately out of scope for now: real-browser end-to-end testing (Playwright or similar) for actual click/focus/keyboard user flows, which jsdom cannot exercise. A separate, larger decision if it's ever wanted.
+
+---
+
+
 
 ## Capture
 
@@ -67,12 +82,19 @@ When session boundaries were made undraggable (to stop them from accidentally ge
 
 ## Tunebook Index / Database
 
-**Editing tunebook data from within the app — Idea**
-Currently `tunebook-index.js` is shared, static reference data bundled with the suite — there's no in-app way to add a book, correct a title, or fill in a gap; changes require hand-editing the file directly. Raised while discussing the New Harp of Columbia appendix transcription: since new tunebooks and corrections are ongoing, hand-editing raw JSON doesn't scale well as the library grows. The likely shape (leaning towards this over a purely personal/local-only override, since the person doing this work is the suite's own maintainer, not an end-user wanting a private correction): an edit mode on the existing Tunebook Index panel — add/correct individual page-title entries, add a new book's metadata (full title, common name, SingLoud/SHMHA codes, badge color), and a "Download updated tunebook-index.js" button to produce a replacement file, matching the download-based pattern already used everywhere else in the suite (no backend, nothing server-side). Open question, not yet decided: whether bulk-pasting a whole transcribed page/title list (for a freshly-transcribed appendix or book) is part of this from the start, or whether per-song entry is enough for a first version and bulk-paste comes later — this changes how much parsing logic goes in versus a plain form.
+**Local activation of unofficial tunebook contributions — Future consideration**
 
-**Full song data per entry (meter, composer, etc.) — Idea**
-The tunebook database currently stores only page and title per song — enough for lookup and autofill, not enough to be a real reference. Being considered: expanding each song entry to carry meter, composer/author, and similar fields beyond what's needed for minutes generation. Not scoped in detail yet — would need its own look at how much this changes the size/shape of `tunebook-index.js`, whether it affects existing lookup functions (`lookupTitle`, `canonPage`, etc.), and whether any of this new data should surface in the Tunebook Index panel itself once it exists.
+Tunebook Editor currently uses a contribution-only model: users can add or revise a tunebook and export a book-specific contribution file for maintainer review, but Capture and Compile continue to use only the curated Master Tunebook Index distributed with the suite. A possible future feature would allow a user to activate a local working-copy or imported contribution in Capture and Compile before it has been accepted into the master collection.
 
+The benefit would be immediate use of an unlisted local or newly compiled tunebook without waiting for a suite release. The cost is a new distinction the entire suite would have to preserve reliably between official master records and unofficial local records. Locally activated books would need conspicuous labeling, isolated storage, conflict handling when a later master release adds the same Edition Code, and safe migration when the local and official records differ. CSV portability would also need clear rules so another device could distinguish an official Edition Code from a local override.
+
+Not planned for the current release. Revisit only if field use shows a real need for immediate local access that outweighs the risk of divergent or ambiguously authoritative tunebook data.
+
+**Editing tunebook data from within the app — Partially built**
+Now underway as its own tool, `tunebook-editor.html` (see `TUNEBOOK-EDITOR-README.md`), rather than a mode bolted onto Compile's own Tunebook Index panel as originally sketched here. Phase 3 done: Browse, Edit Book, and Export all work. Edit Book covers adding a new book, editing an existing one's book-level fields (including a real, editable Edition Code with a warning and required confirmation about it being a genuine rename), and adding/editing/deleting individual page-title entries one at a time, with duplicate page keys refused rather than silently overwritten. Export turned out to be a different shape than originally imagined here: rather than generating a replacement `tunebook-index.js` directly, it packages one book as a standalone contribution file (change summary, validation results, optional contributor info) for a maintainer to review by email — the actual bundled index only changes when a maintainer folds an accepted contribution into a future suite release. The originally-open bulk-paste question is resolved, deliberately: per-row entry only, on purpose — this tool is for the hand-labor of building the conceptual structure and making small corrections, not a bulk importer; a whole book's worth of already-collected data is expected to go into `tunebook-index.js` directly instead.
+
+**Full song data per entry (meter, composer, etc.) — Partially built**
+The richer per-song shape this envisioned (meter, key, time signature, text/music attribution, source citation) now exists as a real, separate file format — an **edition index** (`edition-indexes/*.json`) — that Tunebook Editor can merge into a book's entries for browsing, without changing `tunebook-index.js`'s own shape or touching `lookupTitle()`/`canonPage()` at all. Two real, complete edition indexes are included (`ShH2012.json`, all 469 entries; `VPH2024.json`), each built from a compiler-supplied spreadsheet via a documented conversion script. Still open: whether this richer data ever gets folded into `tunebook-index.js` itself (making it available to Capture/Compile directly, not just Tunebook Editor's browse view) is a separate, larger decision than what's been built so far.
 
 
 **Progressive Web App (PWA) conversion — Idea, explicitly deferred**

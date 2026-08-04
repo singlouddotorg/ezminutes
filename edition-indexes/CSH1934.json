@@ -1,0 +1,852 @@
+{
+  "editionCode": "CSH1934",
+  "indexVersion": "1.0",
+  "songs": {
+    "3": {
+      "title": "Am I a Soldier of the Cross",
+      "timeSignature": "4/4",
+      "firstLine": "Am I a soldier of the cross?",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1933"
+      },
+      "verseCount": 3
+    },
+    "4": {
+      "title": "Prosperity",
+      "timeSignature": "2/4",
+      "firstLine": "Where nothing dwelt but beasts of prey,",
+      "musicAttribution": {
+        "credit": "H. Webster Wood",
+        "year": "1927"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 1
+    },
+    "5": {
+      "title": "Heavenly Land",
+      "timeSignature": "4/4",
+      "firstLine": "I love to think of heavenly lands",
+      "musicAttribution": {
+        "credit": "C. T. Toney",
+        "year": "1931"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 1
+    },
+    "6": {
+      "title": "He Is Coming Back",
+      "timeSignature": "3/2",
+      "firstLine": "Christ is coming back from heaven",
+      "musicAttribution": {
+        "credit": "Miss Dovie D. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 2
+    },
+    "8": {
+      "title": "Come to Him",
+      "timeSignature": "2/4",
+      "firstLine": "Jesus the Lamb of God;",
+      "musicAttribution": {
+        "credit": "J. C. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 1
+    },
+    "9": {
+      "title": "Rejoice and Sing",
+      "timeSignature": "4/4",
+      "firstLine": "If you know that you have been redeemed oh rejoice",
+      "musicAttribution": {
+        "credit": "Arr. O. G. Griffin"
+      },
+      "verseCount": 1
+    },
+    "10": {
+      "title": "Canaan Land",
+      "timeSignature": "4/4",
+      "firstLine": "To Canaans fair and happy land",
+      "musicAttribution": {
+        "credit": "Miss Ether M. Brown",
+        "year": "1931"
+      },
+      "verseCount": 1
+    },
+    "12": {
+      "title": "I Am Thinking To-Day",
+      "timeSignature": "4/4",
+      "firstLine": "I am thinking to-day of that home far away,",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1933"
+      },
+      "verseCount": 2
+    },
+    "13": {
+      "title": "Let Jesus Lead",
+      "timeSignature": "6/2",
+      "firstLine": "If you are willing to let Jesus lead,",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 2
+    },
+    "15": {
+      "title": "Journey Through Life",
+      "timeSignature": "4/4",
+      "firstLine": "Show me the length of my life",
+      "musicAttribution": {
+        "credit": "Rev. J. H. Knight"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J.",
+        "year": "1931"
+      },
+      "verseCount": 1
+    },
+    "16t": {
+      "title": "Christmas",
+      "timeSignature": "4/4",
+      "firstLine": "We'll meet in glory land",
+      "musicAttribution": {
+        "credit": "S. J. Christmas"
+      },
+      "verseCount": 1
+    },
+    "16b": {
+      "title": "Religion",
+      "timeSignature": "4/4",
+      "firstLine": "In this old time religion",
+      "textAttribution": {
+        "credit": "Mrs. May F Brooks"
+      },
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1931"
+      },
+      "verseCount": 2
+    },
+    "18": {
+      "title": "Alone",
+      "timeSignature": "4/4",
+      "firstLine": "As I was walking along the road,",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1904"
+      },
+      "verseCount": 1
+    },
+    "19": {
+      "title": "My Mother's Gone",
+      "timeSignature": "2/4",
+      "firstLine": "I have a father way in glory,",
+      "textAttribution": {
+        "credit": "J. Jackson",
+        "year": "1904"
+      },
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1927"
+      },
+      "verseCount": 5
+    },
+    "20": {
+      "title": "He Leads Me",
+      "timeSignature": "2/4",
+      "firstLine": "When I am sad He makes me glad",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1921"
+      },
+      "verseCount": 3
+    },
+    "21": {
+      "title": "A Beautiful Home",
+      "timeSignature": "2/4",
+      "firstLine": "There is a beautiful home",
+      "musicAttribution": {
+        "credit": "Samuel W. Jackson",
+        "year": "1931"
+      },
+      "verseCount": 1
+    },
+    "22t": {
+      "title": "I'm Not Ashamed of Thee",
+      "timeSignature": "2/4",
+      "firstLine": "Jesus and shall it ever be,",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 2
+    },
+    "22b": {
+      "title": "Home on High",
+      "timeSignature": "4/4",
+      "firstLine": "There is a home that's built on high",
+      "musicAttribution": {
+        "credit": "J. E. Pettie"
+      },
+      "harmonizationAttribution": {
+        "credit": "Miss D. D. Jackson"
+      },
+      "verseCount": 1
+    },
+    "24": {
+      "title": "The Signs of the Judgement",
+      "timeSignature": "4/4",
+      "firstLine": "The judgement day is drawing near",
+      "musicAttribution": {
+        "credit": "J. E. Pettie",
+        "year": "1931"
+      },
+      "verseCount": 1
+    },
+    "25": {
+      "title": "Jesus Rose",
+      "timeSignature": "4/4",
+      "firstLine": "Jesus died on the cross just as He said He would",
+      "musicAttribution": {
+        "credit": "Bishop J. D. Walker"
+      },
+      "verseCount": 1
+    },
+    "27": {
+      "title": "He Died That We Might Live",
+      "timeSignature": "2/4",
+      "firstLine": "Did Christ o'er sinners weep,",
+      "musicAttribution": {
+        "credit": "Miss Dovie D. Jackson",
+        "year": "1931"
+      },
+      "verseCount": 2
+    },
+    "28": {
+      "title": "God's Word to Man",
+      "timeSignature": "4/4",
+      "firstLine": "And in those days when the number was multiplied in Jerusalem,",
+      "musicAttribution": {
+        "credit": "C. T. Toney",
+        "year": "1931"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 1
+    },
+    "29t": {
+      "title": "Little Light of Love",
+      "timeSignature": "2/4",
+      "firstLine": "Teach me how to do my duty",
+      "musicAttribution": {
+        "credit": "S. J. Christmas"
+      },
+      "verseCount": 1
+    },
+    "29b": {
+      "title": "Come On",
+      "timeSignature": "4/4",
+      "firstLine": "O come brother come now with me",
+      "musicAttribution": {
+        "credit": "Samuel W. Jackson",
+        "year": "1931"
+      },
+      "verseCount": 2
+    },
+    "30": {
+      "title": "Jesus My All",
+      "timeSignature": "4/4",
+      "firstLine": "Jesus is my all and all",
+      "musicAttribution": {
+        "credit": "W. E. Glanton",
+        "year": "1926"
+      },
+      "verseCount": 2
+    },
+    "31": {
+      "title": "Come and Go",
+      "timeSignature": "4/4",
+      "firstLine": "Oh come friend and go with me",
+      "musicAttribution": {
+        "credit": "Samuel W. Jackson",
+        "year": "1931"
+      },
+      "verseCount": 2
+    },
+    "32": {
+      "title": "The Savior Calls",
+      "timeSignature": "4/4",
+      "firstLine": "Jesus came to save lost souls from sin,",
+      "musicAttribution": {
+        "credit": "W. E. G.",
+        "year": "1931"
+      },
+      "verseCount": 1
+    },
+    "33": {
+      "title": "All Hail His Power",
+      "timeSignature": "2/4",
+      "firstLine": "All hail the pow'r of Jesus' name,",
+      "musicAttribution": {
+        "credit": "J. C. Jackson",
+        "year": "1931"
+      },
+      "verseCount": 1
+    },
+    "34t": {
+      "title": "The Time Is Drawing Near",
+      "timeSignature": "6/2",
+      "firstLine": "When the gospel is preached all over this world,",
+      "musicAttribution": {
+        "credit": "H. Webster Woods"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 2
+    },
+    "34b": {
+      "title": "This Is My Hope",
+      "timeSignature": "4/4",
+      "firstLine": "Let ev'ry nation ev'ry tongue Gods praise sing",
+      "musicAttribution": {
+        "credit": "H. Webster Woods",
+        "year": "1932"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 4
+    },
+    "36": {
+      "title": "Father's Request",
+      "timeSignature": "6/8",
+      "firstLine": "Come Lord the Holy Spirit",
+      "musicAttribution": {
+        "credit": "H. Webster Woods"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 1,
+      "historicalNote": "In remembrance of my father, R. D. WOODS, who departed from this life Aug. 8, 1921. His last words were “Come Lord”"
+    },
+    "37": {
+      "title": "Mansion in the Sky",
+      "timeSignature": "4/4",
+      "firstLine": "When I can read my title clear to mansion in the sky",
+      "musicAttribution": {
+        "credit": "H. Webster Woods",
+        "year": "1932"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 1
+    },
+    "39": {
+      "title": "Broad Road and Narrow Path",
+      "timeSignature": "2/4",
+      "firstLine": "Broad is the road that leads to death,",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 2
+    },
+    "40": {
+      "title": "Florence",
+      "timeSignature": "4/4",
+      "firstLine": "Children of the heav'nly King",
+      "musicAttribution": {
+        "credit": "H. Webster Woods",
+        "year": "1932"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 2
+    },
+    "41": {
+      "title": "Matilda",
+      "timeSignature": "4/4",
+      "firstLine": "Oh when the gracious Master shall descend again,",
+      "musicAttribution": {
+        "credit": "H. Webster Woods",
+        "year": "1932"
+      },
+      "verseCount": 1,
+      "historicalNote": "In honor of my Mother this song is affectionately dedicated."
+    },
+    "42": {
+      "title": "The Way of the Cross",
+      "timeSignature": "2/4",
+      "firstLine": "I am on my way to glory",
+      "musicAttribution": {
+        "credit": "H. Webster Woods",
+        "year": "1932"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 1
+    },
+    "43": {
+      "title": "Woods Bros.",
+      "timeSignature": "2/4",
+      "firstLine": "Sweet is the day of sacred rest",
+      "musicAttribution": {
+        "credit": "H. Webster Woods",
+        "year": "1932"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 1
+    },
+    "45": {
+      "title": "Heavenly Band",
+      "timeSignature": "4/4",
+      "firstLine": "Come ye that love the Lord",
+      "musicAttribution": {
+        "credit": "H. Webster Woods",
+        "year": "1932"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 2
+    },
+    "46": {
+      "title": "Jackson",
+      "timeSignature": "4/4",
+      "firstLine": "Oh come and go yes come and go",
+      "musicAttribution": {
+        "credit": "H. Webster Woods",
+        "year": "1932"
+      },
+      "verseCount": 2,
+      "historicalNote": "This song is dedicated to my Dear Teacher Mr. J. Jackson one of Alabama's Famous Singers"
+    },
+    "47": {
+      "title": "Webster",
+      "timeSignature": "4/4",
+      "firstLine": "Jesus is my dear and only friend",
+      "musicAttribution": {
+        "credit": "H. Webster Woods",
+        "year": "1932"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 1
+    },
+    "48": {
+      "title": "Jesus Lives in My Soul",
+      "timeSignature": "4/4",
+      "firstLine": "Yes I know that Jesus live, Oh He",
+      "musicAttribution": {
+        "credit": "Bishop J. D. Walker"
+      },
+      "verseCount": 1
+    },
+    "50": {
+      "title": "Are You Ready",
+      "timeSignature": "4/4",
+      "firstLine": "I shall see the King when He comes,",
+      "textAttribution": {
+        "credit": "Mrs. M. L. Shiver",
+        "year": "1932"
+      },
+      "musicAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 2
+    },
+    "51": {
+      "title": "The Lord Is Coming",
+      "timeSignature": "4/4",
+      "firstLine": "The Lord has made the way so plain",
+      "musicAttribution": {
+        "credit": "J. A. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 1
+    },
+    "53": {
+      "title": "We Are Marching On",
+      "timeSignature": "4/4",
+      "firstLine": "We are marching on to glory",
+      "musicAttribution": {
+        "credit": "Miss D. D. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 1
+    },
+    "54": {
+      "title": "Jesus Calls for Thee",
+      "timeSignature": "4/4",
+      "firstLine": "In this world below there's sin you know,",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 2
+    },
+    "56t": {
+      "title": "Cross the River",
+      "timeSignature": "4/4",
+      "firstLine": "I am going with my Savior to that home",
+      "musicAttribution": {
+        "credit": "Mrs. Beatrice William",
+        "year": "1932"
+      },
+      "verseCount": 1
+    },
+    "56b": {
+      "title": "Thy Will Be Done",
+      "timeSignature": "4/4",
+      "firstLine": "Father remove this bitter cup if",
+      "musicAttribution": {
+        "credit": "W. E. Glanton",
+        "year": "1932"
+      },
+      "verseCount": 1
+    },
+    "58": {
+      "title": "Jesus Saves",
+      "timeSignature": "4/4",
+      "firstLine": "The Lord has been so good to me",
+      "musicAttribution": {
+        "credit": "Miss Ether Brown",
+        "year": "1932"
+      },
+      "harmonizationAttribution": {
+        "credit": "Mrs. Mary F. Brown"
+      },
+      "verseCount": 1
+    },
+    "59": {
+      "title": "It Is Finished",
+      "timeSignature": "4/4",
+      "firstLine": "Jesus saved my soul, and set me free, Now I'm",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1932"
+      },
+      "scriptureReference": "St. John 19:30",
+      "verseCount": 2
+    },
+    "61": {
+      "title": "That Great Day",
+      "timeSignature": "2/4",
+      "firstLine": "There is a day coming bye and bye,",
+      "musicAttribution": {
+        "credit": "Miss Dovie D. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 1
+    },
+    "62": {
+      "title": "My Friend",
+      "timeSignature": "4/4",
+      "firstLine": "Jesus is my dearest friend,",
+      "musicAttribution": {
+        "credit": "T. Y. Lawrence"
+      },
+      "verseCount": 1
+    },
+    "63": {
+      "title": "On the Way to Glory",
+      "timeSignature": "2/4",
+      "firstLine": "I am on my way to glory",
+      "musicAttribution": {
+        "credit": "Miss Dovie D. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 1
+    },
+    "64": {
+      "title": "Remember Me",
+      "timeSignature": "4/4",
+      "firstLine": "While I am in this life remember me.",
+      "musicAttribution": {
+        "credit": "T. Y. Lawrence",
+        "year": "1932"
+      },
+      "verseCount": 1
+    },
+    "65t": {
+      "title": "Come to Jesus Now",
+      "timeSignature": "4/4",
+      "firstLine": "Come to Jesus come today",
+      "musicAttribution": {
+        "credit": "Mrs. Lillie M. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 2
+    },
+    "65b": {
+      "title": "Call Upon the Lord",
+      "timeSignature": "4/4",
+      "firstLine": "Who can take away your trouble",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 3
+    },
+    "67": {
+      "title": "A Blessing Asked",
+      "timeSignature": "2/4",
+      "firstLine": "Dismiss us with Thy blessings Lord,",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 2
+    },
+    "68": {
+      "title": "Lord Guide Me",
+      "timeSignature": "4/4",
+      "firstLine": "I know that Jesus is my friend",
+      "musicAttribution": {
+        "credit": "Miss Ether M. Brown",
+        "year": "1932"
+      },
+      "verseCount": 1
+    },
+    "69": {
+      "title": "My Home Above",
+      "timeSignature": "4/4",
+      "firstLine": "I am on my way to my home above",
+      "musicAttribution": {
+        "credit": "W. E. Glanton",
+        "year": "1932"
+      },
+      "verseCount": 1
+    },
+    "71": {
+      "title": "Mercy to Thee",
+      "timeSignature": "4/4",
+      "firstLine": "Oh Lord do hear my voice",
+      "textAttribution": {
+        "credit": "Miss R. B. Covington",
+        "year": "1932"
+      },
+      "musicAttribution": {
+        "credit": "J. Jackson"
+      },
+      "verseCount": 2
+    },
+    "72": {
+      "title": "The Great High Priest",
+      "timeSignature": "4/4",
+      "firstLine": "Jesus the great high Priest,",
+      "musicAttribution": {
+        "credit": "S. J. Christmas"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. Jackson"
+      },
+      "verseCount": 2
+    },
+    "73": {
+      "title": "I Have a Message",
+      "timeSignature": "4/4",
+      "firstLine": "I have a message from the Lord Hallelujah,",
+      "musicAttribution": {
+        "credit": "Bishop J. D. Walker"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 2
+    },
+    "74": {
+      "title": "Doris",
+      "timeSignature": "4/4",
+      "firstLine": "How lost was my condition before",
+      "musicAttribution": {
+        "credit": "Mrs. Florence M. Woods"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. Jackson"
+      },
+      "verseCount": 2
+    },
+    "76": {
+      "title": "Jesus Calls",
+      "timeSignature": "4/4",
+      "firstLine": "Children of God shall surely live on high",
+      "musicAttribution": {
+        "credit": "Mrs. Emma Mae McKenzie",
+        "year": "1932"
+      },
+      "verseCount": 2
+    },
+    "77": {
+      "title": "We Are Going Home",
+      "timeSignature": "2/4",
+      "firstLine": "The Lord Jesus is Lord of all",
+      "musicAttribution": {
+        "credit": "Rev. E. D. McKenzie",
+        "year": "1932"
+      },
+      "verseCount": 2
+    },
+    "78": {
+      "title": "I Love to Think of Jesus",
+      "timeSignature": "6/8",
+      "firstLine": "I love to think of Jesus Name the blessed Savior dear,",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 1
+    },
+    "81": {
+      "title": "The Old Rugged Cross",
+      "timeSignature": "4/4",
+      "firstLine": "I am on my way to glory singing all the way,",
+      "musicAttribution": {
+        "credit": "H. Webster Woods",
+        "year": "1932"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 1
+    },
+    "82": {
+      "title": "Lela",
+      "timeSignature": "4/4",
+      "firstLine": "None will be sighing and none be sad",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1932"
+      },
+      "verseCount": 1,
+      "historicalNote": "This song is Dedicated to Mrs. Lela Jackson"
+    },
+    "84t": {
+      "title": "He Died for Me",
+      "timeSignature": "4/4",
+      "firstLine": "Oh spread the news o'er land and sea,",
+      "musicAttribution": {
+        "credit": "A. D. Kirkland"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. Jackson"
+      },
+      "verseCount": 1
+    },
+    "84b": {
+      "title": "Gates of Mercy",
+      "timeSignature": "4/4",
+      "firstLine": "Dear friend you are still wandering from God,",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1931"
+      },
+      "verseCount": 4
+    },
+    "86": {
+      "title": "Nearing Glory",
+      "timeSignature": "4/4",
+      "firstLine": "I am going home to glory with my Lord and King,",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1929"
+      },
+      "verseCount": 3
+    },
+    "87": {
+      "title": "Florida Storm",
+      "timeSignature": "4/4",
+      "firstLine": "September Eighteenth, Nineteen Hundred and Twenty-six,",
+      "musicAttribution": {
+        "credit": "J. Jackson",
+        "year": "1928"
+      },
+      "verseCount": 5
+    },
+    "89": {
+      "title": "Jehovah Praise",
+      "timeSignature": "4/4",
+      "firstLine": "Praising Jesus all of my days,",
+      "musicAttribution": {
+        "credit": "H. Webster Woods",
+        "year": "1932"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 1
+    },
+    "91t": {
+      "title": "Like Jesus",
+      "timeSignature": "4/4",
+      "firstLine": "I want to be like Jesus, So lowly and so meek:",
+      "musicAttribution": {
+        "credit": "Moses Creech",
+        "year": "1933"
+      },
+      "verseCount": 2
+    },
+    "91b": {
+      "title": "Come Holy Spirit",
+      "timeSignature": "4/4",
+      "firstLine": "Come Holy Spirit Heav'nly Dove,",
+      "musicAttribution": {
+        "credit": "W. K. Walker",
+        "year": "1932"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 1
+    },
+    "92": {
+      "title": "Eternal Truth Thy Word",
+      "timeSignature": "4/4",
+      "firstLine": "From all that dwell below the skies",
+      "musicAttribution": {
+        "credit": "B. F. Faust",
+        "year": "1933"
+      },
+      "verseCount": 2
+    },
+    "94": {
+      "title": "My Hope",
+      "timeSignature": "4/4",
+      "firstLine": "Oh remove from me the sinful way",
+      "musicAttribution": {
+        "credit": "Rev. J. H. Knight"
+      },
+      "harmonizationAttribution": {
+        "credit": "J. J."
+      },
+      "verseCount": 1
+    },
+    "95": {
+      "title": "Shout and Sing",
+      "timeSignature": "4/4",
+      "firstLine": "There is a home not far away",
+      "textAttribution": {
+        "credit": "Miss Pauline Jackson",
+        "year": "1931"
+      },
+      "musicAttribution": {
+        "credit": "J. Jackson"
+      },
+      "verseCount": 3
+    }
+  }
+}

@@ -6,7 +6,7 @@ Built for the Sacred Harp / shape-note singing community, but usable for any eve
 
 ## The suite
 
-EZ Minutes is two related tools sharing one visual system and one CSV format:
+EZ Minutes is a suite of tools sharing one visual system and one CSV format:
 
 | File | What it's for |
 |---|---|
@@ -14,9 +14,11 @@ EZ Minutes is two related tools sharing one visual system and one CSV format:
 | `instructions.html` | Full instructions, quick start, and troubleshooting. |
 | `capture.html` | **Capture** — live, on-the-spot logging *during* the singing. |
 | `compile.html` | **Compile** — reviews the captured record and prepares finished minutes. |
-| `tunebook-index.js` | Shared tunebook data (page/title lookups, book names, codes) both apps load. **Required** — Capture and Compile will show a visible error if it's missing or moved out of the folder. |
+| `tunebook-editor.html` | **Tunebook Editor** — browses the shared tunebook data, edits book details and page indexes in a local working copy, and packages a book as a contribution file for the maintainer to review. See [TUNEBOOK-EDITOR-README.md](TUNEBOOK-EDITOR-README.md). |
+| `tunebook-index.js` | Shared tunebook data (page/title lookups, book names, codes) every app in the suite loads. **Required** — each app will show a visible error if it's missing or moved out of the folder. |
+| `edition-indexes/` | Optional richer per-song data (meter, key, attribution, source, and more) that Tunebook Editor can merge into a book's entries for browsing — plus `tunebook-page-extraction-guide.md`, a standalone reference for what to look for when transcribing a tunebook page into this data, useful on its own even outside this suite. See [TUNEBOOK-EDITOR-README.md](TUNEBOOK-EDITOR-README.md). |
 
-Capture and Compile share the same CSV schema, tagged with a `Schema Version` column so either side can flag a mismatch clearly rather than failing silently. Neither app has its own separate color scheme — the same design system runs across all four pages, including the shared header, navigation, and footer.
+Capture and Compile share the same CSV schema, tagged with a `Schema Version` column so either side can flag a mismatch clearly rather than failing silently. No app in the suite has its own separate color scheme — the same design system runs across all five pages, including the shared header, navigation, and footer.
 
 **EZ Minutes is built for a laptop, desktop computer, or a tablet with a physical keyboard.** It is not designed for phones or phone-sized screens; no development effort goes toward optimizing for that case.
 
@@ -24,7 +26,7 @@ Capture and Compile share the same CSV schema, tagged with a `Schema Version` co
 
 No installation, no build step. Runs entirely in the browser, with no runtime network requests once the page has loaded.
 
-1. Download all five files listed above (and the `samples/` folder, if you want worked examples) — or clone this repo. Keep them all in the same folder; don't separate `tunebook-index.js` from the two apps.
+1. Download all five files listed above (plus `samples/` for worked examples, and `edition-indexes/` if you want the richer per-song enrichment data and the page-extraction reference) — or clone this repo. Keep them all in the same folder; don't separate `tunebook-index.js` from the two apps.
 2. Open `index.html` in any modern browser and choose where you're starting from.
 3. Everything runs locally in the page. Every page in the suite — including Compile — makes zero runtime network requests of any kind once loaded.
 
@@ -69,9 +71,9 @@ Every export (manual download, clipboard copy, or automatic backup) uses these 2
 | `Chair`, `Vice-Chair`, `Secretary`, `Treasurer`, `Arranger(s)`, `Chaplain` | Optional officer names, repeated on every song/marker/session row like Event/Date/Location. Blank on `metadata` rows. |
 | `Memorial Lesson Leader` | Just the name of whoever gave the memorial lesson, if any — not the names being remembered (those live in the Notes of the Memorial/Special-tagged song rows themselves). |
 | `Book` | One of the built-in book abbreviations (see `TUNEBOOK-CHANGELOG.md` for the current list), or `OTHER`. Blank for markers, session, and metadata rows. |
-| `SingLoud Code` | The book's SingLoud.org work code, when Compile has assigned or auto-detected one. Capture doesn't set this itself but preserves it losslessly if the file already has it. |
+| `Edition Code` | The book's edition-specific identifier (e.g. `SHM1991`), when Compile has assigned or auto-detected one. Capture doesn't set this itself but preserves it losslessly if the file already has it. |
 | `Leader(s)` | Free text; multiple leaders are comma-separated. Blank for markers, session, and metadata rows. |
-| `Canonical Leader(s)` | A corrected/canonical spelling of the leader's name, when Compile has one. Same pass-through behavior as SingLoud Code. |
+| `Canonical Leader(s)` | A corrected/canonical spelling of the leader's name, when Compile has one. Same pass-through behavior as Edition Code. |
 | `Page` | The page/call number as typed (e.g. `45t`). Blank for `OTHER` entries, markers, session, and metadata rows. |
 | `Song` | Looked up automatically for indexed books, typed directly for `OTHER` entries — and, on `marker` rows specifically, this column instead carries Compile's custom prose override for that marker, if one was written. |
 | `Tag` | For song rows: blank, `Call Back`, `Memorial`, or `Special`. For `marker` rows (specifically Business Meeting markers): blank, `Treasurer's Report`, `Secretary's Report`, `Chaplain's Report`, or `Chair's Remarks`. |

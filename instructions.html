@@ -108,8 +108,11 @@
     <nav class="suite-nav" aria-label="Suite navigation">
       <a href="index.html">Home</a>
       <a href="instructions.html" aria-current="page">Instructions</a>
+      <span aria-hidden="true" style="opacity:.4;padding:0 2px;">|</span>
       <a href="capture.html">Capture</a>
       <a href="compile.html">Compile</a>
+      <span aria-hidden="true" style="opacity:.4;padding:0 2px;">|</span>
+      <a href="tunebook-editor.html">Tunebooks</a>
     </nav>
   </header>
 </div>
@@ -202,7 +205,7 @@
   <p>Non-default tunebooks need a short code assigned once, on the Song List tab's Book Handling section. EZ Minutes currently supports two independent code systems for this:</p>
   <ul>
     <li><strong>SingLoud.org Work Codes</strong> — used internally, and in every export except the dedicated SHMHA submission.</li>
-    <li><strong>SHMHA abbreviations</strong> — used only in the SHMHA Minutes Book export, translated automatically from the SingLoud code you assign.</li>
+    <li><strong>SHMHA abbreviations</strong> — used only in the SHMHA Minutes Book export, translated automatically from the Work Code you assign.</li>
   </ul>
   <p>Neither system is more "correct" than the other — they're just the two published vocabularies the suite outputs today. Choosing the Type of output on the Preview &amp; Export tab (Minutes Maker, SHMHA Minutes Book Submission, or Simple List) determines which applies, and the preview updates in real time, so you can check any of them before exporting.</p>
   <p>Minutes Maker has its own per-song and summary-line checkboxes: show the song number, the title, both, or — if you uncheck both — Compile falls back to whichever one it actually has, rather than leaving a call-out with no identification at all. A song's source (tunebook) can also be shown on every call-out rather than only when it differs from the day's default book. None of this affects SHMHA Minutes Book Submission, which always applies its own fixed rule regardless of these checkboxes: printed-book songs are identified by page number only, and a title is used only when there's genuinely no page to give (an "Other" source).</p>
@@ -235,7 +238,7 @@
   <h3>"Old schema" or version-mismatch message</h3>
   <p>This behaves differently in each app. Capture blocks importing a file from a different schema version outright, since it's designed to resume a session exactly. Compile is more tolerant: it flags the mismatch and asks you to double-check the result more carefully than usual, but the import still proceeds.</p>
   <h3>Missing or unknown tunebook code</h3>
-  <p>Assign the book a SingLoud code on the Song List tab's Book Handling section. If the SHMHA export shows a code you don't recognize, check the SHMHA Guide tab's abbreviation table.</p>
+  <p>Assign the book a Work Code on the Song List tab's Book Handling section. If the SHMHA export shows a code you don't recognize, check the SHMHA Guide tab's abbreviation table.</p>
   <h3>Browser storage unavailable</h3>
   <p>Capture will show a clear warning rather than silently failing to save. Download or copy your minutes right away if you see this, since local autosave isn't working on this device/browser combination.</p>
   <h3>Preview doesn't match what I expected</h3>
@@ -248,11 +251,11 @@
   <p>That's fine — you can add songs by hand on the Song List tab. Importing a Capture file is the normal path, not a requirement.</p>
 
   <h2>Version and Schema Information</h2>
-  <p id="versionInfoText">EZ Minutes · Version 1.0.0-beta.26 · Schema 4</p>
+  <p id="versionInfoText">EZ Minutes · Version 1.0.0-beta.56 · Schema 4</p>
   <p style="font-size:13px;color:var(--muted);">Capture and Compile share the same CSV schema, marked with a Schema Version in every export, so either app can flag a mismatch clearly rather than failing silently.</p>
 
   <footer class="suite-footer">
-    <span>EZ Minutes · Version 1.0.0-beta.26 · Schema 4</span>
+    <span>EZ Minutes · Version 1.0.0-beta.56 · Schema 4</span>
     <span aria-hidden="true">·</span>
     <a href="index.html">Home</a>
   </footer>

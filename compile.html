@@ -343,7 +343,7 @@
 <body>
 <div class="missing-dep-banner" id="missingDepBanner" role="alert">
   <strong>Missing file: tunebook-index.js</strong>
-  This page needs <code>tunebook-index.js</code> in the same folder for tunebook names and codes. Right now it isn't loading, so book names and SingLoud/SHMHA codes won't resolve correctly. Make sure <code>tunebook-index.js</code> is sitting alongside this file, then reload the page.
+  This page needs <code>tunebook-index.js</code> in the same folder for tunebook names and codes. Right now it isn't loading, so book names and Work/SHMHA codes won't resolve correctly. Make sure <code>tunebook-index.js</code> is sitting alongside this file, then reload the page.
 </div>
 <div id="unsupportedWidthNotice" style="display:none;">
   <div class="unsupported-box">
@@ -366,8 +366,11 @@
   <nav class="suite-nav" aria-label="Suite navigation">
     <a href="index.html">Home</a>
     <a href="instructions.html">Instructions</a>
+    <span aria-hidden="true" style="opacity:.4;padding:0 2px;">|</span>
     <a href="capture.html">Capture</a>
     <a href="compile.html" aria-current="page">Compile</a>
+    <span aria-hidden="true" style="opacity:.4;padding:0 2px;">|</span>
+    <a href="tunebook-editor.html">Tunebooks</a>
   </nav>
 </header>
 </div>
@@ -383,7 +386,6 @@
     <button class="tab-btn" data-tab="songs" role="tab" aria-selected="false" aria-controls="panel-songs" id="tab-songs"><span class="n">06</span>Song List</button>
     <button class="tab-btn" data-tab="export" role="tab" aria-selected="false" aria-controls="panel-export" id="tab-export"><span class="n">07</span>Preview &amp; Export</button>
     <button class="tab-btn" data-tab="shmha" role="tab" aria-selected="false" aria-controls="panel-shmha" id="tab-shmha"><span class="n">08</span>SHMHA Guide</button>
-    <button class="tab-btn" data-tab="tunebooks" role="tab" aria-selected="false" aria-controls="panel-tunebooks" id="tab-tunebooks"><span class="n">09</span>Tunebook Index</button>
     <a href="#" class="reset-link" id="resetAllLink" style="margin:14px 0 0 8px;">Reset all</a>
     <div style="flex:1"></div>
     <p class="save-status" id="saveStatus" role="status" aria-live="polite"></p>
@@ -515,7 +517,7 @@
           </div>
         </div>
         <div id="bookAbbrevRows"></div>
-        <p style="font-size:11.5px;color:var(--ink-faint);margin:0 0 10px;">Assign each non-default book its <strong>SingLoud.org</strong> tunebook code. Songs from the default book print with no tag; every other book shows its SingLoud code next to the page number everywhere in this app, e.g. <em>39t (SHC)</em>. The one exception is the dedicated <strong>SHMHA Minutes Book</strong> export on the Preview &amp; Export tab — that format automatically translates to the Minutes Book's own abbreviations (e.g. <em>39t (CB)</em>) using the table on the SHMHA Guide tab. If your rows use different <strong>Day</strong> labels, each day's default book is auto-detected from whichever book appears most that day, unless you name a default above.</p>
+        <p style="font-size:11.5px;color:var(--ink-faint);margin:0 0 10px;">Assign each non-default book its <strong>SingLoud.org</strong> tunebook Work Code. Songs from the default book print with no tag; every other book shows its Work Code next to the page number everywhere in this app, e.g. <em>39t (SHC)</em>. The one exception is the dedicated <strong>SHMHA Minutes Book</strong> export on the Preview &amp; Export tab — that format automatically translates to the Minutes Book's own abbreviations (e.g. <em>39t (CB)</em>) using the table on the SHMHA Guide tab. If your rows use different <strong>Day</strong> labels, each day's default book is auto-detected from whichever book appears most that day, unless you name a default above.</p>
       </fieldset>
 
       <fieldset class="group" id="mergeGroupWrap" style="display:none;">
@@ -558,7 +560,7 @@
           <li><strong>Multi-day singings.</strong> Start a second or third day with the day and date spelled out on its own line.</li>
           <li><strong>Names.</strong> Verify every spelling. No state names or abbreviations after a singer's name. No comma between a name and the first song number.</li>
           <li><strong>Song numbers.</strong> List songs by number only; give a title only if the song isn't in a printed book. Add lower-case "t" or "b" only when two songs start on the same page (e.g. <em>31t</em>, <em>49b</em>) — a song alone on its page gets no letter (<em>306</em>, not <em>306b</em>).</li>
-          <li><strong>Other singing books.</strong> Use the abbreviations on page 44 of the Minutes Book (table below) — not SingLoud codes.</li>
+          <li><strong>Other singing books.</strong> Use the abbreviations on page 44 of the Minutes Book (table below) — not Work Codes.</li>
           <li><strong>Memorial lesson.</strong> For those memorialized, include state of origin and year of death if known.</li>
           <li><strong>Officers.</strong> List at the very end, ending with the secretary's name.</li>
           <li><strong>Brevity.</strong> Keep business, resolutions, reports, memorial lessons, and thanks brief — submissions are edited for space.</li>
@@ -578,11 +580,11 @@
       </fieldset>
 
       <fieldset class="group">
-        <legend>Other singing-book abbreviations (page 44) — and their SingLoud equivalents</legend>
-        <p style="font-size:12px;color:var(--ink-faint);margin:0 0 10px;">Assign each book its SingLoud code on the Song List tab; the SHMHA export translates automatically using this table. Where a row has no SingLoud match yet, the export flags it instead of guessing.</p>
+        <legend>Other singing-book abbreviations (page 44) — and their Work Code equivalents</legend>
+        <p style="font-size:12px;color:var(--ink-faint);margin:0 0 10px;">Assign each book its Work Code on the Song List tab; the SHMHA export translates automatically using this table. Where a row has no Work Code match yet, the export flags it instead of guessing.</p>
         <div style="overflow-x:auto;">
         <table class="songtbl" style="font-size:12.5px;">
-          <thead><tr><th>SHMHA code</th><th>Book</th><th>SingLoud code</th></tr></thead>
+          <thead><tr><th>SHMHA code</th><th>Book</th><th>Work Code</th></tr></thead>
           <tbody>
             <tr><td>ACH</td><td>American Christmas Harp</td><td>ACH</td></tr>
             <tr><td>AH</td><td>The American Harmony</td><td>— not yet mapped</td></tr>
@@ -602,7 +604,7 @@
             <tr><td>NH</td><td>Northern Harmony</td><td>NoH</td></tr>
             <tr><td>NHC</td><td>New Harp of Columbia</td><td>— not yet mapped</td></tr>
             <tr><td>NbH</td><td>Norumbega Harmony</td><td>NbH</td></tr>
-            <tr><td>OSH</td><td>Old School Hymnal</td><td>— not yet mapped (no corresponding SingLoud entry found; formerly collided with SingLoud's old "OSH" for Ohio Sacred Harp — that book is now coded "OhS", so the collision is resolved)</td></tr>
+            <tr><td>OSH</td><td>Old School Hymnal</td><td>— not yet mapped (no corresponding Work Code entry found; formerly collided with SingLoud's old "OSH" for Ohio Sacred Harp — that book is now coded "OhS", so the collision is resolved)</td></tr>
             <tr><td>ScH</td><td>Social Harp</td><td>ScH</td></tr>
             <tr><td>ShH</td><td>The Shenandoah Harmony</td><td>ShH</td></tr>
             <tr><td>SoH</td><td>Southern Harmony</td><td>SoH</td></tr>
@@ -623,29 +625,6 @@
           <a href="https://sacredharp.substack.com/p/full-list-of-denson-edition-work" target="_blank" rel="noopener">this reference</a>.
         </p>
       </fieldset>
-    </section>
-
-    <!-- ================= TUNEBOOK INDEX ================= -->
-    <section class="panel" data-panel="tunebooks" role="tabpanel" id="panel-tunebooks" aria-labelledby="tab-tunebooks">
-      <h2 class="panel-title">Tunebook Index</h2>
-      <p class="panel-desc">Browse the full page-by-page index of any tunebook this suite has data for — a quick reference while entering songs, or for double-checking a page number or title against what's actually printed. This is read-only; it doesn't add anything to the Song List.</p>
-
-      <div class="grid2">
-        <div class="field">
-          <label for="tbBookSelect">Tunebook</label>
-          <div style="display:flex;gap:8px;">
-            <select id="tbBookSelect" style="flex:1;"></select>
-            <button type="button" id="tbOpenBtn" class="small">Open</button>
-          </div>
-        </div>
-        <div class="field">
-          <label for="tbSearch">Search (page or title)</label>
-          <input type="text" id="tbSearch" placeholder="e.g. 42, or weeping">
-        </div>
-      </div>
-
-      <p class="panel-desc" id="tbResultCount" style="margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;"></p>
-      <div id="tbResults" style="max-height:60vh;overflow-y:auto;border:1px solid var(--line2);border-radius:8px;"></div>
     </section>
 
     <!-- ================= EXPORT ================= -->
@@ -728,7 +707,7 @@
 
       <hr class="rule">
       <strong style="color:var(--ink-soft);font-size:13px;">Preview</strong>
-      <p class="panel-desc" style="margin:6px 0 10px;font-size:12px;" id="previewModeNote">Shown as it appears in every export except the SHMHA submission — SingLoud tunebook codes, ordinary punctuation.</p>
+      <p class="panel-desc" style="margin:6px 0 10px;font-size:12px;" id="previewModeNote">Shown as it appears in every export except the SHMHA submission — Work Codes, ordinary punctuation.</p>
       <pre class="preview" id="previewText"></pre>
 
       <h3 style="font-family:var(--serif);font-size:15px;margin:22px 0 8px;">Output formats</h3>
@@ -838,7 +817,7 @@
       if(!parsed.meta.bookCodes) parsed.meta.bookCodes = {};
       if(!parsed.meta.dayLocations) parsed.meta.dayLocations = {};
       // one-time migration from the old freeform-abbreviation field, if present, when the
-      // typed abbreviation happens to already be a valid SingLoud code
+      // typed abbreviation happens to already be a valid Work Code
       if(parsed.meta.bookAbbrevs){
         Object.keys(parsed.meta.bookAbbrevs).forEach(function(bookName){
           var val = parsed.meta.bookAbbrevs[bookName];
@@ -1051,16 +1030,16 @@
     ["ZiH", "Zion\u2019s Harp", "1836"]
   ];
   var SINGLOUD_BOOKS = {}; // code -> {title, year}
-  var SINGLOUD_DUPLICATE_CODES = [];
+  var WORKCODE_DUPLICATE_CODES = [];
   SINGLOUD_BOOKS_RAW.forEach(function(row){
     if(SINGLOUD_BOOKS[row[0]]){
-      SINGLOUD_DUPLICATE_CODES.push({ code: row[0], first: SINGLOUD_BOOKS[row[0]].title, second: row[1] });
+      WORKCODE_DUPLICATE_CODES.push({ code: row[0], first: SINGLOUD_BOOKS[row[0]].title, second: row[1] });
     } else {
       SINGLOUD_BOOKS[row[0]] = { title: row[1], year: row[2] };
     }
   });
-  if(SINGLOUD_DUPLICATE_CODES.length){
-    console.warn("EZ Minutes: Compile — duplicate SingLoud Work Codes detected (second entry was NOT loaded):", SINGLOUD_DUPLICATE_CODES);
+  if(WORKCODE_DUPLICATE_CODES.length){
+    console.warn("EZ Minutes: Compile — duplicate SingLoud Work Codes detected (second entry was NOT loaded):", WORKCODE_DUPLICATE_CODES);
   }
   var SINGLOUD_CODE_LIST = Object.keys(SINGLOUD_BOOKS).map(function(code){
     return { code: code, title: SINGLOUD_BOOKS[code].title, year: SINGLOUD_BOOKS[code].year };
@@ -1087,18 +1066,18 @@
   // TUNEBOOK-CHANGELOG.md's "Forthcoming" table) - a book that IS indexed carries its own
   // shmhaCode directly, checked first below, so there's exactly one place to update it
   // rather than two that have to be kept in sync by hand.
-  var SINGLOUD_TO_SHMHA = {
+  var WORKCODE_TO_SHMHA = {
     CHI:"ICH", Ec1:"EH1", EC2:"EH2", SHJ:"JB",
     KHy:"KH", KyH:"KH", KsH:"KsH", MiH:"MH", MoH:"MH", NoH:"NH",
     ScH:"ScH", SoH:"SoH", SHW:"WB"
   };
-  function shmhaCodeFor(singloudCode){
+  function shmhaCodeFor(workCode){
     if(typeof EZ_MINUTES_TUNEBOOKS !== "undefined" && EZ_MINUTES_TUNEBOOKS.books){
       var indexed = Object.keys(EZ_MINUTES_TUNEBOOKS.books).map(function(abbr){ return EZ_MINUTES_TUNEBOOKS.books[abbr]; })
-        .find(function(b){ return b.singloudCode === singloudCode; });
+        .find(function(b){ return b.workCode === workCode; });
       if(indexed) return indexed.shmhaCode || "";
     }
-    return SINGLOUD_TO_SHMHA[singloudCode] || "";
+    return WORKCODE_TO_SHMHA[workCode] || "";
   }
   function isSacredHarpDefaultBook(abbr){
     return !!(typeof EZ_MINUTES_TUNEBOOKS !== "undefined" && EZ_MINUTES_TUNEBOOKS.books && EZ_MINUTES_TUNEBOOKS.books[abbr] && EZ_MINUTES_TUNEBOOKS.books[abbr].isSacredHarpDefault);
@@ -1107,7 +1086,7 @@
   // Shared version identifiers — kept as simple constants for now so both apps' footers
   // can display them consistently; a good candidate to pull into one shared config file
   // once the suite has a common build step.
-  var EZ_MINUTES_SUITE_VERSION = "1.0.0-beta.26";
+  var EZ_MINUTES_SUITE_VERSION = "1.0.0-beta.56"; // Appendix-style page keys (e.g. "a11", "a104") now sort numerically in sortPages, instead of as plain text ("a108" was sorting before "a11")
   var KNOWN_CAPTURE_SCHEMA_VERSIONS = ["1", "2", "3", "4"];
 
   // ---------------- narrative/text-parsing constants, deliberately placed early ----------------
@@ -1157,7 +1136,6 @@
       document.querySelector('.panel[data-panel="'+btn.dataset.tab+'"]').classList.add("active");
       if(btn.dataset.tab === "export"){ renderPreview(); }
       if(btn.dataset.tab === "songs"){ renderSongs(); }
-      if(btn.dataset.tab === "tunebooks"){ renderTunebookIndex(); }
     });
   });
 
@@ -1224,9 +1202,6 @@
     });
   });
   hydrateFields();
-  document.getElementById("tbBookSelect").addEventListener("change", renderTunebookIndex);
-  document.getElementById("tbSearch").addEventListener("input", renderTunebookIndex);
-  document.getElementById("tbOpenBtn").addEventListener("click", renderTunebookIndex);
   document.getElementById("versionFooter").textContent =
     "EZ Minutes · Version " + EZ_MINUTES_SUITE_VERSION + " · Schema " + KNOWN_CAPTURE_SCHEMA_VERSIONS[KNOWN_CAPTURE_SCHEMA_VERSIONS.length - 1] +
     (typeof EZ_MINUTES_TUNEBOOKS !== "undefined" && EZ_MINUTES_TUNEBOOKS.books ? " · Tunebook Index " + (typeof EZ_MINUTES_TUNEBOOK_INDEX_VERSION !== "undefined" ? EZ_MINUTES_TUNEBOOK_INDEX_VERSION : "(unknown)") : " · Tunebook Index MISSING");
@@ -1335,7 +1310,16 @@
     // project without anyone deciding that on purpose. Replacing the project is the
     // safer default; an explicit choice is required before that happens rather than it
     // happening silently.
-    if(state.songs.length > 0){
+    //
+    // Transactional import: the previous version wiped the current project to
+    // freshState() before the replacement file had even been read, let alone parsed
+    // or validated - an unreadable, malformed, or accidentally-wrong file meant the
+    // real project was already gone with no way back. Now a snapshot is taken first,
+    // and only committed over if the replacement genuinely succeeds; any failure -
+    // a read error, a parse error, or importCSVRows itself reporting failure via its
+    // validation checks - restores the snapshot instead of leaving an empty project.
+    var hadExistingProject = state.songs.length > 0;
+    if(hadExistingProject){
       var proceed = confirm(
         "This project already has " + state.songs.length + " row(s) in it.\n\n" +
         "Importing this file will replace everything currently in Compile - the current project will be discarded and cannot be recovered afterward.\n\n" +
@@ -1343,17 +1327,47 @@
         "Replace the current project with this file?"
       );
       if(!proceed) return;
-      state = freshState();
-      saveState();
+    }
+    var preImportSnapshot = hadExistingProject ? JSON.parse(JSON.stringify(state)) : null;
+    function restoreSnapshot(reason){
+      if(preImportSnapshot){
+        state = preImportSnapshot;
+        saveState();
+        hydrateFields();
+        renderSongs();
+        renderPreview();
+      }
+      importStatus.textContent = reason;
     }
     var reader = new FileReader();
     reader.onload = function(){
+      var rows;
       try{
-        var rows = parseCSV(String(reader.result));
-        importCSVRows(rows, file.name);
+        rows = parseCSV(String(reader.result));
       }catch(err){
+        // Parsing failed before state was ever touched - nothing to roll back, the
+        // current project (if any) was never replaced.
         importStatus.textContent = "Could not read that file: " + err.message;
+        return;
       }
+      state = freshState();
+      saveState();
+      var importSucceeded = false;
+      try{
+        importSucceeded = importCSVRows(rows, file.name);
+      }catch(err){
+        restoreSnapshot("Could not read that file: " + err.message + (hadExistingProject ? " Your previous project has been restored." : ""));
+        return;
+      }
+      if(importSucceeded === false){
+        // importCSVRows already set its own explanatory message on importStatus;
+        // just restore the prior project underneath it rather than leaving it wiped.
+        var explanation = importStatus.textContent;
+        restoreSnapshot(explanation + (hadExistingProject ? " Your previous project has been restored." : ""));
+      }
+    };
+    reader.onerror = function(){
+      importStatus.textContent = "Could not read that file — the browser reported a read error." + (hadExistingProject ? " Your previous project is untouched." : "");
     };
     reader.readAsText(file);
   }
@@ -1403,7 +1417,7 @@
     sessionIdCol:["session id"],
     metadataFieldCol:["metadata field"],
     metadataValueCol:["metadata value"],
-    singLoudCodeCol:["singloud code"],
+    editionCodeCol:["edition code","singloud code"],
     canonicalLeaderCol:["canonical leader(s)","canonical leader"],
     timestampCol:["timestamp iso"],
     timeEnteredCol:["time entered"],
@@ -1429,18 +1443,18 @@
     return s;
   }
 
-  // EZ Minutes' own short codes for the books it ships with, mapped to SingLoud codes
+  // EZ Minutes' own short codes for the books it ships with, mapped to Work Codes
   // where a confident match exists — and the full tunebook names for narrative prose (e.g.
   // "Song selections were from ___ unless otherwise noted"). Both are derived from the
   // externally-loaded EZ_MINUTES_TUNEBOOKS (tunebook-index.js, shared with Capture) rather
   // than duplicated here, so the two apps can never drift out of sync with each other.
-  // A book with no confident SingLoud match (its singloudCode is "") is correctly left out
+  // A book with no confident Work Code match (its workCode is "") is correctly left out
   // of EZ_MINUTES_BOOK_CODES entirely — better to prompt the compiler on the Song List tab
   // than guess wrong on a tunebook code.
   if (typeof EZ_MINUTES_TUNEBOOKS !== "undefined" && EZ_MINUTES_TUNEBOOKS.books){
     Object.keys(EZ_MINUTES_TUNEBOOKS.books).forEach(function(abbr){
       var b = EZ_MINUTES_TUNEBOOKS.books[abbr];
-      if (b.singloudCode) EZ_MINUTES_BOOK_CODES[abbr] = b.singloudCode;
+      if (b.workCode) EZ_MINUTES_BOOK_CODES[abbr] = b.workCode;
       EZ_MINUTES_BOOK_NAMES[abbr] = b.fullTitle;
     });
   } else {
@@ -1681,7 +1695,7 @@
   }
 
   function importCSVRows(rows, filename){
-    if(!rows.length){ importStatus.textContent = "That file looked empty."; return; }
+    if(!rows.length){ importStatus.textContent = "That file looked empty."; return false; }
     var header = rows[0].map(function(h){ return h.trim().toLowerCase(); });
     var idx = {};
     Object.keys(COLUMN_ALIASES).forEach(function(key){
@@ -1689,14 +1703,25 @@
     });
     if(idx.leader === -1 && idx.page === -1 && idx.notes === -1){
       importStatus.textContent = "Couldn't find recognizable columns in " + filename + ". You can still add songs by hand on the Song List tab.";
-      return;
+      return false;
     }
 
-    // Informational only — Compile stays tolerant of any schema version rather than
-    // rejecting a file outright; EZ Minutes: Capture is the one that enforces this strictly
-    // on its own re-import. We just flag it here so a mismatch isn't a silent surprise.
+    // Compile stays tolerant of most schema-version mismatches - EZ Minutes: Capture is the
+    // one that enforces this strictly on its own re-import - but a file reporting a version
+    // genuinely NEWER than this build knows about is a different risk: re-exporting it
+    // through this build's own fixed current-schema header could silently discard whatever
+    // that newer schema added (extra columns, new meanings), while still reporting the
+    // result as a complete, faithful export. That's a real data-loss risk, not just an
+    // unfamiliar label, so it blocks import rather than just noting it - the file should be
+    // opened in a version of Compile that actually understands it.
     var fileSchemaVersion = idx.schemaVersion > -1 ? (rows[1] && rows[1][idx.schemaVersion] || "").trim() : "";
     var schemaVersionNote = "";
+    var highestKnownSchemaVersion = Math.max.apply(null, KNOWN_CAPTURE_SCHEMA_VERSIONS.map(function(v){ return parseInt(v, 10); }));
+    var fileSchemaVersionNum = /^\d+$/.test(fileSchemaVersion) ? parseInt(fileSchemaVersion, 10) : null;
+    if(fileSchemaVersionNum !== null && fileSchemaVersionNum > highestKnownSchemaVersion){
+      importStatus.textContent = "This file reports schema version " + fileSchemaVersion + ", which is newer than what this build of Compile (schema " + highestKnownSchemaVersion + ") understands. Re-exporting it here could silently drop whatever that newer schema added. Open this file in a version of EZ Minutes: Compile that supports schema " + fileSchemaVersion + " instead.";
+      return false;
+    }
     if(fileSchemaVersion && KNOWN_CAPTURE_SCHEMA_VERSIONS.indexOf(fileSchemaVersion) === -1){
       schemaVersionNote = " This file reports EZ Minutes: Capture schema version " + fileSchemaVersion + ", which this build of Compile wasn't tested against — double-check the import carefully.";
     }
@@ -1737,7 +1762,70 @@
     var duplicateSessionIdList = Object.keys(duplicateSessionIdSet);
     if(duplicateSessionIdList.length){
       importStatus.textContent = "Two or more sessions in this file share the same Session ID (" + duplicateSessionIdList.join(", ") + ") — this file needs to be repaired before it can be imported, since Compile can no longer tell those sessions apart.";
-      return;
+      return false;
+    }
+
+    // A source leader form ("J. Smith," say) mapped to two different canonical names
+    // across different rows is a genuine unresolved identity question - it might be two
+    // different people, or a mistaken earlier identification, and the source evidence for
+    // each row has to survive until a person actually resolves it. Detected here, upfront,
+    // by collecting every distinct canonical value seen per normalized source form, rather
+    // than letting the later row silently overwrite the earlier one in the shared name map.
+    var canonicalCandidates = {};
+    rows.slice(1).forEach(function(r){
+      var rt = getFrom(r, "recordType").toLowerCase();
+      if(rt === "metadata" || rt === "session") return;
+      var ldr = getFrom(r, "leader");
+      var canon = getFrom(r, "canonicalLeaderCol");
+      if(!ldr || !canon || canon === ldr) return;
+      var k = normKey(ldr);
+      if(!canonicalCandidates[k]) canonicalCandidates[k] = {};
+      canonicalCandidates[k][canon] = true;
+    });
+    var conflictingNameKeys = {};
+    var conflictingNameWarnings = [];
+    Object.keys(canonicalCandidates).forEach(function(k){
+      var distinctValues = Object.keys(canonicalCandidates[k]);
+      if(distinctValues.length > 1){
+        conflictingNameKeys[k] = true;
+        conflictingNameWarnings.push("\u26a0 \"" + distinctValues[0] + "\" and other rows disagree on the Canonical Leader for the same source name — every row's own value has been kept as typed rather than picked for you; review and correct these by hand on the Song List tab: " + distinctValues.join(" vs. "));
+      }
+    });
+
+    // Schema 4 made Session ID a declared, required structural field - unlike Schema 3 and
+    // earlier, where it didn't exist as a concept at all and inferring membership from
+    // session-boundary position is the only option (and a valid one, during a deliberate
+    // upgrade). A Schema 4 file with a blank or unmatched Session ID on a real row means
+    // something is genuinely wrong with the file - a hand edit, a bug in whatever wrote it,
+    // a partial edit - and silently guessing its session from row position would hide that
+    // rather than surface it. This only applies when the file itself declares Schema 4;
+    // anything earlier keeps the existing inference-based behavior below unchanged.
+    if(fileSchemaVersion === "4"){
+      var schema4Problems = [];
+      var seenBlankBoundary = false;
+      rows.slice(1).forEach(function(r, ri){
+        var rt = getFrom(r, "recordType").toLowerCase();
+        if(rt === "metadata") return;
+        var sid = getFrom(r, "sessionIdCol");
+        if(rt === "session"){
+          if(!sid) seenBlankBoundary = true;
+          return;
+        }
+        if(!sid){
+          schema4Problems.push("row " + (ri + 2) + (rt ? " (" + rt + ")" : "") + " has a blank Session ID");
+        } else if(!validSessionIds[sid]){
+          schema4Problems.push("row " + (ri + 2) + (rt ? " (" + rt + ")" : "") + " has Session ID \"" + sid + "\" that doesn't match any session boundary in this file");
+        }
+      });
+      if(seenBlankBoundary){
+        schema4Problems.unshift("one or more session boundaries in this file have no Session ID at all");
+      }
+      if(schema4Problems.length){
+        var shownProblems = schema4Problems.slice(0, 5);
+        var moreCount = schema4Problems.length - shownProblems.length;
+        importStatus.textContent = "This file reports Schema 4, where Session ID is required structural data, but " + shownProblems.join("; ") + (moreCount > 0 ? "; and " + moreCount + " more issue" + (moreCount === 1 ? "" : "s") : "") + ". This isn't something Compile can safely guess at — the file needs to be corrected in whatever tool produced it before it can be imported.";
+        return false;
+      }
     }
 
     // Pre-pass: how many distinct "days" does this file actually cover? Prefer explicit
@@ -1929,7 +2017,7 @@
       var isUnknownType = !isSession && !isMetadata && recordTypeRaw && recordTypeRaw !== "marker" && recordTypeRaw !== "song";
       var markerWord = markerLabelCol || notes; // dedicated Marker column first, Notes for older exports
       var isOther = book && book.toLowerCase() === "other";
-      var singLoudCodeCol = get("singLoudCodeCol");
+      var editionCodeCol = get("editionCodeCol");
       var canonicalLeaderCol = get("canonicalLeaderCol");
       var timestampColVal = get("timestampCol");
       var timeEnteredColVal = get("timeEnteredCol");
@@ -2003,7 +2091,7 @@
       } else if(sessionIdCol){
         autoFilled.push("\u26a0 a row's Session ID didn't match any session boundary in this file — fell back to its physical position instead");
       }
-      state.songs.push({
+      var pushedSong = {
         id: uid(),
         order: startOrder + added,
         type: isMarker ? "marker" : "song",
@@ -2013,16 +2101,21 @@
         page: isMarker ? "" : (isOther ? "" : page),
         title: isOther ? (titleCol || page) : (titleCol || ""),
         leader: leader,
-        singLoudCode: singLoudCodeCol || "",
+        editionCode: editionCodeCol || "",
         markerType: isMarker ? (markerWord||"").toUpperCase() : "",
         notes: notes,
         tag: tag || "",
         prose: isMarker ? (titleCol || "") : "",
         timestampISO: timestampColVal || "",
         timeEntered: timeEnteredColVal || ""
-      });
+      };
+      state.songs.push(pushedSong);
       if(canonicalLeaderCol && leader && canonicalLeaderCol !== leader){
-        state.nameMap[normKey(leader)] = canonicalLeaderCol;
+        if(conflictingNameKeys[normKey(leader)]){
+          pushedSong.canonicalLeaderOverride = canonicalLeaderCol;
+        } else {
+          state.nameMap[normKey(leader)] = canonicalLeaderCol;
+        }
       }
     }
 
@@ -2084,7 +2177,7 @@
       autoFilled.push("book(s) used");
     }
     if(autoMappedBooks.length){
-      autoFilled.push("SingLoud code" + (autoMappedBooks.length===1?"":"s") + " for " + autoMappedBooks.join(", ") + " (see Song List tab)");
+      autoFilled.push("Work Code" + (autoMappedBooks.length===1?"":"s") + " for " + autoMappedBooks.join(", ") + " (see Song List tab)");
     }
     if(sickAutoText && !state.lists.sick.trim()){
       state.lists.sick = sickAutoText;
@@ -2116,17 +2209,17 @@
       if(anyLocationAdded) autoFilled.push("per-day locations (see Song List tab)");
     }
 
-    // RC10-04: a SingLoud code the compiler assigned (or that came in already assigned on
-    // a previous export) lives on each row's own singLoudCode field - but the *editable*
+    // RC10-04: a Work Code the compiler assigned (or that came in already assigned on
+    // a previous export) lives on each row's own editionCode field - but the *editable*
     // project-level map (state.meta.bookCodes, what the UI shows and the next export
     // actually uses) was never being hydrated from that row data. Without this, a
     // used-book's code would silently revert to the built-in default the moment Compile
     // re-exported, discarding whatever the compiler had actually selected.
     var codesByBook = {};
     state.songs.forEach(function(s){
-      if(s.type !== "song" || !s.book || s.book.toLowerCase() === "other" || !s.singLoudCode) return;
+      if(s.type !== "song" || !s.book || s.book.toLowerCase() === "other" || !s.editionCode) return;
       if(!codesByBook[s.book]) codesByBook[s.book] = {};
-      codesByBook[s.book][s.singLoudCode] = true;
+      codesByBook[s.book][s.editionCode] = true;
     });
     var bookCodeConflicts = [];
     Object.keys(codesByBook).forEach(function(book){
@@ -2134,7 +2227,7 @@
       if(codes.length === 1){
         if(state.meta.bookCodes[book] !== codes[0]){
           state.meta.bookCodes[book] = codes[0];
-          autoFilled.push("SingLoud code for " + fullBookName(book) + " (" + codes[0] + ")");
+          autoFilled.push("Work Code for " + fullBookName(book) + " (" + codes[0] + ")");
         }
       } else if(codes.length > 1){
         // Genuinely conflicting codes for the same book across different rows - don't
@@ -2143,7 +2236,8 @@
         bookCodeConflicts.push(fullBookName(book) + " (" + codes.join(", ") + ")");
       }
     });
-    if(bookCodeConflicts.length) autoFilled.push("\u26a0 " + bookCodeConflicts.join("; ") + " have conflicting SingLoud codes across rows — check the Song List tab");
+    if(bookCodeConflicts.length) autoFilled.push("\u26a0 " + bookCodeConflicts.join("; ") + " have conflicting Work Codes across rows — check the Song List tab");
+    if(conflictingNameWarnings.length) autoFilled.push(conflictingNameWarnings.join(" | "));
 
     // Metadata rows are explicit prior Compile state (business/lists/ordinal content, and
     // per-session officer overrides) written back by a previous Compile session — always
@@ -2194,6 +2288,7 @@
     importStatus.textContent = added + " row(s) imported from " + filename + "." + autoNote + schemaVersionNote + (orderReorderNote ? " " + orderReorderNote + "." : "") + " Head to the Song List tab to clean things up.";
     renderSongs();
     renderPreview();
+    return true;
   }
 
   // ---------------- Song list ----------------
@@ -2797,21 +2892,21 @@
     if(!bookName) return "";
     return state.meta.bookCodes[bookName] || "";
   }
-  // The CSV's SingLoud Code column is a portable, external identifier - unlike the
+  // The CSV's Edition Code column is a portable, external identifier - unlike the
   // narrative, it has no established-edition-at-the-top context to lean on, so it needs
   // the full Work Code + Edition Year (e.g. "SHM1991"), not the bare 3-letter Work Code
   // ("SHM") that's genuinely the better choice for an inline narrative tag. For a
   // recognized book, the internal abbr key already IS that full code; for an
   // unrecognized/Other book, fall back to whatever bare code the compiler typed in by hand.
-  function fullSingloudCodeFor(bookName){
+  function fullEditionCodeFor(bookName){
     if(!bookName) return "";
     if(typeof EZ_MINUTES_TUNEBOOKS !== "undefined" && EZ_MINUTES_TUNEBOOKS.books && EZ_MINUTES_TUNEBOOKS.books[bookName]){
       return bookName;
     }
     return state.meta.bookCodes[bookName] || "";
   }
-  function singloudOptionsHtml(selected){
-    var opts = '<option value="">— pick this book\'s SingLoud code —</option>';
+  function workCodeOptionsHtml(selected){
+    var opts = '<option value="">— pick this book\'s Work Code —</option>';
     opts += SINGLOUD_CODE_LIST.map(function(b){
       return '<option value="'+esc(b.code)+'"'+(selected===b.code?" selected":"")+'>'+esc(b.title)+' ('+esc(b.code)+', '+esc(b.year)+')</option>';
     }).join("");
@@ -2830,96 +2925,6 @@
     }).sort(function(a, b){
       return (EZ_MINUTES_TUNEBOOKS.books[a].commonName || a).localeCompare(EZ_MINUTES_TUNEBOOKS.books[b].commonName || b);
     });
-  }
-
-  // Same book-specific data (badgeColor/badgeTextColor, singloudCode) tunebook-index.js
-  // already carries for Capture's own badges - reused here rather than any new
-  // per-book information living in Compile itself.
-  function tunebookBadgeHtml(abbr){
-    var b = EZ_MINUTES_TUNEBOOKS.books[abbr];
-    var bg = (b && b.badgeColor) || "#d9d9d9";
-    var fg = (b && b.badgeTextColor) || "#000";
-    // Within the app itself (as opposed to a minutes narrative, where the edition is
-    // established once via prose and a bare Work Code like "SHM" is genuinely clearer per
-    // song) there's no such established context - so the full Work Code + Edition Year
-    // (the internal key itself, e.g. "SHM1991") is what actually disambiguates, since a
-    // bare 3-letter code can't tell the 1991 and 2025 editions apart.
-    var label = abbr;
-    return '<span style="display:inline-flex;align-items:center;padding:2px 10px;border-radius:999px;' +
-      'font-size:11.5px;font-weight:600;background:' + bg + ';color:' + fg + ';">' + esc(label) + '</span>';
-  }
-
-  function populateTunebookIndexSelect(){
-    var sel = document.getElementById("tbBookSelect");
-    if(!sel || sel.options.length) return; // populate once
-    var placeholder = document.createElement("option");
-    placeholder.value = "";
-    placeholder.textContent = "\u2014 Choose a tunebook \u2014";
-    sel.appendChild(placeholder);
-    var allOpt = document.createElement("option");
-    allOpt.value = "__all__";
-    allOpt.textContent = "All tunebooks";
-    sel.appendChild(allOpt);
-    tunebooksWithIndex().forEach(function(abbr){
-      var b = EZ_MINUTES_TUNEBOOKS.books[abbr];
-      var opt = document.createElement("option");
-      opt.value = abbr;
-      opt.textContent = b.fullTitle || b.commonName || abbr;
-      sel.appendChild(opt);
-    });
-  }
-
-  function renderTunebookIndex(){
-    populateTunebookIndexSelect();
-    var sel = document.getElementById("tbBookSelect");
-    var host = document.getElementById("tbResults");
-    var countEl = document.getElementById("tbResultCount");
-    if(!sel || !sel.value){ host.innerHTML = ""; countEl.innerHTML = ""; return; }
-    var query = (document.getElementById("tbSearch").value || "").trim().toLowerCase();
-
-    function rowsFor(abbr){
-      var book = EZ_MINUTES_TUNEBOOKS.books[abbr];
-      var songs = book.songs || {};
-      var pages = sortPages(Object.keys(songs));
-      if(query){
-        pages = pages.filter(function(p){
-          return p.toLowerCase().indexOf(query) > -1 || (songs[p].title || "").toLowerCase().indexOf(query) > -1;
-        });
-      }
-      return { book: book, pages: pages, total: Object.keys(songs).length };
-    }
-
-    if(sel.value === "__all__"){
-      var books = tunebooksWithIndex();
-      var groups = books.map(function(abbr){ return { abbr: abbr, data: rowsFor(abbr) }; }).filter(function(g){ return g.data.pages.length; });
-      var totalMatches = groups.reduce(function(n, g){ return n + g.data.pages.length; }, 0);
-      countEl.innerHTML = totalMatches + " song(s) across " + groups.length + " tunebook(s)" + (query ? " matching \u201c" + esc(query) + "\u201d" : "");
-      if(!groups.length){ host.innerHTML = '<div style="padding:12px;color:var(--ink-faint);">No matches.</div>'; return; }
-      host.innerHTML = groups.map(function(g){
-        var header = '<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg-alt, rgba(0,0,0,0.04));font-weight:600;">' +
-          tunebookBadgeHtml(g.abbr) + '<span>' + esc(g.data.book.fullTitle || g.abbr) + '</span></div>';
-        var rows = g.data.pages.map(function(p, i){
-          var bg = i % 2 ? "" : "background:var(--bg-alt, rgba(0,0,0,0.02));";
-          return '<div style="display:flex;gap:14px;padding:6px 12px 6px 24px;' + bg + '">' +
-            '<span style="min-width:60px;font-weight:600;color:var(--ink-soft);">' + esc(p) + '</span>' +
-            '<span>' + esc(g.data.book.songs[p].title || "") + '</span>' +
-          '</div>';
-        }).join("");
-        return header + rows;
-      }).join("");
-      return;
-    }
-
-    var data = rowsFor(sel.value);
-    countEl.innerHTML = tunebookBadgeHtml(sel.value) +
-      '<span>' + data.pages.length + " of " + data.total + " song(s) in " + esc(data.book.fullTitle || sel.value) + (query ? " matching \u201c" + esc(query) + "\u201d" : "") + '</span>';
-    host.innerHTML = data.pages.map(function(p, i){
-      var bg = i % 2 ? "" : "background:var(--bg-alt, rgba(0,0,0,0.02));";
-      return '<div style="display:flex;gap:14px;padding:6px 12px;' + bg + '">' +
-        '<span style="min-width:60px;font-weight:600;color:var(--ink-soft);">' + esc(p) + '</span>' +
-        '<span>' + esc(data.book.songs[p].title || "") + '</span>' +
-      '</div>';
-    }).join("") || '<div style="padding:12px;color:var(--ink-faint);">No matches.</div>';
   }
 
   function renderBookSettings(){
@@ -2951,7 +2956,7 @@
           : "";
         row.innerHTML =
           '<span class="bname">'+esc(b)+shmhaNote+'</span>' +
-          '<select class="abbr-in" data-book="'+esc(b)+'" aria-label="SingLoud code for '+esc(b)+'">'+singloudOptionsHtml(code)+'</select>';
+          '<select class="abbr-in" data-book="'+esc(b)+'" aria-label="Work Code for '+esc(b)+'">'+workCodeOptionsHtml(code)+'</select>';
         rowsHost.appendChild(row);
       });
       rowsHost.querySelectorAll(".abbr-in").forEach(function(inp){
@@ -3056,7 +3061,7 @@
   }
 
   // page/title text for one song row, including a non-default book tag and any inline
-  // dedication. abbrFn(bookNameAsTyped) resolves the tag to print — SingLoud code normally,
+  // dedication. abbrFn(bookNameAsTyped) resolves the tag to print — Work Code normally,
   // SHMHA code for the Minutes Book export. chaplainNameToSuppress is only passed by the two
   // call sites where the app itself is about to state that same chaplain gave the prayer.
   function pageDisplay(row, effectiveDefault, abbrFn, chaplainNameToSuppress, forceSuppressNote, mode){
@@ -3211,6 +3216,28 @@
     return v === undefined ? null : v;
   }
 
+  // Compares two "anything else" page keys - an appendix's "a104," "A184.2," etc. - the
+  // same way a person reading the appendix would: by its letter prefix, then the number
+  // embedded in it, then whatever's left over (a t/b split, a decimal suffix). Plain
+  // string comparison alone gets this wrong in a way that's easy to miss in review: "a108"
+  // sorts before "a11" as text, because the character '0' is less than '1' at the third
+  // position - nothing to do with the actual page numbers 108 and 11. Falls back to plain
+  // string comparison only when a key has no digits in it at all (e.g. a bare label).
+  function comparePageMisc(a, b){
+    var ma = /^([A-Za-z]*)(\d+)(.*)$/.exec(a);
+    var mb = /^([A-Za-z]*)(\d+)(.*)$/.exec(b);
+    if(!ma || !mb) return a < b ? -1 : (a > b ? 1 : 0);
+    var prefixA = ma[1].toLowerCase(), prefixB = mb[1].toLowerCase();
+    if(prefixA !== prefixB) return prefixA < prefixB ? -1 : 1;
+    var numA = parseInt(ma[2], 10), numB = parseInt(mb[2], 10);
+    if(numA !== numB) return numA - numB;
+    var sa = ma[3], sb = mb[3];
+    if(sa === sb) return 0;
+    if(sa === "t") return -1;
+    if(sb === "t") return 1;
+    return sa < sb ? -1 : 1;
+  }
+
   function sortPages(pages){
     return pages.sort(function(a, b){
       var na = parseInt(a, 10), nb = parseInt(b, 10);
@@ -3225,7 +3252,7 @@
       var bGroup = bRoman !== null ? 0 : (bIsNum ? 1 : 2);
       if(aGroup !== bGroup) return aGroup - bGroup;
       if(aGroup === 0) return aRoman - bRoman;
-      if(aGroup === 2) return a < b ? -1 : (a > b ? 1 : 0);
+      if(aGroup === 2) return comparePageMisc(a, b);
       if(na !== nb) return na - nb;
       var sa = a.replace(/^\d+/, ""), sb = b.replace(/^\d+/, "");
       if(sa === sb) return 0;
@@ -3715,20 +3742,38 @@
     return parts.join("\n");
   }
 
-  // This is EZ Minutes' one master project file — a real v3-schema CSV that either app
+  // This is EZ Minutes' one master project file — a real v4-schema CSV that either app
   // opens as the current authoritative revision, not a simplified reference dump and not a
   // separate "project format" from whatever Capture produced. Everything Compile knows that
   // a plain song row can't hold (Business tab, Names & Lists, per-session officer overrides,
   // the ordinal number, and anything this build doesn't even recognize) goes out as
   // "metadata" rows; everything Compile has corrected about a specific song (a merged
-  // leader spelling, an assigned SingLoud code) goes out as extra columns on that same row.
+  // leader spelling, an assigned Work Code) goes out as extra columns on that same row.
   // The function name (toCleanCSV) is a holdover from before the suite settled on "one
   // master file" as the model — kept as-is internally to avoid an unnecessary rename of
   // every call site, but the exported filename and all user-facing text call this what it
   // actually is: the Master CSV.
   function toCleanCSV(){
     var songs = state.songs.slice().sort(function(a,b){ return a.order-b.order; });
-    var header = ['Schema Version','Order of entry','Record Type','Session Label','Session ID','Metadata Field','Metadata Value','Event','Date','Location','Chair','Vice-Chair','Secretary','Treasurer','Arranger(s)','Chaplain','Memorial Lesson Leader','Book','SingLoud Code','Leader(s)','Canonical Leader(s)','Page','Song','Tag','Notes','Marker','Timestamp ISO','Time entered'];
+    // A genuine Work Code conflict - the same recognized Book edition, but rows disagree on
+    // the annotated Edition Code - must not be silently normalized away on export. This is
+    // recomputed fresh here (rather than reused from import time) so it's correct
+    // regardless of when the conflict arose, including from a manual edit after import.
+    var exportCodesByBook = {};
+    songs.forEach(function(s){
+      if(s.type !== "song" || !s.book || s.book.toLowerCase() === "other" || !s.editionCode) return;
+      if(!exportCodesByBook[s.book]) exportCodesByBook[s.book] = {};
+      exportCodesByBook[s.book][s.editionCode] = true;
+    });
+    var exportConflictingBooks = {};
+    Object.keys(exportCodesByBook).forEach(function(book){
+      if(Object.keys(exportCodesByBook[book]).length > 1) exportConflictingBooks[book] = true;
+    });
+    function editionCodeForExport(s){
+      if(exportConflictingBooks[s.book]) return s.editionCode || "";
+      return fullEditionCodeFor(s.book);
+    }
+    var header = ['Schema Version','Order of entry','Record Type','Session Label','Session ID','Metadata Field','Metadata Value','Event','Date','Location','Chair','Vice-Chair','Secretary','Treasurer','Arranger(s)','Chaplain','Memorial Lesson Leader','Book','Edition Code','Leader(s)','Canonical Leader(s)','Page','Song','Tag','Notes','Marker','Timestamp ISO','Time entered'];
     function cell(v){
       v = String(v==null?"":v);
       if(v && "=+-@".indexOf(v[0]) !== -1) v = "'" + v;
@@ -3810,8 +3855,8 @@
       var isOther = (s.book||"").toLowerCase() === "other";
       var exportBook = isOther ? "OTHER" : (s.book || "");
       rows.push([order, "song", "", s.sessionId || "", "", "", eventVal, dateVal, locationFor(s.sessionId)].concat(roleCols, [
-        exportBook, fullSingloudCodeFor(s.book),
-        s.leader || "", canonicalLeader(s.leader) !== s.leader ? canonicalLeader(s.leader) : "",
+        exportBook, editionCodeForExport(s),
+        s.leader || "", (s.canonicalLeaderOverride !== undefined ? s.canonicalLeaderOverride : (canonicalLeader(s.leader) !== s.leader ? canonicalLeader(s.leader) : "")),
         isOther ? "" : (s.page || ""), s.title || "",
         s.tag || "", s.notes || "", "", exportTimestamp(s), s.timeEntered || ""
       ]));
@@ -3969,7 +4014,7 @@
       document.getElementById("previewModeNote").textContent = "Events only, as terse as possible without dropping core data — for checking names and details, not for publication.";
     } else {
       document.getElementById("previewText").textContent = toPlainText(buildNarrative("singloud"));
-      document.getElementById("previewModeNote").textContent = "Shown as it appears in every export except the SHMHA submission — SingLoud tunebook codes, ordinary punctuation.";
+      document.getElementById("previewModeNote").textContent = "Shown as it appears in every export except the SHMHA submission — Work Codes, ordinary punctuation.";
     }
   }
 
